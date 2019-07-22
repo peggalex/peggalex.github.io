@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>    
+	<style>
+		:root {
+			--skyBlue: #A6DCF7;
+			--grassGreen: #7FFFAB;
+			--darkGreen: #5DC967;
+			--svgWidth: 1000px;
+		}
+
+		body {
+			background-color: var(--skyBlue);
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			font-family: 'Lato', sans-serif;
+		}
+
+		button {
+			background-color: var(--grassGreen);
+			border: none;
+			color: white;
+			font-size: 20px;
+			padding: 15px;
+			margin-top: 5px;
+			text-align: center;
+		}
+		
+		button:focus { outline:0; }
+
+		#centerEverything {
+			display: flex;
+			flex-direction: column;
+			align-items: flex-start;
+			animation: openUp 1s;
+			width: var(--svgWidth);
+		}
+
+		#nonHeader {
+			display: flex;
+			flex-direction: row;
+			width: 100%;
+		}
+
+		#sideButtons {
+			 position: sticky;
+			flex-shrink: 0;
+			flex-grow: 1;
+			display: flex;
+			flex-direction: column;
+			overflow-y: scroll;
+		}
+
+		#stage {
+			background-color: white;
+			margin: 5px 0px 5px 5px;
+			padding: 5px;
+			width: 100%;
+		}
+
+		#stage h1{
+			color: var(--skyBlue);
+		}
+
+		#stage *:not(br){
+			margin: 0;
+		}
+
+		#header{
+			align-self: center;
+			width: 1000px;
+			height: 300px;
+		  	position: sticky;
+		  	overflow: hidden;
+		}
+
+		.content {
+			display:none;
+		}
+
+		.content.contentActive {
+			display:block;
+		}
+
+		.sideButton:hover {
+			background-color: var(--darkGreen);
+			transition: 1s;
+		}
+
+		.sideButton.sideButtonActive {
+			background-color: var(--darkGreen);
+		}
+
+	</style>
+
+	<link href="https://fonts.googleapis.com/css?family=Raleway:300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans+HK&display=swap" rel="stylesheet">
+
+</head>
+<body>
+	<div id='centerEverything'>
+		<div id='header'>
+			<object type='image/svg+xml' data='header.svg'></object>
+		</div>
+		<div id='nonHeader'>
+			<div id='sideButtons'>
+				<button class='about sideButton' id='button_about'>About</button>
+				<button class='projects sideButton' id='button_projects'>Projects</button>
+				<button class='contact sideButton' id='button_contact'>Contact</button>
+			</div>
+			<div id='stage'>
+				<div class='about content' id='content_about'>
+					<p>Hi, my name's Alex. I am a 4th year computer programmer from the University of Toronto.</p>
+					<br>
+					<h1>Background</h1>
+					<p>I was born and raised in Hong Kong by my British dad and my Filipino mum.</p>
+					<br>
+					<h1>School</h1>
+					<p>I'm majoring in both computer science and economics for an honorary bachelors of science. I've been a TA for CSC108, and will continue to TA this year in CSC207.</p>
+					<br>
+					<h1>Interests</h1>
+					<p>I like tv and video games lol. I love The Office, Community and Would I Lie to You.</p>
+					<br>
+				</div>
+				<div class='projects content' id='content_projects'>
+					<div style='display:flex; justify-content:center'>
+						<iframe frameborder='1' width='500px' height='500px' src='https://www.github.com/peggalex'></iframe>
+					</div>
+				</div>
+				<div class='contact content' id='content_contact'>
+					<h1>Email</h1>
+					<a href='mailto:alex.pegg@mail.utoronto.ca'>alex.pegg@mail.utoronto.ca</a>
+					<br><br>
+					<h1>LinkedIn</h1>
+					<a href='https://www.linkedin.com/in/alexander-pegg-68b954163/'>Alexander Pegg LinkedIn</a>
+					<br><br>
+					<h1>GitHub</h1>
+					<a href='https://github.com/peggalex>peggalex'>github</h1>
+					<br><br>	
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+<script>
+
+	sideButtonCallback = function() {
+		$(".contentActive").removeClass("contentActive")
+		$(".sideButtonActive").removeClass("sideButtonActive")
+
+		$('#'+this.id).addClass("sideButtonActive")
+
+		let type = this.id.split('_')[1]
+		let contentName = '#content_'+type
+		$(contentName).addClass("contentActive")
+	}
+
+	$('.sideButton').on('click',sideButtonCallback)
+	$('#button_about').trigger('click')
+
+</script>
+</html>

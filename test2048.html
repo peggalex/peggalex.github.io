@@ -8,8 +8,10 @@
 
 	body{
 		font-family: 'Lato', sans-serif;
+		color: #404040;
 		display:flex;
 		justify-content:center;
+		overflow: hidden;
 	}
 
 
@@ -18,7 +20,15 @@
 		display: flex;
 		flex-direction: column;
 		width:min-content;
+	}
 
+	#topBar{
+		display: flex;
+		justify-content: center;
+	}
+
+	#topBar p{
+		margin-left: 5%;
 	}
 	.row {
 		display: flex;
@@ -41,7 +51,7 @@
 		font-size: 50px;
 		/*transition: left 2s, top 2s;*/
 		text-align: center;
-		transition: left 0.5s, top 0.5s, background-color 0.5s;
+		transition: left 0.5s, top 0.5s, background-color 0.5s ease-in-out;
 		animation: fadein 0.5s ease-in;
 	}
 
@@ -62,19 +72,20 @@
 </head>
 <body>
 	<div id='mainStage'>
-		<p>Official game <a href="https://2048game.com">here<a></p>
+		<div id='topBar'>
+			<p>Official game <a href="https://2048game.com">here<a></a></p>
+			<p>score: <a id='score'></a></p>
+			<p>highscore: <a id='highscore'></a></p>
+		</div>
 		<div id='table'>
 		</div>
 	</div>
 </body>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-
 <script>
 	const transitionTime= 2000,
 		NUM_COLORS = 10,
 		domTable = document.getElementById('table')
-
+		my39thBday = new Date(2037,9,17)
 
 	var model,
 		HIGHSCORE = 0,
@@ -83,6 +94,15 @@
 		tableStr = '',
 		animating = false //blocking keyboard sig
 
+	var setCookie = (hs) => document.cookie = `highscore=${hs}; expires=${my39thBday}; path=/`
+	var getHighscore = () => {
+		c = document.cookie
+		return parseInt(c.substring(c.indexOf('highscore=')+'highscore='.length).split(';')[0])
+	}
+
+	if (!document.cookie.includes('highscore') || isNaN(getHighscore())){
+		setCookie(0)
+	}
 	for (let i=0;i<DIMENSIONS;i++){
 		tableStr += "<div class='row' id='row "+i.toString()+"''>"
 		for (let j=0;j<DIMENSIONS;j++){
@@ -141,13 +161,15 @@
 
 
 		this.value = value
+		this.sequenceNum = value==BASE ? 0 : 1 //could do 2^(1+floor{n/2}) + (odd) ? 2^n
 		this.recentlyChanged = false
 		this.ds = 0
 		this.died = false
 		this.isNew = true
 				
 		this.expand = ()=>{
-			this.value *= BASE
+			this.value *= 2
+			this.sequenceNum += 1
 			this.recentlyChanged = true
 			this.isNew = false
 			return this.value;
@@ -201,8 +223,9 @@
 			this.domCell.style.left = `${domRectNew.x}px`
 			this.domCell.style.top = `${domRectNew.y}px`
 			this.domCell.innerHTML = this.cell.value
-			let colorIndex = Math.log(this.cell.value)/Math.log(BASE)
-			this.domCell.style.backgroundColor = colorScheme[colorIndex]
+			//let colorIndex = (Math.log(this.cell.value)/Math.log(BASE))%NUM_COLORS
+			//let colorIndex = (this.cell.value/BASE-1)%NUM_COLORS
+			this.domCell.style.backgroundColor = colorScheme[this.cell.sequenceNum]
 		}
 
 		getDomCell = (i,j) => document.getElementById(`table_${i},${j}`)
@@ -222,7 +245,7 @@
 
 
 	}
-	updateView = function(table, key){
+	updateView = function(table, score, key){
 		let startTime = performance.now(),
 			cell = null,
 			insertCell = function(cell,domCell){
@@ -237,61 +260,8 @@
 				s += '</div>'
 				document.body.innerHTML += s
 			}
-
-			getDomCell = (i,j) => document.getElementById(`table_${i},${j}`),
-
-			_moveCell = (domCell,left,top) => {
-				domCell.style.left = `${left}px`
-				domCell.style.top = `${top}px`
-				domCell.id = `cellAt_${left}_${top}!new`
-				domCell.classList.add('current')
-			},
-			
-			moveCell = function(cell, key, i, j){
-
-				let oldCoord = [i,j]
-				switch(key){
-					case 'Up':
-						oldCoord[0]+=cell.ds
-						break
-					case 'Down':
-						oldCoord[0]-=cell.ds
-						break
-					case 'Left':
-						oldCoord[1]+=cell.ds
-						break
-					case 'Right':
-						oldCoord[1]-=cell.ds
-						break
-				}
-				//assert html table #cell_i,j.className !in 'null'
-				//console.log('oldCoord:',oldCoord, 'prev:',[i,j],'ds:',cell.ds, 'dir:',key)
-				/*
-				let domCell = getDomCell(oldCoord[0],oldCoord[1]),
-					domRectOld = domCell.getBoundingClientRect(),
-					domCellTrue =  document.getElementById(`cellAt_${domRectOld.x}_${domRectOld.y}`),
-					domRectNew = getDomCell(i,j).getBoundingClientRect()
-
-				//domCellTrue.innerHTML = `${cell.value},${cell.ds}${cell.isNew?'!':''}`
-				domCellTrue.innerHTML = cell.value
-				_moveCell(domCellTrue,domRectNew.x,domRectNew.y)
-				*/
-				domCell.move(i,j)
-			}
-			
 		animating = true
-		/*
-		for (let i=0;i<DIMENSIONS;i++){
-			for (let j=0;j<DIMENSIONS;j++){
-				cell = table[i][j]
-				if (!(cell==null || cell.isNew)){
-					moveCell(cell,key,i,j)
-					domCell = domCells.find((c)=>c.cell == cell)
-					domCell.move
-				}
-			}
-		}
-		*/
+
 		for (let i=0;i<DIMENSIONS;i++){
 			for (let j=0;j<DIMENSIONS;j++){
 				cell = table[i][j]
@@ -304,26 +274,19 @@
 				}
 			}
 		}
+		setCookie(Math.max(score,getHighscore()))
+		document.getElementById('score').innerHTML = score
+		document.getElementById('highscore').innerHTML = getHighscore()
 		animating = false
 		domCells.forEach((c)=>c.update(key))
 		domCells = domCells.filter((c)=>!c.cell.died)
-
-		/*
-		let domCells = Array.from(document.getElementsByClassName('cell'))
-		domCells.forEach((c)=>{
-			if (c.classList.contains('current')){
-				c.id = c.id.split('!')[0]
-				c.classList.remove('current')
-			} else {
-				c.parentElement.removeChild(c)
-			}
-		})
-		*/
 
 	}
 
 
 	Model = function(){
+		this.getNthTerm = (n) => 2**(n-1+Math.floor(BASE/2)) + (2**(n-1))*n%2
+		this.tenth = this.getNthTerm(10)
 
 		this.generateNewPoint = function() {
 			//P(x=4) = 1/4
@@ -355,12 +318,12 @@
 			for (let i=0; i<DIMENSIONS-2; i++){
 				this.generateNewPoint()
 			}
-			updateView(this.table, null)
+			updateView(this.table, this.score, null)
 		}
 
 		this.newGame()
 
-		var leftMergeRow = function(vector) {
+		var leftMergeRow = (vector)=> {
 			let oldVector = [...vector]
 
 			for (let i=0;i<vector.length;i++){
@@ -381,6 +344,7 @@
 			for (let i=0;i<vector.length-1;i++){
 				if (vector[i]!=null && vector[i].canMerge(vector[i+1])){
 					vector[i+1].expand()
+					this.score += vector[i+1].value
 					vector.slice(i+1).forEach(function(c){
 						if (c!=null){c.ds+=1}
 					})
@@ -463,22 +427,25 @@
 					s+='\n|'
 					for (let j=0;j<DIMENSIONS;j++){
 						cell = model.table[i][j]
-						s += cell==null ? '    ' : `${cell.value}(${cell.ds})`
+						s += cell==null ? ' ' : cell.value//`${cell.value}(${cell.ds})`
 						s += '|'
 					}
 				}
 				return s
 			}
-			console.log('beforebefore:',getTableStr(model.table),direction)
+			//console.log('beforebefore:',getTableStr(model.table),direction)
 
 			resetCells()
 			if (this.rotateLeftMerge(dirToRotateLeft[direction])) {
 				//console.log('before:',getTableStr(model.table),direction)
-				this.generateNewPoint()
-				console.log('after:',getTableStr(model.table),direction)
+				for (let i=0;i<Math.max(1,BASE-1);i++){
+					this.generateNewPoint()
+				}
+				//colorScheme = getColorLst(NUM_COLORS)
+				//console.log('after:',getTableStr(model.table),direction)
 
 			}
-			updateView(this.table, direction)
+			updateView(this.table, this.score, direction)
 		}
 
 		this.rotateLeftMerge = function(funcs){
@@ -491,7 +458,7 @@
 			return isMoved
 		}
 		
-		this.isGameOver = function() {
+		this.isGameOver = () => {
 			if (this.table.some((row)=>row.some((e)=>e!=null))){
 				return false
 			} else {
@@ -508,20 +475,12 @@
 			return true
 		}
 		
-		this.handleScore = function(points) {
+		this.handleScore = (points) => {
 			this.score+=points
 			if (points==BASE**10) { this.gameIsWon = true; }
 			HIGHSCORE = Math.max(HIGHSCORE, this.score)
 		}
-				
-		this.getScore = function() { return this.score; }
-		
-		this.getIsHighScore = function() { 
-			return HIGHSCORE==this.score && HIGHSCORE!=0
-		}
-		
-		this.showWinPrompt = function() { return this.gameIsWon & !this.winPrompted; }
-		
+
 	}
 
 	document.body.onload = ()=> model = new Model()

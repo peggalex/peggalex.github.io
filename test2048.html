@@ -1,0 +1,702 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<style>
+	:root {
+		--animation-time: 2s;
+	}
+
+	body{
+		font-family: 'Lato', sans-serif;
+		display:flex;
+		justify-content:center;
+	}
+
+
+	#table{
+		background-color: lightblue;
+		display: flex;
+		flex-direction: column;
+		width:min-content;
+
+	}
+	.row {
+		display: flex;
+		flex-direction: row;
+		width: min-content;
+	}
+
+	.cellTrue {
+		width: 100px;
+		height: 100px;
+		background-color: lightyellow;
+		margin: 10px;
+		border-radius: 7.5px;
+	}
+
+	.cell {
+		position: absolute;
+		background-color: lightgreen;
+		border-radius: 7.5px;
+		font-size: 50px;
+		/*transition: left 2s, top 2s;*/
+		text-align: center;
+		transition: left 0.5s, top 0.5s;
+		animation: fadein 0.5s ease-in;
+	}
+
+	.cell.new {
+		transition-property: opacity;
+		transition-duration: 2s;
+		transition-delay: 0.5s;
+	}
+
+	@keyframes fadein {
+		from {opacity: 0;}
+    	to {opacity: 1;}
+	}
+
+	</style>
+	<link href="https://fonts.googleapis.com/css?family=Lato:300&display=swap" rel="stylesheet">
+
+</head>
+<body>
+	<div id='mainStage'>
+		<p>Official game <a href="https://2048game.com">here<a></p>
+		<div id='table'>
+		</div>
+	</div>
+</body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+<script>
+	const transitionTime= 2000,
+		NUM_COLORS = 10,
+		domTable = document.getElementById('table')
+
+
+	var model,
+		HIGHSCORE = 0,
+		BASE = 2,
+		DIMENSIONS = BASE+2,
+		tableStr = '',
+		animating = false //blocking keyboard sig
+
+	for (let i=0;i<DIMENSIONS;i++){
+		tableStr += "<div class='row' id='row "+i.toString()+"''>"
+		for (let j=0;j<DIMENSIONS;j++){
+			tableStr += "<div class='cellTrue' "
+			tableStr += "id='table_"+i.toString()+','+j.toString()+"'"+">"+"</div>"
+		}
+		tableStr += "</div>"
+	}
+	domTable.innerHTML = tableStr
+
+	getColorFromInt = function(i){
+	  //precond: 255*6 > i >= 0
+	    i = i%(128*6)
+	    rgb = [100,100,100]
+	    index = Math.floor(i/(2*128))
+	    indexNext = (index==2) ? 0 : index+1
+	  
+		if (Math.floor(i/128)%2==1){
+		    rgb[index] = 255-(i%128)
+		    rgb[indexNext] = 255
+	    } else {
+	        rgb[index] = 255
+	        rgb[indexNext] = 127+(i%128)
+	  }
+	      
+	    return rgb
+	}
+
+	rgbToHex = function(rgbLst){
+	    //better than the complicated solutions available online
+	    ret = '#'
+	    rgbLst.forEach((c)=>ret += c<16 ? '0'+c.toString(16) : c.toString(16))
+	    return ret
+	}
+
+	getColorLst = function(numOfColors) {
+	  
+	    let colors = [],
+	    seed = parseInt(Math.random()*(128*6))
+	    for (let i=0;i<numOfColors; i++){
+	    	let colorSerial = Math.round(seed+((i/numOfColors)*(128*6))),
+	  	    	rgbColor = getColorFromInt(colorSerial)
+	  	    colors.push(rgbToHex(rgbColor))
+	    }
+	    return colors
+	}
+
+	Cell = function(value=BASE) {
+
+		/*
+		renderColor = function() {
+			let index = (Math.log(value)/Math.log(BASE))%BASE
+			this.color = model.colorScheme[index]
+		}
+		*/
+
+
+		this.value = value
+		this.recentlyChanged = false
+		this.ds = 0
+		this.died = false
+		this.isNew = true
+				
+		this.expand = ()=>{
+			this.value *= BASE
+			this.recentlyChanged = true
+			this.isNew = false
+			return this.value;
+		}
+
+		this.canMerge = (other)=> {
+			return other!=null && this.value==other.value &&
+			!(this.recentlyChanged||other.recentlyChanged)
+		}
+
+		this.reset = ()=>{
+			this.ds = 0
+			this.recentlyChanged = false
+			this.isNew = false
+		}
+	}
+	var domCells = [],
+		colorScheme = getColorLst(NUM_COLORS)
+
+	DomCell = function(cell,i,j){
+		this.cell = cell
+		this.i = i
+		this.j = j
+
+		this.update = (key) => {
+			if (this.cell.died){
+				this.domCell.parentElement.removeChild(this.domCell)
+				//domCells.splice(domCells.indexOf(this),1)
+				return
+			}
+			if (this.cell.ds>0){
+				let newCoord = [this.i,this.j]
+				switch(key){
+					case 'Up':
+						newCoord[0]-=this.cell.ds
+						break
+					case 'Down':
+						newCoord[0]+=this.cell.ds
+						break
+					case 'Left':
+						newCoord[1]-=this.cell.ds
+						break
+					case 'Right':
+						newCoord[1]+=this.cell.ds
+						break
+				}
+				this.i = newCoord[0]
+				this.j = newCoord[1]
+			}
+			let domRectNew = getDomCell(this.i,this.j).getBoundingClientRect()
+			this.domCell.style.left = `${domRectNew.x}px`
+			this.domCell.style.top = `${domRectNew.y}px`
+			this.domCell.innerHTML = this.cell.value
+			let colorIndex = Math.log(this.cell.value)/Math.log(BASE)
+			this.domCell.style.backgroundColor = colorScheme[colorIndex]
+		}
+
+		getDomCell = (i,j) => document.getElementById(`table_${i},${j}`)
+
+		let domRect = getDomCell(i,j).getBoundingClientRect()
+
+		this.domCell = document.createElement("div")
+		this.update(null)
+		document.body.appendChild(this.domCell)
+		this.domCell.classList.add('cell')
+
+		this.domCell.style.width = `${domRect.width}px`
+		this.domCell.style.height = `${domRect.height}px`
+
+
+
+
+
+	}
+	updateView = function(table, key){
+		let startTime = performance.now(),
+			cell = null,
+			insertCell = function(cell,domCell){
+				let domRect = domCell.getBoundingClientRect(),
+					s=''
+				s += "<"+`div class='cell current'`
+				s += ` id='cellAt_${domRect.x}_${domRect.y}'`
+				s += ' style='+"'"+'position:absolute;'
+				s += `left:${domRect.x}px;top:${domRect.y}px;`
+				s += `width:${domRect.width}px;height:${domRect.height}px;`+"'"+'>'
+				s += cell.value
+				s += '</div>'
+				document.body.innerHTML += s
+			}
+
+			getDomCell = (i,j) => document.getElementById(`table_${i},${j}`),
+
+			_moveCell = (domCell,left,top) => {
+				domCell.style.left = `${left}px`
+				domCell.style.top = `${top}px`
+				domCell.id = `cellAt_${left}_${top}!new`
+				domCell.classList.add('current')
+			},
+			
+			moveCell = function(cell, key, i, j){
+
+				let oldCoord = [i,j]
+				switch(key){
+					case 'Up':
+						oldCoord[0]+=cell.ds
+						break
+					case 'Down':
+						oldCoord[0]-=cell.ds
+						break
+					case 'Left':
+						oldCoord[1]+=cell.ds
+						break
+					case 'Right':
+						oldCoord[1]-=cell.ds
+						break
+				}
+				//assert html table #cell_i,j.className !in 'null'
+				//console.log('oldCoord:',oldCoord, 'prev:',[i,j],'ds:',cell.ds, 'dir:',key)
+				/*
+				let domCell = getDomCell(oldCoord[0],oldCoord[1]),
+					domRectOld = domCell.getBoundingClientRect(),
+					domCellTrue =  document.getElementById(`cellAt_${domRectOld.x}_${domRectOld.y}`),
+					domRectNew = getDomCell(i,j).getBoundingClientRect()
+
+				//domCellTrue.innerHTML = `${cell.value},${cell.ds}${cell.isNew?'!':''}`
+				domCellTrue.innerHTML = cell.value
+				_moveCell(domCellTrue,domRectNew.x,domRectNew.y)
+				*/
+				domCell.move(i,j)
+			}
+			
+		animating = true
+		/*
+		for (let i=0;i<DIMENSIONS;i++){
+			for (let j=0;j<DIMENSIONS;j++){
+				cell = table[i][j]
+				if (!(cell==null || cell.isNew)){
+					moveCell(cell,key,i,j)
+					domCell = domCells.find((c)=>c.cell == cell)
+					domCell.move
+				}
+			}
+		}
+		*/
+		for (let i=0;i<DIMENSIONS;i++){
+			for (let j=0;j<DIMENSIONS;j++){
+				cell = table[i][j]
+				if (cell!=null && cell.died){
+					alert('kys	')
+				}
+				if (cell!=null && cell.isNew){
+					//insertCell(cell,getDomCell(i,j))
+					domCells.push(new DomCell(cell,i,j))
+				}
+			}
+		}
+		animating = false
+		domCells.forEach((c)=>c.update(key))
+		domCells = domCells.filter((c)=>!c.cell.died)
+
+		/*
+		let domCells = Array.from(document.getElementsByClassName('cell'))
+		domCells.forEach((c)=>{
+			if (c.classList.contains('current')){
+				c.id = c.id.split('!')[0]
+				c.classList.remove('current')
+			} else {
+				c.parentElement.removeChild(c)
+			}
+		})
+		*/
+
+	}
+
+
+	Model = function(){
+
+		this.generateNewPoint = function() {
+			//P(x=4) = 1/4
+			var getCoord = () => parseInt(Math.random()*(DIMENSIONS))%DIMENSIONS
+			let p = Math.round(Math.random()*4),
+				value = (p==4) ? BASE*2 : BASE,
+				x = getCoord(),
+				y = getCoord()
+
+			while (this.table[y][x] != null) {
+				x = getCoord()
+				y = getCoord()
+			}
+			this.table[y][x] = new Cell(value)
+		}
+					
+		this.newGame = function(){
+			this.gameIsWon = false
+			this.winPrompted = false
+			this.score = 0
+			this.table = []
+			for (let rowNum=0; rowNum<DIMENSIONS; rowNum++){
+				let row = []
+				for (let colNum=0; colNum<DIMENSIONS; colNum++){
+					row.push(null)
+				}
+				this.table.push(row)
+			}
+			for (let i=0; i<DIMENSIONS-2; i++){
+				this.generateNewPoint()
+			}
+			updateView(this.table, null)
+		}
+
+		this.newGame()
+
+		var leftMergeRow = function(vector) {
+			let oldVector = [...vector]
+
+			for (let i=0;i<vector.length;i++){
+				if (vector[i]==null){
+					vector.slice(i).forEach(function(c){
+						if (c!=null){
+							c.ds+=1
+						}
+					})
+					vector.splice(i,1)
+					vector.push(null)
+					if (vector[i]==null && vector.slice(i).some((c)=>c!=null)){
+						i-=1
+					}
+				}
+			}
+
+			for (let i=0;i<vector.length-1;i++){
+				if (vector[i]!=null && vector[i].canMerge(vector[i+1])){
+					vector[i+1].expand()
+					vector.slice(i+1).forEach(function(c){
+						if (c!=null){c.ds+=1}
+					})
+					vector[i].died = true
+					vector.splice(i,1)
+					vector.push(null)
+				}
+			}
+
+			for (i=0;i<DIMENSIONS;i++){
+				if (oldVector[i]==null ? vector[i]!=null : vector[i]==null){return true;}
+			}
+			return false
+		}
+
+		var leftMergeTable = function(mat) {
+			let bool = false,
+				tempBool
+			mat.forEach(function(row){
+				tempBool = leftMergeRow(row)
+				bool = bool || tempBool
+			})
+			return bool
+		}
+
+		var matrixTranspose = function(mat) {
+			let transposed = [],
+				row
+			for (let j=0; j<DIMENSIONS; j++){
+				row = []
+				for (let i=0; i<DIMENSIONS; i++){
+					row.push(mat[i][j])
+				}
+				transposed.push(row)
+			}
+			for (let i=0; i<DIMENSIONS; i++){
+				mat[i] = transposed[i]
+			}
+		}
+
+		var rotateMatrixClock = function(mat) {
+			//transpose then reverse along columns
+			matrixTranspose(mat)
+			flipMatrixCol(mat)
+		}
+
+		var rotateMatrixAnti = function(mat) {
+			//transpose then reverse along rows
+			flipMatrixCol(mat)
+			matrixTranspose(mat)
+			//flipMatrixRow(mat)
+		}
+
+		var flipMatrixRow = function(mat) {
+			mat.forEach((row)=>row.reverse())
+		}
+
+		var flipMatrixCol = function(mat) {
+			mat.reverse()
+		}
+		
+		this.shift = function(direction) {
+			var isMoved,
+				dirToRotateLeft = {
+					'Up':[rotateMatrixClock,rotateMatrixAnti],
+					'Right':[flipMatrixRow,flipMatrixRow],
+					'Down':[rotateMatrixAnti,rotateMatrixClock],
+					'Left':null
+				}
+
+			let resetCells = () => this.table.forEach(
+				(row)=>row.filter((c)=>c!=null).forEach(
+					(c)=>c.reset()
+				)
+			)
+			var getTableStr = function(table) {
+				let cell
+				s = ''
+				for (let i=0;i<DIMENSIONS;i++){
+					s+='\n|'
+					for (let j=0;j<DIMENSIONS;j++){
+						cell = model.table[i][j]
+						s += cell==null ? '    ' : `${cell.value}(${cell.ds})`
+						s += '|'
+					}
+				}
+				return s
+			}
+			console.log('beforebefore:',getTableStr(model.table),direction)
+
+			resetCells()
+			if (this.rotateLeftMerge(dirToRotateLeft[direction])) {
+				//console.log('before:',getTableStr(model.table),direction)
+				this.generateNewPoint()
+				console.log('after:',getTableStr(model.table),direction)
+
+			}
+			updateView(this.table, direction)
+		}
+
+		this.rotateLeftMerge = function(funcs){
+			if (funcs==null){
+				return leftMergeTable(this.table)
+			}
+			funcs[0](this.table)
+			let isMoved = leftMergeTable(this.table)
+			funcs[1](this.table)
+			return isMoved
+		}
+		
+		this.isGameOver = function() {
+			if (this.table.some((row)=>row.some((e)=>e!=null))){
+				return false
+			} else {
+				for (let i=0; i<DIMENSIONS-1; i++){
+					for (let j=0; j<DIMENSIONS-1; j++){
+						if (this.table[i][j].canMerge(this.table[i+1][j])||
+							this.table[i][j].canMerge(this.table[i][j+1])){
+							return false
+						}
+						// if there are any adjacently similar cells, game isn't over
+					}
+				}
+			}
+			return true
+		}
+		
+		this.handleScore = function(points) {
+			this.score+=points
+			if (points==BASE**10) { this.gameIsWon = true; }
+			HIGHSCORE = Math.max(HIGHSCORE, this.score)
+		}
+				
+		this.getScore = function() { return this.score; }
+		
+		this.getIsHighScore = function() { 
+			return HIGHSCORE==this.score && HIGHSCORE!=0
+		}
+		
+		this.showWinPrompt = function() { return this.gameIsWon & !this.winPrompted; }
+		
+	}
+
+	var model = new Model()
+
+	view = function(__){
+
+	}
+
+	getCellCoord = function(cell, table){
+		
+	}
+/*
+	controller = function(evt){
+		let key = evt.key
+		if (key.substring(0,'Arrow'.length)!='Arrow'){
+			return
+		}
+		key = key.substring('Arrow'.length)
+
+		model.shift(key)
+
+		Animation = function(startLeft, startTop, endLeft, endTop, cell){
+			this.cell = cell
+			this.startTop = startTop
+			this.endTop = endTop
+			this.startLeft = startLeft
+			this.endLeft = endLeft
+
+			this.animationFrame = (time,startTime) => {
+				let progress = (time-startTime) / transitionTime
+				//console.log(this.cell)
+				animate = (progress) => {
+					let length
+					if (key == 'Up' || key == 'Down'){
+						length = this.startTop+Math.round((this.endTop-this.startTop)*progress)
+						this.cell.style.top = `${length}px`
+					} else {
+						length = this.startLeft+Math.round((this.endLeft-this.startLeft)*progress)
+						this.cell.style.left = `${length}px`
+					}	
+					console.log('prog:',progress,'length:',length-this.startLeft)				
+				}
+				if (progress<=1){
+					animate(progress)
+				}
+			}
+		}
+
+		let startTime = performance.now(),
+			animations = [],
+			cell,
+			insertCell = function(domCell, isNew=false){
+				//create a new absolutely positioned cell
+				//in the dom, inhereting view port flex sizing properties
+				//from the bounding box of the true flex box in #table
+				//it is called cellAtX,Y for reference
+				let domRect = domCell.getBoundingClientRect(),
+					s=''
+
+				s += "<"+`div class='cell ${isNew ? 'new' : ''}'`
+				s += ` id='cellAt${domRect.x},${domRect.y}'`
+				s += ' style='+"'"+'position:absolute;'
+				s += `left:${domRect.x}px;top:${domRect.y}px;`
+				s += `width:${domRect.width}px;height:${domRect.height}px;`+"'"+'>'
+				s += `${cell.value},${cell.ds}`+'</div>'
+				document.body.innerHTML += s
+			}
+
+			getDomCell = (i,j) => document.getElementById(`table_${i},${j}`),
+
+			moveCell = function(cell, key, i, j){
+				let oldCoord = [i,j]
+				switch(key){
+					case 'Up':
+						oldCoord[0]+=cell.ds
+
+					case 'Down':
+						oldCoord[0]-=cell.ds
+
+					case 'Left':
+						oldCoord[1]+=cell.ds
+
+					case 'Right':
+						oldCoord[1]-=cell.ds
+				}
+				//assert html table #cell_i,j.className !in 'null'
+				//console.log('oldCoord:',oldCoord, 'prev:',[i,j],'ds:',cell.ds, 'dir:',key)
+				let domCell = getDomCell(oldCoord[0],oldCoord[1]),
+					domRectOld = domCell.getBoundingClientRect(),
+					domRectNew = getDomCell(i,j).getBoundingClientRect()
+
+				insertCell(domCell) //creates #cellAtX,Y
+				let domCellTrue = document.getElementById(`cellAt${domRectOld.x},${domRectOld.y}`)
+
+				 
+				/*if (key == 'Up' || key == 'Down'){
+					domCellTrue.style.top = `${domRectNew.y}px`
+				} else {
+					domCellTrue.style.left = `${domRectNew.x}px`
+				}*//*
+				
+
+				animations.push(new Animation(domRectOld.x, domRectOld.y,
+					domRectNew.x, domRectNew.y, domCellTrue))
+			}
+
+		let domCells = Array.from(document.getElementsByClassName('cell'))
+		domCells.forEach((c)=>document.body.removeChild(c))
+		//remove all existing cells as they will be repainted
+
+		for (let i=0;i<DIMENSIONS;i++){
+			for (let j=0;j<DIMENSIONS;j++){
+				cell = model.table[i][j]
+				if (cell!=null){
+					if (cell.isNew){
+						insertCell(getDomCell(i,j),true)
+					} else {
+						moveCell(cell,key,i,j)
+					}
+				}
+			}
+		}
+		startTime = performance.now()
+		function animationFrames(time) {
+			for (let i=0; i<animations.length;i++){
+				let a=animations[i]
+				//console.log('this is a:',a)
+				a.animationFrame(Math.min(time,startTime+transitionTime),startTime)
+			}
+			//animations.forEach((a)=>a.animationFrame(time,startTime))
+
+			if (time-startTime<transitionTime){
+				window.requestAnimationFrame(animationFrames)
+			}
+		}
+
+		window.requestAnimationFrame(animationFrames)
+
+
+
+	}
+
+	window.onkeydown = controller/
+
+*/
+	getDomCell = (i,j) => document.getElementById(`table_${i},${j}`)
+
+	controller = function(evt){
+		let key = evt.key
+		if (key.substring(0,'Arrow'.length)!='Arrow'){
+			return
+		}
+		key = key.substring('Arrow'.length)
+
+		model.shift(key)
+
+	}
+
+/*
+	for (let i=0;i<DIMENSIONS;i++){
+		for (let j=0;j<DIMENSIONS;j++){
+			let domRect = getDomCell(i,j).getBoundingClientRect(),
+				s=''
+
+			s += "<"+`div class='cell'`
+			s += ` id='cellAt_${domRect.x}_${domRect.y}'`
+			s += ' style='+"'"+'position:absolute;'
+			s += `left:${domRect.x}px;top:${domRect.y}px;`
+			s += `width:${domRect.width}px;height:${domRect.height}px;`+"'"+'>'
+			s += '</div>'
+			document.body.innerHTML += s
+		}
+	}
+	*/
+	window.onkeydown = controller
+
+</script>
+</html>

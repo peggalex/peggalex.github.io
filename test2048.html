@@ -3,7 +3,7 @@
 <head>
 	<style>
 	:root {
-		--animation-time: 2s;
+		--animeTime: 0.5s;
 	}
 
 	body{
@@ -51,7 +51,7 @@
 		font-size: 50px;
 		/*transition: left 2s, top 2s;*/
 		text-align: center;
-		transition: left 0.5s, top 0.5s, background-color 0.5s ease-in-out;
+		transition: left var(--animeTime), top var(--animeTime), background-color var(--animeTime) ease-in-out;
 		animation: fadein 0.5s ease-in;
 	}
 
@@ -89,9 +89,10 @@
 
 	var model,
 		HIGHSCORE = 0,
-		BASE = 2,
+		BASE = 3,
 		DIMENSIONS = BASE+2,
 		tableStr = '',
+		tableSizes = null,
 		animating = false //blocking keyboard sig
 
 	var setCookie = (hs) => document.cookie = `highscore=${hs}; expires=${my39thBday}; path=/`
@@ -150,15 +151,28 @@
 	    return colors
 	}
 
-	Cell = function(value=BASE) {
+	TableSizes = function(){
+		getTableRect = (i,j) => document.getElementById(`table_${i},${j}`).getBoundingClientRect()
 
-		/*
-		renderColor = function() {
-			let index = (Math.log(value)/Math.log(BASE))%BASE
-			this.color = model.colorScheme[index]
+		this.update = ()=>{
+			let rect = getTableRect(0,0)
+			let rectRight = getTableRect(0,1)
+			let rectBottom = getTableRect(1,0)
+			this.startX = rect.x
+			this.startY = rect.y
+			this.width = rect.width
+			this.height = rect.height
+			this.marginX = rectRight.x-this.width-this.startX
+			this.marginY = rectBottom.y-this.height-rect.y
 		}
-		*/
 
+		this.getX = (j) => this.startX+j*(this.width+this.marginX)
+		this.getY = (i) => this.startY+i*(this.height+this.marginY)
+
+		this.update()
+	}
+
+	Cell = function(value=BASE) {
 
 		this.value = value
 		this.sequenceNum = value==BASE ? 0 : 1 //could do 2^(1+floor{n/2}) + (odd) ? 2^n
@@ -219,55 +233,71 @@
 				this.i = newCoord[0]
 				this.j = newCoord[1]
 			}
+			/*
 			let domRectNew = getDomCell(this.i,this.j).getBoundingClientRect()
-			this.domCell.style.left = `${domRectNew.x}px`
-			this.domCell.style.top = `${domRectNew.y}px`
-			this.domCell.innerHTML = this.cell.value
+			if (this.cell.ds>0){
+				this.domCell.style.left = `${domRectNew.x}px`
+				this.domCell.style.top = `${domRectNew.y}px`
+				this.domCell.innerHTML = this.cell.value
+			}
+			*/
+			if (this.cell.ds>0){
+				this.domCell.style.top = `${tableSizes.getY(this.i)}px`
+				this.domCell.style.left = `${tableSizes.getX(this.j)}px`
+			}
 			//let colorIndex = (Math.log(this.cell.value)/Math.log(BASE))%NUM_COLORS
 			//let colorIndex = (this.cell.value/BASE-1)%NUM_COLORS
-			this.domCell.style.backgroundColor = colorScheme[this.cell.sequenceNum]
+			if (this.cell.recentlyChanged){
+				this.domCell.style.backgroundColor = colorScheme[this.cell.sequenceNum]
+				this.domCell.innerHTML = this.cell.value
+			}
 		}
 
-		getDomCell = (i,j) => document.getElementById(`table_${i},${j}`)
+		//getDomCell = (i,j) => document.getElementById(`table_${i},${j}`)
 
-		let domRect = getDomCell(i,j).getBoundingClientRect()
+		//let domRect = getDomCell(i,j).getBoundingClientRect()
 
 		this.domCell = document.createElement("div")
-		this.update(null)
 		document.body.appendChild(this.domCell)
 		this.domCell.classList.add('cell')
 
+		/*
+		this.domCell.style.left = `${domRect.x}px`
+		this.domCell.style.top = `${domRect.y}px`
 		this.domCell.style.width = `${domRect.width}px`
 		this.domCell.style.height = `${domRect.height}px`
+		*/
+		this.domCell.style.top = `${tableSizes.getY(i)}px`
+		this.domCell.style.left = `${tableSizes.getX(j)}px`
+		this.domCell.style.width = `${tableSizes.width}px`
+		this.domCell.style.height = `${tableSizes.height}px`
+		this.domCell.style.backgroundColor = colorScheme[this.cell.sequenceNum]
 
-
-
-
-
+		this.domCell.innerHTML = this.cell.value
 	}
 	updateView = function(table, score, key){
 		let startTime = performance.now(),
 			cell = null,
 			insertCell = function(cell,domCell){
-				let domRect = domCell.getBoundingClientRect(),
-					s=''
+				/*let domRect = domCell.getBoundingClientRect(),
+					s=''*/
+
+				let s =''
 				s += "<"+`div class='cell current'`
-				s += ` id='cellAt_${domRect.x}_${domRect.y}'`
 				s += ' style='+"'"+'position:absolute;'
-				s += `left:${domRect.x}px;top:${domRect.y}px;`
-				s += `width:${domRect.width}px;height:${domRect.height}px;`+"'"+'>'
+				s += `left:${tableSizes.getX(j)}px;top:${tableSizes.getY(i)}px;`
+				s += `width:${tableSizes.width}px;height:${tableSizes.height}px;`+"'"+'>'
 				s += cell.value
 				s += '</div>'
 				document.body.innerHTML += s
 			}
 		animating = true
+		setTimeout(()=>animating=false, 250)
 
 		for (let i=0;i<DIMENSIONS;i++){
 			for (let j=0;j<DIMENSIONS;j++){
 				cell = table[i][j]
-				if (cell!=null && cell.died){
-					alert('kys	')
-				}
+
 				if (cell!=null && cell.isNew){
 					//insertCell(cell,getDomCell(i,j))
 					domCells.push(new DomCell(cell,i,j))
@@ -277,34 +307,38 @@
 		setCookie(Math.max(score,getHighscore()))
 		document.getElementById('score').innerHTML = score
 		document.getElementById('highscore').innerHTML = getHighscore()
-		animating = false
 		domCells.forEach((c)=>c.update(key))
 		domCells = domCells.filter((c)=>!c.cell.died)
-
 	}
-
 
 	Model = function(){
 		this.getNthTerm = (n) => 2**(n-1+Math.floor(BASE/2)) + (2**(n-1))*n%2
 		this.tenth = this.getNthTerm(10)
 
-		this.generateNewPoint = function() {
+		this.generateNewPoint = ()=> {
 			//P(x=4) = 1/4
-			var getCoord = () => parseInt(Math.random()*(DIMENSIONS))%DIMENSIONS
-			let p = Math.round(Math.random()*4),
-				value = (p==4) ? BASE*2 : BASE,
-				x = getCoord(),
-				y = getCoord()
-
-			while (this.table[y][x] != null) {
-				x = getCoord()
-				y = getCoord()
+			//var getCoord = () => parseInt(Math.random()*(DIMENSIONS))%DIMENSIONS
+			let coordsFree  = []
+			for (let i=0;i<DIMENSIONS;i++){
+				for (let j=0;j<DIMENSIONS;j++){
+					if (this.table[i][j] == null){
+						coordsFree.push([i,j])
+					}
+				}
 			}
-			this.table[y][x] = new Cell(value)
+			if (coordsFree.length==0){
+				return
+			}
+			let p = Math.ceil(Math.random()*4),
+				value = (p==4) ? BASE*2 : BASE,
+				index = (Math.round(Math.random()*coordsFree.length))%coordsFree.length
+
+			this.table[coordsFree[index][0]][coordsFree[index][1]] = new Cell(value)
 		}
 					
 		this.newGame = function(){
 			this.gameIsWon = false
+			this.gameover = false
 			this.winPrompted = false
 			this.score = 0
 			this.table = []
@@ -407,6 +441,9 @@
 		}
 		
 		this.shift = function(direction) {
+			if (this.gameover){
+				return
+			}
 			var isMoved,
 				dirToRotateLeft = {
 					'Up':[rotateMatrixClock,rotateMatrixAnti],
@@ -446,6 +483,7 @@
 
 			}
 			updateView(this.table, this.score, direction)
+			console.log(this.checkIsGameOver())
 		}
 
 		this.rotateLeftMerge = function(funcs){
@@ -458,20 +496,21 @@
 			return isMoved
 		}
 		
-		this.isGameOver = () => {
-			if (this.table.some((row)=>row.some((e)=>e!=null))){
-				return false
-			} else {
-				for (let i=0; i<DIMENSIONS-1; i++){
-					for (let j=0; j<DIMENSIONS-1; j++){
-						if (this.table[i][j].canMerge(this.table[i+1][j])||
-							this.table[i][j].canMerge(this.table[i][j+1])){
-							return false
-						}
-						// if there are any adjacently similar cells, game isn't over
+		this.checkIsGameOver = () => {
+			for (let i=0; i<DIMENSIONS-1; i++){
+				for (let j=0; j<DIMENSIONS-1; j++){
+					if (this.table[i][j]==null){
+						return false
+					} else if (this.table[i][j].canMerge(this.table[i+1][j])||
+						this.table[i][j].canMerge(this.table[i][j+1])){
+
+						return false
 					}
+					// if there are any adjacently similar cells, game isn't over
 				}
 			}
+			alert('game over loser')
+			this.gameover = true
 			return true
 		}
 		
@@ -482,8 +521,16 @@
 		}
 
 	}
-
+/*
+	let repositionCells = ()=>updateView(model.table,model.score,null)
+	window.onresize = repositionCells
 	document.body.onload = ()=> model = new Model()
+	*/
+	document.body.onload = ()=>{
+		tableSizes = new TableSizes()
+		model = new Model()
+	}
+	window.onresize = ()=> {tableSizes.update();updateView(model.table,model.score,null)}	
 
 	view = function(__){
 
@@ -492,143 +539,12 @@
 	getCellCoord = function(cell, table){
 		
 	}
-/*
-	controller = function(evt){
-		let key = evt.key
-		if (key.substring(0,'Arrow'.length)!='Arrow'){
-			return
-		}
-		key = key.substring('Arrow'.length)
-
-		model.shift(key)
-
-		Animation = function(startLeft, startTop, endLeft, endTop, cell){
-			this.cell = cell
-			this.startTop = startTop
-			this.endTop = endTop
-			this.startLeft = startLeft
-			this.endLeft = endLeft
-
-			this.animationFrame = (time,startTime) => {
-				let progress = (time-startTime) / transitionTime
-				//console.log(this.cell)
-				animate = (progress) => {
-					let length
-					if (key == 'Up' || key == 'Down'){
-						length = this.startTop+Math.round((this.endTop-this.startTop)*progress)
-						this.cell.style.top = `${length}px`
-					} else {
-						length = this.startLeft+Math.round((this.endLeft-this.startLeft)*progress)
-						this.cell.style.left = `${length}px`
-					}	
-					console.log('prog:',progress,'length:',length-this.startLeft)				
-				}
-				if (progress<=1){
-					animate(progress)
-				}
-			}
-		}
-
-		let startTime = performance.now(),
-			animations = [],
-			cell,
-			insertCell = function(domCell, isNew=false){
-				//create a new absolutely positioned cell
-				//in the dom, inhereting view port flex sizing properties
-				//from the bounding box of the true flex box in #table
-				//it is called cellAtX,Y for reference
-				let domRect = domCell.getBoundingClientRect(),
-					s=''
-
-				s += "<"+`div class='cell ${isNew ? 'new' : ''}'`
-				s += ` id='cellAt${domRect.x},${domRect.y}'`
-				s += ' style='+"'"+'position:absolute;'
-				s += `left:${domRect.x}px;top:${domRect.y}px;`
-				s += `width:${domRect.width}px;height:${domRect.height}px;`+"'"+'>'
-				s += `${cell.value},${cell.ds}`+'</div>'
-				document.body.innerHTML += s
-			}
-
-			getDomCell = (i,j) => document.getElementById(`table_${i},${j}`),
-
-			moveCell = function(cell, key, i, j){
-				let oldCoord = [i,j]
-				switch(key){
-					case 'Up':
-						oldCoord[0]+=cell.ds
-
-					case 'Down':
-						oldCoord[0]-=cell.ds
-
-					case 'Left':
-						oldCoord[1]+=cell.ds
-
-					case 'Right':
-						oldCoord[1]-=cell.ds
-				}
-				//assert html table #cell_i,j.className !in 'null'
-				//console.log('oldCoord:',oldCoord, 'prev:',[i,j],'ds:',cell.ds, 'dir:',key)
-				let domCell = getDomCell(oldCoord[0],oldCoord[1]),
-					domRectOld = domCell.getBoundingClientRect(),
-					domRectNew = getDomCell(i,j).getBoundingClientRect()
-
-				insertCell(domCell) //creates #cellAtX,Y
-				let domCellTrue = document.getElementById(`cellAt${domRectOld.x},${domRectOld.y}`)
-
-				 
-				/*if (key == 'Up' || key == 'Down'){
-					domCellTrue.style.top = `${domRectNew.y}px`
-				} else {
-					domCellTrue.style.left = `${domRectNew.x}px`
-				}*//*
-				
-
-				animations.push(new Animation(domRectOld.x, domRectOld.y,
-					domRectNew.x, domRectNew.y, domCellTrue))
-			}
-
-		let domCells = Array.from(document.getElementsByClassName('cell'))
-		domCells.forEach((c)=>document.body.removeChild(c))
-		//remove all existing cells as they will be repainted
-
-		for (let i=0;i<DIMENSIONS;i++){
-			for (let j=0;j<DIMENSIONS;j++){
-				cell = model.table[i][j]
-				if (cell!=null){
-					if (cell.isNew){
-						insertCell(getDomCell(i,j),true)
-					} else {
-						moveCell(cell,key,i,j)
-					}
-				}
-			}
-		}
-		startTime = performance.now()
-		function animationFrames(time) {
-			for (let i=0; i<animations.length;i++){
-				let a=animations[i]
-				//console.log('this is a:',a)
-				a.animationFrame(Math.min(time,startTime+transitionTime),startTime)
-			}
-			//animations.forEach((a)=>a.animationFrame(time,startTime))
-
-			if (time-startTime<transitionTime){
-				window.requestAnimationFrame(animationFrames)
-			}
-		}
-
-		window.requestAnimationFrame(animationFrames)
-
-
-
-	}
-
-	window.onkeydown = controller/
-
-*/
 	getDomCell = (i,j) => document.getElementById(`table_${i},${j}`)
 
 	controller = function(evt){
+		if (animating){
+			return
+		}
 		let key = evt.key
 		if (key.substring(0,'Arrow'.length)!='Arrow'){
 			return
@@ -639,22 +555,6 @@
 
 	}
 
-/*
-	for (let i=0;i<DIMENSIONS;i++){
-		for (let j=0;j<DIMENSIONS;j++){
-			let domRect = getDomCell(i,j).getBoundingClientRect(),
-				s=''
-
-			s += "<"+`div class='cell'`
-			s += ` id='cellAt_${domRect.x}_${domRect.y}'`
-			s += ' style='+"'"+'position:absolute;'
-			s += `left:${domRect.x}px;top:${domRect.y}px;`
-			s += `width:${domRect.width}px;height:${domRect.height}px;`+"'"+'>'
-			s += '</div>'
-			document.body.innerHTML += s
-		}
-	}
-	*/
 	window.onkeydown = controller
 
 </script>

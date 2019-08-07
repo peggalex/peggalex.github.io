@@ -3,15 +3,24 @@
 <head>
 	<style>
 	:root {
-		--animeTime: 0.5s;
+		--animeTime: 0.25s;
 	}
 
 	body{
 		font-family: 'Lato', sans-serif;
 		color: #404040;
+		overflow: hidden;
+
+	}
+
+	#topBarContainer {
 		display:flex;
 		justify-content:center;
-		overflow: hidden;
+	}
+
+	#mainStage {
+		display:flex;
+		justify-content:center;
 	}
 
 
@@ -24,12 +33,17 @@
 
 	#topBar{
 		display: flex;
-		justify-content: center;
+		justify-content: space-around;
+		align-items: center;
+		height:min-content;
+		width:100%;
 	}
 
-	#topBar p{
-		margin-left: 5%;
+	#topBar *{
+		/*margin-right: 5%;*/
+		height: min-content;
 	}
+
 	.row {
 		display: flex;
 		flex-direction: row;
@@ -37,8 +51,8 @@
 	}
 
 	.cellTrue {
-		width: 100px;
-		height: 100px;
+		width: 72px;
+		height: 72px;
 		background-color: lightyellow;
 		margin: 10px;
 		border-radius: 7.5px;
@@ -48,18 +62,50 @@
 		position: absolute;
 		background-color: lightgreen;
 		border-radius: 7.5px;
-		font-size: 50px;
+		font-size: 30px;
+		vertical-align: middle;
 		/*transition: left 2s, top 2s;*/
 		text-align: center;
 		transition: left var(--animeTime), top var(--animeTime), background-color var(--animeTime) ease-in-out;
 		animation: fadein 0.5s ease-in;
+		display:flex;
+		align-items: center;
+		justify-content: center;
 	}
 
 	.cell.new {
 		transition-property: opacity;
 		transition-duration: 2s;
-		transition-delay: 0.5s;
+		transition-delay: var(--animeTime);
 	}
+
+	#newGameButton {
+		height: 47.5px;
+        text-shadow: none;
+        transition: .5s;
+        background-color: #add8e6;
+        border: none;
+        font-family: 'Lato', sans-serif;
+        font-size:110%;    
+        cursor: pointer;
+    }
+
+    #bases{
+     	height: 100%;
+     	font-size: 108%;
+     	width: 25px;
+    }
+
+    #bases:focus { 
+   		outline: 0;	
+    }
+
+    .score.high{
+    	color:green;
+    }
+
+    #newGameButton:focus { outline:0; }
+    #newGameButton:hover { background-color: #deeff5; }
 
 	@keyframes fadein {
 		from {opacity: 0;}
@@ -71,12 +117,21 @@
 
 </head>
 <body>
-	<div id='mainStage'>
+	<div id='topBarContainer'>
 		<div id='topBar'>
-			<p>Official game <a href="https://2048game.com">here<a></a></p>
-			<p>score: <a id='score'></a></p>
-			<p>highscore: <a id='highscore'></a></p>
+			<p>Official game <a href="https://2048game.com">here</a></p>
+			<p>score: <a class='score' id='score'></a></p>
+			<p>highscore: <a class='score' id='highscore'></a></p>
+			<div style='display:flex; align-items: center;'>
+				<div>
+					<input id='bases' onKeyDown="return false" type="number" min="2" max="5" step="1" value="3" name="bases">
+					<p style='margin:0;color:grey;'>base</p>
+				</div>
+				<button id='newGameButton'>new game</button>
+			</div>
 		</div>
+	</div>
+	<div id='mainStage'>
 		<div id='table'>
 		</div>
 	</div>
@@ -89,9 +144,8 @@
 
 	var model,
 		HIGHSCORE = 0,
-		BASE = 3,
+		BASE = 4,
 		DIMENSIONS = BASE+2,
-		tableStr = '',
 		tableSizes = null,
 		animating = false //blocking keyboard sig
 
@@ -104,15 +158,23 @@
 	if (!document.cookie.includes('highscore') || isNaN(getHighscore())){
 		setCookie(0)
 	}
-	for (let i=0;i<DIMENSIONS;i++){
-		tableStr += "<div class='row' id='row "+i.toString()+"''>"
-		for (let j=0;j<DIMENSIONS;j++){
-			tableStr += "<div class='cellTrue' "
-			tableStr += "id='table_"+i.toString()+','+j.toString()+"'"+">"+"</div>"
+
+	loadTable = function(){
+		while (domTable.firstChild) {
+		  domTable.removeChild(domTable.firstChild);
 		}
-		tableStr += "</div>"
+		let tableStr = ''
+
+		for (let i=0;i<DIMENSIONS;i++){
+			tableStr += "<div class='row' id='row "+i.toString()+"''>"
+			for (let j=0;j<DIMENSIONS;j++){
+				tableStr += "<div class='cellTrue' "
+				tableStr += "id='table_"+i.toString()+','+j.toString()+"'"+">"+"</div>"
+			}
+			tableStr += "</div>"
+		}
+		domTable.innerHTML = tableStr
 	}
-	domTable.innerHTML = tableStr
 
 	getColorFromInt = function(i){
 	  //precond: 255*6 > i >= 0
@@ -190,8 +252,7 @@
 		}
 
 		this.canMerge = (other)=> {
-			return other!=null && this.value==other.value &&
-			!(this.recentlyChanged||other.recentlyChanged)
+			return other!=null && this.value==other.value
 		}
 
 		this.reset = ()=>{
@@ -211,7 +272,6 @@
 		this.update = (key) => {
 			if (this.cell.died){
 				this.domCell.parentElement.removeChild(this.domCell)
-				//domCells.splice(domCells.indexOf(this),1)
 				return
 			}
 			if (this.cell.ds>0){
@@ -233,40 +293,19 @@
 				this.i = newCoord[0]
 				this.j = newCoord[1]
 			}
-			/*
-			let domRectNew = getDomCell(this.i,this.j).getBoundingClientRect()
-			if (this.cell.ds>0){
-				this.domCell.style.left = `${domRectNew.x}px`
-				this.domCell.style.top = `${domRectNew.y}px`
-				this.domCell.innerHTML = this.cell.value
-			}
-			*/
-			if (this.cell.ds>0){
-				this.domCell.style.top = `${tableSizes.getY(this.i)}px`
-				this.domCell.style.left = `${tableSizes.getX(this.j)}px`
-			}
-			//let colorIndex = (Math.log(this.cell.value)/Math.log(BASE))%NUM_COLORS
-			//let colorIndex = (this.cell.value/BASE-1)%NUM_COLORS
 			if (this.cell.recentlyChanged){
 				this.domCell.style.backgroundColor = colorScheme[this.cell.sequenceNum]
-				this.domCell.innerHTML = this.cell.value
+				this.domCell.innerHTML = `<p>${this.cell.value}</p>`
 			}
+			this.domCell.style.top = `${tableSizes.getY(this.i)}px`
+			this.domCell.style.left = `${tableSizes.getX(this.j)}px`
+			this.domCell.style.backgroundColor = colorScheme[this.cell.sequenceNum]
 		}
-
-		//getDomCell = (i,j) => document.getElementById(`table_${i},${j}`)
-
-		//let domRect = getDomCell(i,j).getBoundingClientRect()
 
 		this.domCell = document.createElement("div")
 		document.body.appendChild(this.domCell)
 		this.domCell.classList.add('cell')
 
-		/*
-		this.domCell.style.left = `${domRect.x}px`
-		this.domCell.style.top = `${domRect.y}px`
-		this.domCell.style.width = `${domRect.width}px`
-		this.domCell.style.height = `${domRect.height}px`
-		*/
 		this.domCell.style.top = `${tableSizes.getY(i)}px`
 		this.domCell.style.left = `${tableSizes.getX(j)}px`
 		this.domCell.style.width = `${tableSizes.width}px`
@@ -291,22 +330,25 @@
 				s += '</div>'
 				document.body.innerHTML += s
 			}
-		animating = true
-		setTimeout(()=>animating=false, 250)
+		//animating = true
+		//setTimeout(()=>animating=false, 250)
 
 		for (let i=0;i<DIMENSIONS;i++){
 			for (let j=0;j<DIMENSIONS;j++){
 				cell = table[i][j]
-
 				if (cell!=null && cell.isNew){
-					//insertCell(cell,getDomCell(i,j))
 					domCells.push(new DomCell(cell,i,j))
 				}
 			}
 		}
-		setCookie(Math.max(score,getHighscore()))
+		if (score>=getHighscore()){
+			setCookie(score)
+			document.getElementById('highscore').innerHTML = score
+			let scores = document.getElementsByClassName('score')
+			Array.from(scores).forEach((e)=>e.classList.add('high'))
+		}
+		//setCookie(Math.max(score,getHighscore()))
 		document.getElementById('score').innerHTML = score
-		document.getElementById('highscore').innerHTML = getHighscore()
 		domCells.forEach((c)=>c.update(key))
 		domCells = domCells.filter((c)=>!c.cell.died)
 	}
@@ -336,7 +378,14 @@
 			this.table[coordsFree[index][0]][coordsFree[index][1]] = new Cell(value)
 		}
 					
-		this.newGame = function(){
+		this.newGame = () => {
+			if (this.table){
+				this.table.forEach((r)=>r.forEach((c)=>{
+					if (c!=null){
+						c.died = true
+					}
+				}))
+			}
 			this.gameIsWon = false
 			this.gameover = false
 			this.winPrompted = false
@@ -349,7 +398,7 @@
 				}
 				this.table.push(row)
 			}
-			for (let i=0; i<DIMENSIONS-2; i++){
+			for (let i=0; i<2**(BASE-1); i++){
 				this.generateNewPoint()
 			}
 			updateView(this.table, this.score, null)
@@ -376,7 +425,9 @@
 			}
 
 			for (let i=0;i<vector.length-1;i++){
-				if (vector[i]!=null && vector[i].canMerge(vector[i+1])){
+				if (vector[i]!=null 
+					&& vector[i].canMerge(vector[i+1])
+					&& !(vector[i].recentlyChanged||vector[i+1].recentlyChanged)){
 					vector[i+1].expand()
 					this.score += vector[i+1].value
 					vector.slice(i+1).forEach(function(c){
@@ -475,15 +526,16 @@
 			resetCells()
 			if (this.rotateLeftMerge(dirToRotateLeft[direction])) {
 				//console.log('before:',getTableStr(model.table),direction)
-				for (let i=0;i<Math.max(1,BASE-1);i++){
+				if (this.score == this.tenth) {alert('you win!')}
+				for (let i=0;i<2**(BASE-2);i++){
 					this.generateNewPoint()
 				}
-				//colorScheme = getColorLst(NUM_COLORS)
+				colorScheme = getColorLst(NUM_COLORS)
 				//console.log('after:',getTableStr(model.table),direction)
 
 			}
 			updateView(this.table, this.score, direction)
-			console.log(this.checkIsGameOver())
+			this.gameover = this.checkIsGameOver()
 		}
 
 		this.rotateLeftMerge = function(funcs){
@@ -497,20 +549,21 @@
 		}
 		
 		this.checkIsGameOver = () => {
-			for (let i=0; i<DIMENSIONS-1; i++){
-				for (let j=0; j<DIMENSIONS-1; j++){
+			for (let i=0; i<DIMENSIONS; i++){
+				for (let j=0; j<DIMENSIONS; j++){
 					if (this.table[i][j]==null){
 						return false
-					} else if (this.table[i][j].canMerge(this.table[i+1][j])||
-						this.table[i][j].canMerge(this.table[i][j+1])){
-
+					} else if (i<DIMENSIONS-1 
+							&& this.table[i][j].canMerge(this.table[i+1][j])){
+						return false
+					} else if (j<DIMENSIONS-1
+							&& this.table[i][j].canMerge(this.table[i][j+1])){
 						return false
 					}
 					// if there are any adjacently similar cells, game isn't over
 				}
 			}
 			alert('game over loser')
-			this.gameover = true
 			return true
 		}
 		
@@ -521,20 +574,32 @@
 		}
 
 	}
-/*
+	/*
 	let repositionCells = ()=>updateView(model.table,model.score,null)
 	window.onresize = repositionCells
 	document.body.onload = ()=> model = new Model()
 	*/
 	document.body.onload = ()=>{
+		let padding = 0.05
+		document.getElementById('highscore').innerHTML = getHighscore()
+		let totalHeight = domTable.getBoundingClientRect().y*(1-padding)
+		let cellTrues = document.getElementsByClassName('cellTrue')
+		loadTable()
 		tableSizes = new TableSizes()
 		model = new Model()
+		let newGameButt = document.getElementById('newGameButton')
+		newGameButt.onclick = () => {
+			BASE = parseInt(document.getElementById('bases').value)
+			DIMENSIONS = BASE+2,
+			loadTable()
+			tableSizes.update()
+			model.newGame()
+			let scores = document.getElementsByClassName('score')
+			Array.from(scores).forEach((e)=>e.classList.remove('high'))
+		}
+		newGameButt.click()
 	}
 	window.onresize = ()=> {tableSizes.update();updateView(model.table,model.score,null)}	
-
-	view = function(__){
-
-	}
 
 	getCellCoord = function(cell, table){
 		

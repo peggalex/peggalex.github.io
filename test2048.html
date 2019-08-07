@@ -1,7 +1,6 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-	<meta charset="utf-8"/> <!-- firefox throws an error without this -->
 	<style>
 	:root {
 		--animeTime: 0.5s;
@@ -395,7 +394,6 @@
 			}
 			this.gameIsWon = false
 			this.gameover = false
-			this.winPrompted = false
 			this.score = 0
 			this.table = []
 			for (let rowNum=0; rowNum<DIMENSIONS; rowNum++){
@@ -433,10 +431,11 @@
 
 			for (let i=0;i<vector.length-1;i++){
 				if (vector[i]!=null 
-					&& vector[i].canMerge(vector[i+1])
-					&& !(vector[i].recentlyChanged||vector[i+1].recentlyChanged)){
+						&& vector[i].canMerge(vector[i+1])
+						&& !(vector[i].recentlyChanged||vector[i+1].recentlyChanged)){
 					vector[i+1].expand()
 					this.score += vector[i+1].value
+					if (vector[i+1].value==this.tenth){gameIsWon=true;}
 					vector.slice(i+1).forEach(function(c){
 						if (c!=null){c.ds+=1}
 					})
@@ -533,7 +532,7 @@
 			resetCells()
 			if (this.rotateLeftMerge(dirToRotateLeft[direction])) {
 				//console.log('before:',getTableStr(model.table),direction)
-				if (this.score == this.tenth) {alert('you win!')}
+				if (this.gameIsWon) {alert('you win!')}
 				for (let i=0;i<2**(BASE-2);i++){
 					this.generateNewPoint()
 				}

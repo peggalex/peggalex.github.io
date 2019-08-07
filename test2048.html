@@ -10,6 +10,8 @@
 		font-family: 'Lato', sans-serif;
 		color: #404040;
 		overflow: hidden;
+		display:flex;
+		justify-content:center;
 
 	}
 
@@ -19,8 +21,10 @@
 	}
 
 	#mainStage {
+		/*
 		display:flex;
 		justify-content:center;
+		*/
 	}
 
 
@@ -33,7 +37,7 @@
 
 	#topBar{
 		display: flex;
-		justify-content: space-around;
+		justify-content: space-between;
 		align-items: center;
 		height:min-content;
 		width:100%;
@@ -83,7 +87,7 @@
 		height: 47.5px;
         text-shadow: none;
         transition: .5s;
-        background-color: #add8e6;
+        background-color: #deeff5;
         border: none;
         font-family: 'Lato', sans-serif;
         font-size:110%;    
@@ -94,6 +98,7 @@
      	height: 100%;
      	font-size: 108%;
      	width: 25px;
+     	margin-right: 5px;
     }
 
     #bases:focus { 
@@ -105,7 +110,7 @@
     }
 
     #newGameButton:focus { outline:0; }
-    #newGameButton:hover { background-color: #deeff5; }
+    #newGameButton:hover { background-color: #AEB6BF; }
 
 	@keyframes fadein {
 		from {opacity: 0;}
@@ -118,8 +123,10 @@
 </head>
 <body>
 	<div id='topBarContainer'>
+	</div>
+	<div id='mainStage'>
 		<div id='topBar'>
-			<p>Official game <a href="https://2048game.com">here</a></p>
+			<!--<p>Official game <a href="https://2048game.com">here</a></p>-->
 			<p>score: <a class='score' id='score'></a></p>
 			<p>highscore: <a class='score' id='highscore'></a></p>
 			<div style='display:flex; align-items: center;'>
@@ -130,10 +137,9 @@
 				<button id='newGameButton'>new game</button>
 			</div>
 		</div>
-	</div>
-	<div id='mainStage'>
 		<div id='table'>
 		</div>
+		<p>Official game <a href="https://2048game.com">here</a></p>
 	</div>
 </body>
 <script>

@@ -360,7 +360,7 @@
 	}
 
 	Model = function(){
-		this.getNthTerm = (n) => 2**(n-1+Math.floor(BASE/2)) + (2**(n-1))*n%2
+		this.getNthTerm = (n) => 2**(n-1+Math.floor(BASE/2)) + (2**(n-1))*(n%2)
 		this.tenth = this.getNthTerm(10)
 
 		this.generateNewPoint = ()=> {

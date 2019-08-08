@@ -134,7 +134,7 @@
 					<input id='bases' onKeyDown="return false" type="number" min="2" max="5" step="1" value="3" name="bases">
 					<p style='margin:0;color:grey;'>base</p>
 				</div>
-				<button id='newGameButton'>new game</button>
+				<button id='newGameButton'>new</button>
 			</div>
 		</div>
 		<div id='table'>
@@ -407,13 +407,13 @@
 				this.generateNewPoint()
 			}
 			updateView(this.table, this.score, null)
-		}
+		}	
 
 		this.newGame()
 
 		var leftMergeRow = (vector)=> {
 			let oldVector = [...vector]
-
+			/*
 			for (let i=0;i<vector.length;i++){
 				if (vector[i]==null){
 					vector.slice(i).forEach(function(c){
@@ -444,11 +444,78 @@
 					vector.push(null)
 				}
 			}
+			*/
+			/*
+			let canMergeStrict = (v1,v2) => v1.canMerge(v2) &&
+					!(v1.recentlyChanged || v2.recentlyChanged),
+				j
 
-			for (i=0;i<DIMENSIONS;i++){
-				if (oldVector[i]==null ? vector[i]!=null : vector[i]==null){return true;}
+			fruitLoop:
+			for (let i=1;i<vector.length;i++){
+				if (vector[j=i]!=null){
+					while(vector[j-=1]==null){
+						(vector[j] = vector[j+1]).ds += 1
+						vector[j+1] = null
+						if (j==0){continue fruitLoop}
+					}
+					//assert(cell=vector[j+1])
+					if (canMergeStrict(vector[j+1],vector[j])){
+						vector[j].died = true;
+						(vector[j]=vector[j+1]).expand()
+						vector[j].ds += 1
+						vector[j+1]=null
+
+						if (vector[j].value==this.tenth){gameIsWon=true;}
+					}
+				}
 			}
-			return false
+			*/
+			let canMergeStrict = (v1,v2) => v1.canMerge(v2) &&
+					!(v1.recentlyChanged || v2.recentlyChanged),
+				ds=0,
+				i=1,
+				j
+
+			
+			fruitLoop:
+			for (let i=1;i<vector.length;i++){
+				if (vector[j=i]!=null){
+					while(vector[j-=1]==null){
+						(vector[j] = vector[j+1]).ds += 1
+						vector[j+1] = null
+						if (j==0){continue fruitLoop}
+					}
+					//assert(cell=vector[j+1])
+					if (canMergeStrict(vector[j+1],vector[j])){
+						vector[j].died = true;
+						(vector[j]=vector[j+1]).expand()
+						vector[j].ds += 1
+						vector[j+1]=null
+
+						if (vector[j].value==this.tenth){gameIsWon=true;}
+					}
+				}
+			}
+/*
+			i = -1
+
+			while((i+=1)<DIMENSIONS){
+				if (vector[i]==null){
+					vector.splice(i,1)
+					vector.push(null)
+					ds+=1
+				} else {
+					vector[i].ds += ds
+					if (i<DIMENSIONS-1 && canMergeStrict(vector[i],vector[i+1])){
+						vector[i].died = true
+						vector[i] = splice(i,1)
+						vector.push(null)
+						vector[i+1].expand()
+					}
+				}
+			}*/
+
+			return vector.some((c)=>c!=null&&c.ds>0)
 		}
 
 		var leftMergeTable = function(mat) {
@@ -537,7 +604,7 @@
 					this.generateNewPoint()
 				}
 				colorScheme = getColorLst(NUM_COLORS)
-				//console.log('after:',getTableStr(model.table),direction)
+				console.log('after:',getTableStr(model.table),direction)
 
 			}
 			updateView(this.table, this.score, direction)

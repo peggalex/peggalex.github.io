@@ -489,6 +489,7 @@
 					if (canMergeStrict(vector[j+1],vector[j])){
 						vector[j].died = true;
 						(vector[j]=vector[j+1]).expand()
+						this.score += vector[j].value
 						vector[j].ds += 1
 						vector[j+1]=null
 

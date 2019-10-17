@@ -244,9 +244,9 @@
 				</div>
 				<input type="submit" id='submit'>
 			</form>
-			<p>Grade average so far: <span id='gradeAvg'></span>%,<span id='gradeAvgGPA' style='color:red;'></span></p>
+			<p>Grade average so far: <span id='gradeAvg'></span>%<span id='gradeAvgGPA' style='color:red;'></span></p>
 			<p>Percent earned so far: <span id='totalPercent'></span>%</p>
-			<p>Guarenteed grade: <span id='finalGrade'></span>%,<span id='finalGradeGPA' style='color:red;'></span></p>
+			<p>Guaranteed grade: <span id='finalGrade'></span>%<span id='finalGradeGPA' style='color:red;'></span></p>
 		</div>
 	</div>
 	<div id='footer' class='row centered'>
@@ -284,7 +284,7 @@
     	this.gpa = gpa
 
     	this.getStr = () => {
-    		return ' ' + this.letter + ', gpa: ' + this.gpa.toFixed(1)
+    		return ', ' + this.letter + ', gpa: ' + this.gpa.toFixed(1)
     	}
 
     }

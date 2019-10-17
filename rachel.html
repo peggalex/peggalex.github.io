@@ -1,0 +1,456 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+
+	<title>~Rachel~</title>
+	<link href="https://fonts.googleapis.com/css?family=Oxygen:300&display=swap" rel="stylesheet">
+
+	<style>
+		body {
+			font-family: 'Oxygen', sans-serif;
+			height: 100%;
+			/*overflow: hidden;*/
+		}
+
+		svg {
+			width: 100%;
+			height: 600px;
+			border: 1px solid black;
+		}
+
+		input[type=submit] {
+			background-color: white;
+			border: 1px solid lightblue;
+			/*width: 80px;*/
+			height: 40px;
+			font-family: 'Oxygen', sans-serif;
+			outline: none;
+			font-size: 20px;
+		}
+
+		.row {
+			display: flex;
+			flex-direction: row;
+		}
+
+		.deleteButton {
+			width: 40px;
+			height: 40px;
+			border: 1px solid red;
+			color: red;
+			border-radius: 20px;
+			margin-left: 10px;
+			transition: opacity 0.5s ease-out;
+			font-size: 15px;
+		}
+
+		.addButton {
+			width: 40px;
+			height: 40px;
+			border: 1px solid lightgreen;
+			color: lightgreen;
+			border-radius: 20px;
+			margin-left: 10px;
+			transition: opacity 0.5s ease-out;
+			font-size: 15px;
+
+		}
+
+		.col {
+			display: flex;
+			flex-direction: column;
+		}
+
+		.centered {
+			display: flex;
+			justify-content: center;
+		}
+
+		.centeredCross {
+			display: flex;
+			align-items: center;
+		}
+
+		#stuff {
+			width: 20%;
+			display: flex;
+			align-items: flex-end;
+			margin-right: 20px;
+		}
+
+		#grades > *{
+			padding-bottom: 10px;
+			margin-bottom: 10px;
+			border-bottom: solid;
+			border-width: thin;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			/*transition: height 0.5s;*/
+		}
+
+		#grades p{
+			margin-left: 10px;
+			margin-right: 10px;
+		}
+
+		#header {
+			margin-bottom: 10px;
+			height: 130px;
+		}
+
+		#mainStage{
+			min-height: 350px;
+		}
+
+		#borderline {
+			height: 0px;
+			border-bottom: solid;
+			border-color: lightblue;
+			animation: expand 1s 0.25s ease-out forwards;
+		}
+
+		.deleteButton:hover {
+			opacity: 0.25;
+		}
+
+		.addButton:hover {
+			opacity: 0.25;
+		}
+
+		.scoreGrade{
+			animation: popin 1s ease-out;
+		}
+
+		.percentGrade{
+			animation: popin 0.5s ease-out;
+			transition: width 0.5s;
+		}
+
+		.dyingRow{
+			animation: popout 0.25s ease-in forwards;
+		}
+
+		#title{
+			color: lightblue;
+			font-size: 40px;
+		}
+
+
+		@keyframes popin {
+
+			from {
+				max-height: 0;
+				opacity: 0;
+			}
+			to {
+				max-height: 100px;
+				opacity: 1;
+			}
+		}
+
+		@keyframes popout {
+
+			from {
+				max-height: 60px;
+				opacity: 1;
+			}
+			to {
+				max-height: 0px;
+				opacity: 0;
+			}
+		}
+
+		@keyframes fade_in {
+
+			from {
+				opacity: 0;
+			}
+			to {
+				opacity: 1;
+			}	
+		}
+
+		@keyframes expand {
+
+			from {
+				width: 0%;
+			}
+			to {
+				width: 100%;
+			}
+		}
+
+		#whale{
+			width: 60px;
+			height: 60px;
+			margin-right: 20px;
+		}
+
+		#footer{
+			border-top: solid;
+			border-color: lightblue;
+			border-width: thin;
+			opacity: 0;
+			animation: fade_in 1s ease-out 1.25s forwards;
+
+		}
+
+		#footer > *{
+			margin-right: 10px;
+		}
+
+
+
+	}
+
+
+	</style>
+</head>
+
+<body>
+	<div id='header' class='col centeredCross'>
+		<div titleDiv class='row centered centeredCross'>
+			<img src="whaleWhaleWhale.gif" id='whale' onclick="loadWhale()">
+			<p id='title'> better grade calculator </p>
+		</div>
+		<div id='borderline'></div>
+	</div>
+	<div id='mainStage' class='row'>
+		<div id='stuff' class='col'>
+			<div class='row centeredCross'>
+				<p>add percent grade</p>
+				<button class='addButton' onclick='newPercentGrade()'>＋</button>
+			</div>
+			<div class='row centeredCross'>
+				<p>add score grade</p>
+				<button class='addButton' onclick='newScoreGrade()'>＋</button>
+			</div>
+		</div>
+
+		<div id='imStuff' class='col'>
+			<form id='myForm'>
+				<div id='grades'>
+				</div>
+				<input type="submit" id='submit'>
+			</form>
+			<p>Grade average so far: <span id='gradeAvg'></span>%,<span id='gradeAvgGPA' style='color:red;'></span></p>
+			<p>Percent earned so far: <span id='totalPercent'></span>%</p>
+			<p>Guarenteed grade: <span id='finalGrade'></span>%,<span id='finalGradeGPA' style='color:red;'></span></p>
+		</div>
+	</div>
+	<div id='footer' class='row centered'>
+		<p>
+			inspiration by <a href='http://www.benegg.net/grade_calculator.html'>ben egg</a>
+		</p>
+		<p>
+			| designed by <a href='https://peggalex.github.io'>alex pegg</a> | © all rights reserved
+		</p>
+	</div>
+</body>
+
+<script>
+	/*
+	let str = '<table align="center"><span class="tableHeading">'
+    let headings = ['Assignment no.','Score','Total','Weight']
+    headings.forEach((h)=>str+='<th>'+h+'</th>')
+    str+='</tr></span>'
+    addRow = function(c){
+      str += '<tr>'
+      colDefaults = [1,'',100,'']
+      cols.forEach(function(colDefault){
+        str+='<td align="center">'+colDefault+'</td>'
+        colDefaults[0]+=1
+      })
+      str+='</tr>'
+    }
+    bundleNames.forEach(addRow)
+    return str+'</table>'
+    */
+
+    
+    Grade = function(letter,gpa){
+    	this.letter = letter
+    	this.gpa = gpa
+
+    	this.getStr = () => {
+    		return ' ' + this.letter + ', gpa: ' + this.gpa.toFixed(1)
+    	}
+
+    }
+
+
+    grades = document.getElementById('grades')
+    gradeKeys = [0,50,53,57,60,63,67,70,73,77,80,85,90,Infinity]
+    gradeDic = {
+    	50: new Grade('F',0),
+    	53: new Grade('D-',0.7),
+    	57: new Grade('D',1.0),
+    	60: new Grade('D+',1.3),
+    	63: new Grade('C-',1.7),
+    	67: new Grade('C',2.0),
+    	70: new Grade('C+',2.3),
+    	73: new Grade('B-',2.7),
+    	77: new Grade('B',3.0),
+    	80: new Grade('B+',3.3),
+    	85: new Grade('A-',3.7),
+    	90: new Grade('A',4.0),
+    	Infinity: new Grade('A+',4.0)
+    } //non inclusive of right bound
+    deciPrec = 2
+
+    getGradeStr = (grade) => {
+    	for (let i=1; i<gradeKeys.length; i++){
+    		if (gradeKeys[i-1]<=grade && grade<gradeKeys[i]){
+    			return gradeDic[gradeKeys[i]].getStr()
+    		}
+    	}
+    }
+
+    deleteGrade = (event) => {
+    	event.preventDefault()
+    	row = event.target.parentElement
+    	row.classList.add('dyingRow')
+    	setTimeout(()=>grades.removeChild(row),250)
+    }
+
+    newPercentGrade = () => {
+    	grade = document.createElement("div")
+    	grade.classList.add('percentGrade')
+    	grade.classList.add('row')
+
+    	grade.innerHTML += '<p>percent score: </p>'
+    	percent = document.createElement("input")
+    	percent.setAttribute('type','number')
+       	percent.setAttribute('step','any')
+      	percent.setAttribute('min','0')
+    	percent.setAttribute('placeholder','percent %')
+    	percent.classList.add('percent')
+    	percent.required = true
+    	grade.appendChild(percent)
+    	grade.innerHTML += '<p>%</p>'
+
+    	grade.innerHTML += '<p> weight: </p>'
+    	weight = document.createElement('input')
+    	weight.setAttribute('type','number')
+    	weight.setAttribute('step','any')
+    	weight.setAttribute('min','0')
+    	weight.setAttribute('placeholder','weight %')
+    	weight.classList.add('weight')
+    	weight.required = true
+    	grade.appendChild(weight)
+    	grade.innerHTML += '<p>%</p>'
+
+
+    	deleteButt = document.createElement('button')
+    	deleteButt.innerHTML = "✕"
+    	deleteButt.addEventListener('click',deleteGrade)
+    	deleteButt.classList.add('deleteButton')
+    	grade.appendChild(deleteButt)
+
+    	grades.appendChild(grade)
+    }
+
+    newScoreGrade = () => {
+    	grade = document.createElement("div")
+    	grade.classList.add('row')
+
+    	grade.innerHTML += '<p> score: </p>'
+    	score = document.createElement("input")
+    	score.setAttribute('type','number')
+       	score.setAttribute('step','any')
+      	score.setAttribute('min','0')
+    	score.setAttribute('placeholder','score (points)')
+       	score.classList.add('score')
+    	score.required = true
+    	grade.appendChild(score)
+    	grade.innerHTML += '<p>/</p>'
+
+    	outOf = document.createElement("input")
+    	outOf.setAttribute('type','number')
+    	outOf.setAttribute('step','any')
+      	outOf.setAttribute('min','0')
+    	outOf.setAttribute('placeholder','out of (points)')
+        outOf.classList.add('outOf')
+    	outOf.required = true
+    	grade.appendChild(outOf)
+
+    	grade.innerHTML += '<p> weight: </p>'
+    	weight = document.createElement('input')
+    	weight.setAttribute('type','number')
+    	weight.setAttribute('step','any')
+      	weight.setAttribute('min','0')
+    	weight.setAttribute('placeholder','weight %')
+    	weight.classList.add('weight')
+    	weight.required = true
+    	grade.appendChild(weight)
+    	grade.innerHTML += '<p>%</p>'
+
+    	deleteButt = document.createElement('button')
+    	deleteButt.innerHTML = "✕"
+    	deleteButt.classList.add('deleteButton')
+    	deleteButt.addEventListener('click',deleteGrade)
+    	grade.appendChild(deleteButt)
+
+    	grades.appendChild(grade)
+    	grade.classList.add('scoreGrade')
+    }
+
+    loadWhale = () =>  document.getElementById('whale').src = "whaleWhaleWhale.gif"
+
+    submitFun = (event) => {
+    	event.preventDefault()
+    	loadWhale()
+	    fine = true
+	    total = 0
+	    sumWeights = 0
+	    let weight,
+	    	percent
+
+	    percentGrades = Array.from(grades.getElementsByClassName("percentGrade"))
+	    scoreGrades = Array.from(grades.getElementsByClassName("scoreGrade"))
+
+	    percentGrades.forEach((e)=>{
+	    	weight = parseFloat(e.querySelector('.weight').value)
+	    	percent = parseFloat(e.querySelector('.percent').value)
+
+	    	total += (percent/100)*(weight/100)
+	    	sumWeights += weight/100
+	    })
+
+	    scoreGrades.forEach((e)=>{
+	    	weight = parseFloat(e.querySelector('.weight').value)
+	    	score = parseFloat(e.querySelector('.score').value)
+	    	outOf = parseFloat(e.querySelector('.outOf').value)
+	    	total += (score/outOf)*(weight/100)
+	    	console.log('total: ',total)
+	    	sumWeights += weight/100
+
+	    })
+
+	    gradeAvgVal = (sumWeights!=0) ? (total*100 / sumWeights) : 0
+	    gradeAvg = document.getElementById('gradeAvg')
+	    gradeAvg.innerHTML = gradeAvgVal.toFixed(deciPrec)
+	    gradeAvg = document.getElementById('gradeAvgGPA')
+	    gradeAvg.innerHTML = getGradeStr(gradeAvgVal)
+
+
+
+	    totalPercent = document.getElementById('totalPercent')
+	   	totalPercent.innerHTML = (sumWeights*100).toFixed(deciPrec)
+
+	    finalGradeVal = total*100
+	   	finalGrade = document.getElementById('finalGrade')
+	    finalGrade.innerHTML = (finalGradeVal).toFixed(deciPrec)
+	   	finalGrade = document.getElementById('finalGradeGPA')
+	   	finalGrade.innerHTML = getGradeStr(finalGradeVal)
+
+
+	}
+
+	document.getElementById('myForm').addEventListener('submit', submitFun)
+
+</script>
+
+</html>

@@ -20,6 +20,10 @@
 			border: 1px solid black;
 		}
 
+		button {
+			background-color: white;
+		}
+
 		input[type=submit] {
 			background-color: white;
 			border: 1px solid lightblue;
@@ -28,10 +32,6 @@
 			font-family: 'Oxygen', sans-serif;
 			outline: none;
 			font-size: 20px;
-		}
-		
-		button {
-			background-color: white;
 		}
 
 		.row {
@@ -198,7 +198,7 @@
 			border-color: lightblue;
 			border-width: thin;
 			opacity: 0;
-			animation: fade_in 1s ease-out 1.25s forwards;
+			animation: fade_in 1s ease-in 1.25s forwards;
 
 		}
 
@@ -208,6 +208,7 @@
 
 		#imStuff {
 			margin-top: 10px;
+			width: 55%;
 		}
 
 
@@ -406,6 +407,8 @@
     }
 
     loadWhale = () =>  document.getElementById('whale').src = "whaleWhaleWhale.gif"
+
+    loadWhale()
 
     submitFun = (event) => {
     	event.preventDefault()

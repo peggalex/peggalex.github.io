@@ -22,6 +22,7 @@
 
 		button {
 			background-color: white;
+			outline: none;
 		}
 
 		input[type=submit] {
@@ -55,6 +56,11 @@
 			font-size: 15px;
 		}
 
+		.deleteButton::after {
+			content: '✕';
+
+		}
+
 		.addButton {
 			width: 40px;
 			height: 40px;
@@ -64,7 +70,10 @@
 			margin-left: 10px;
 			transition: opacity 0.5s ease-out;
 			font-size: 15px;
+		}
 
+		.addButton::after {
+			content: '＋';
 		}
 
 		.col {
@@ -192,6 +201,16 @@
 			}
 		}
 
+		@keyframes comedown {
+			from {
+				transform: translateY(-80px)
+			}
+			to {
+				transform: translateY(0px));
+			}
+
+		}
+
 		#whale{
 			width: 60px;
 			height: 60px;
@@ -216,6 +235,14 @@
 			width: 55%;
 		}
 
+		#toggle {
+
+		}
+
+		#titleDiv {
+			animation: comedown 1.5s;
+		}
+
 
 	}
 
@@ -225,7 +252,7 @@
 
 <body>
 	<div id='header' class='col centeredCross'>
-		<div titleDiv class='row centered centeredCross'>
+		<div id='titleDiv' class='row centered centeredCross'>
 			<img src="whaleWhaleWhale.gif" id='whale' onclick="loadWhale()">
 			<p id='title'> better grade calculator </p>
 		</div>
@@ -235,11 +262,11 @@
 		<div id='stuff' class='col'>
 			<div class='row centeredCross'>
 				<p>add percent grade</p>
-				<button class='addButton' onclick='newPercentGrade()'>＋</button>
+				<button class='addButton' onclick='newPercentGrade()'></button>
 			</div>
 			<div class='row centeredCross'>
 				<p>add score grade</p>
-				<button class='addButton' onclick='newScoreGrade()'>＋</button>
+				<button class='addButton' onclick='newScoreGrade()'></button>
 			</div>
 		</div>
 
@@ -252,6 +279,13 @@
 			<p>Grade average so far: <span id='gradeAvg'></span>%<span id='gradeAvgGPA' style='color:red;'></span></p>
 			<p>Percent earned so far: <span id='totalPercent'></span>%</p>
 			<p>Guaranteed grade: <span id='finalGrade'></span>%<span id='finalGradeGPA' style='color:red;'></span></p>
+		</div>
+
+		<div id='omg' class='col'>
+			<!--<div class='row'>
+				<button id='toggle'></button>
+				<p>bonus marks</p>
+			</div>-->	
 		</div>
 	</div>
 	<div id='footer' class='row centered'>
@@ -365,7 +399,6 @@
 
 
     	deleteButt = document.createElement('button')
-    	deleteButt.innerHTML = "✕"
     	deleteButt.addEventListener('click',deleteGrade)
     	deleteButt.classList.add('deleteButton')
     	grade.appendChild(deleteButt)
@@ -410,7 +443,6 @@
     	grade.innerHTML += '<p>%</p>'
 
     	deleteButt = document.createElement('button')
-    	deleteButt.innerHTML = "✕"
     	deleteButt.classList.add('deleteButton')
     	deleteButt.addEventListener('click',deleteGrade)
     	grade.appendChild(deleteButt)

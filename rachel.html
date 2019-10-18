@@ -32,6 +32,11 @@
 			font-family: 'Oxygen', sans-serif;
 			outline: none;
 			font-size: 20px;
+			transition: background-color 2s;
+		}
+
+		input[type=submit]:hover {
+			background-color: lightblue;
 		}
 
 		.row {
@@ -317,14 +322,21 @@
     	}
     }
 
+
+    loadWhale = () =>  document.getElementById('whale').src = "whaleWhaleWhale.gif"
+
+    loadWhale()
+
     deleteGrade = (event) => {
     	event.preventDefault()
+    	loadWhale()
     	row = event.target.parentElement
     	row.classList.add('dyingRow')
     	setTimeout(()=>grades.removeChild(row),250)
     }
 
     newPercentGrade = () => {
+    	loadWhale()
     	grade = document.createElement("div")
     	grade.classList.add('percentGrade')
     	grade.classList.add('row')
@@ -362,6 +374,7 @@
     }
 
     newScoreGrade = () => {
+    	loadWhale()
     	grade = document.createElement("div")
     	grade.classList.add('row')
 
@@ -406,9 +419,6 @@
     	grade.classList.add('scoreGrade')
     }
 
-    loadWhale = () =>  document.getElementById('whale').src = "whaleWhaleWhale.gif"
-
-    loadWhale()
 
     submitFun = (event) => {
     	event.preventDefault()

@@ -6,6 +6,7 @@
 	<meta name="google" content="notranslate">
 	<title>Grade Calc</title>
 	<link href="https://fonts.googleapis.com/css?family=Oxygen:300&display=swap" rel="stylesheet">
+	<script src="https://www.desmos.com/api/v1.3/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"></script>
 
 	<style>
 		body {
@@ -25,7 +26,7 @@
 			outline: none;
 		}
 
-		input[type=submit] {
+		#submit {
 			background-color: white;
 			border: 1px solid lightblue;
 			/*width: 80px;*/
@@ -33,11 +34,20 @@
 			font-family: 'Oxygen', sans-serif;
 			outline: none;
 			font-size: 20px;
-			transition: background-color 2s;
+			transition: background-color 0.5s;
 		}
 
-		input[type=submit]:hover {
+		#submit:hover {
 			background-color: lightblue;
+		}
+
+		h1 {
+			color: lightblue;
+		}
+
+		h2 {
+			color: grey;
+			font-size: 25px;
 		}
 
 		.row {
@@ -123,6 +133,8 @@
 
 		#mainStage{
 			min-height: 350px;
+			opacity: 0;
+			animation: fade_in 1.5s ease-out 2s forwards;
 		}
 
 		#borderline {
@@ -152,12 +164,6 @@
 		.dyingRow{
 			animation: popout 0.25s ease-in forwards;
 		}
-
-		#title{
-			color: lightblue;
-			font-size: 40px;
-		}
-
 
 		@keyframes popin {
 
@@ -205,7 +211,7 @@
 
 		@keyframes comedown {
 			from {
-				transform: translateY(-80px)
+				transform: translateY(-150px)
 			}
 			to {
 				transform: translateY(0px));
@@ -223,6 +229,7 @@
 			border-top: solid;
 			border-color: lightblue;
 			border-width: thin;
+			margin-top: 10px;
 			opacity: 0;
 			animation: fade_in 1s ease-in 1.25s forwards;
 
@@ -242,7 +249,30 @@
 		}
 
 		#titleDiv {
-			animation: comedown 1.5s;
+			animation: comedown 1s ease-out;
+		}
+
+		#calculators{
+			justify-content: space-between;
+		}
+
+		#cdfInput{
+			width:40px;
+			margin-left:10px;
+		}
+
+		#cdfGo{
+			border:none;
+			color:lightgreen;
+			transition: opacity 0.5s ease-out;
+		}
+
+		#cdfGo::after{
+			content:'►';
+		}
+
+		#cdfGo:hover{
+			opacity:0.25;
 		}
 
 
@@ -256,7 +286,7 @@
 	<div id='header' class='col centeredCross'>
 		<div id='titleDiv' class='row centered centeredCross'>
 			<img src="whaleWhaleWhale.gif" id='whale' onclick="loadWhale()">
-			<p id='title'> better grade calculator </p>
+			<h1> better grade calculator </h1>
 		</div>
 		<div id='borderline'></div>
 	</div>
@@ -276,11 +306,28 @@
 			<form id='myForm'>
 				<div id='grades'>
 				</div>
-				<input type="submit" id='submit'>
+				<button type="submit" id='submit'>calculate</button>
 			</form>
 			<p>Grade average so far: <span id='gradeAvg'></span>%<span id='gradeAvgGPA' style='color:red;'></span></p>
 			<p>Percent earned so far: <span id='totalPercent'></span>%</p>
 			<p>Guaranteed grade: <span id='finalGrade'></span>%<span id='finalGradeGPA' style='color:red;'></span></p>
+			<div id='calculators' style='opacity: 0;' class='row centered'>
+				<div class='col'>
+					<h2> grade pdf </h2>
+					<div id="pdfCalc"></div>
+					<form id='cdfForm' class='row centeredCross'>
+						<p>likelihood you get higher than: </p>
+						<input id='cdfInput' type=number step=any min=0 max=100>
+						<p>%</p>
+						<button type='submit' id='cdfGo' onclick='cdfHandler()'></button>
+						<p id='cdfOutput'></p>
+					</form>
+				</div>
+				<div class='col'>
+					<h2> grade cdf </h2>
+					<div id='cdfCalc'></div>
+				</div>
+			</div>
 		</div>
 
 		<div id='omg' class='col'>
@@ -371,6 +418,25 @@
     	setTimeout(()=>grades.removeChild(row),250)
     }
 
+    addWeightAndDelete = (div) => {
+		div.innerHTML += '<p> weight: </p>'
+    	weight = document.createElement('input')
+    	weight.setAttribute('type','number')
+    	weight.setAttribute('step','any')
+    	weight.setAttribute('min','0')
+    	weight.setAttribute('placeholder','weight %')
+    	weight.classList.add('weight')
+    	weight.required = true
+    	div.appendChild(weight)
+    	div.innerHTML += '<p>%</p>'
+
+
+    	deleteButt = document.createElement('button')
+    	deleteButt.addEventListener('click',deleteGrade)
+    	deleteButt.classList.add('deleteButton')
+    	div.appendChild(deleteButt)
+    }
+
     newPercentGrade = () => {
     	loadWhale()
     	grade = document.createElement("div")
@@ -388,29 +454,14 @@
     	grade.appendChild(percent)
     	grade.innerHTML += '<p>%</p>'
 
-    	grade.innerHTML += '<p> weight: </p>'
-    	weight = document.createElement('input')
-    	weight.setAttribute('type','number')
-    	weight.setAttribute('step','any')
-    	weight.setAttribute('min','0')
-    	weight.setAttribute('placeholder','weight %')
-    	weight.classList.add('weight')
-    	weight.required = true
-    	grade.appendChild(weight)
-    	grade.innerHTML += '<p>%</p>'
-
-
-    	deleteButt = document.createElement('button')
-    	deleteButt.addEventListener('click',deleteGrade)
-    	deleteButt.classList.add('deleteButton')
-    	grade.appendChild(deleteButt)
-
+    	addWeightAndDelete(grade)
     	grades.appendChild(grade)
     }
 
     newScoreGrade = () => {
     	loadWhale()
     	grade = document.createElement("div")
+    	grade.classList.add('scoreGrade')
     	grade.classList.add('row')
 
     	grade.innerHTML += '<p> score: </p>'
@@ -433,26 +484,58 @@
     	outOf.required = true
     	grade.appendChild(outOf)
 
-    	grade.innerHTML += '<p> weight: </p>'
-    	weight = document.createElement('input')
-    	weight.setAttribute('type','number')
-    	weight.setAttribute('step','any')
-      	weight.setAttribute('min','0')
-    	weight.setAttribute('placeholder','weight %')
-    	weight.classList.add('weight')
-    	weight.required = true
-    	grade.appendChild(weight)
-    	grade.innerHTML += '<p>%</p>'
-
-    	deleteButt = document.createElement('button')
-    	deleteButt.classList.add('deleteButton')
-    	deleteButt.addEventListener('click',deleteGrade)
-    	grade.appendChild(deleteButt)
-
+    	addWeightAndDelete(grade)
     	grades.appendChild(grade)
-    	grade.classList.add('scoreGrade')
     }
 
+    DataPoint = function(grade,weight){
+    	this.grade = grade
+    	this.weight = weight
+    }
+
+    get_cdf = (_mu, mu, sd) => {
+		let erfTerm,
+			phiParam = (_mu - mu)/sd,
+			erfParam = phiParam/Math.sqrt(2)
+
+		function reqListener () {
+		  //console.log(this.responseText)
+		  //alert(parseFloat(this.responseText))
+		  erfTerm = parseFloat(this.responseText)
+		}
+
+		var oReq = new XMLHttpRequest()
+		oReq.addEventListener("load", reqListener)
+		oReq.open("GET", `https://api.mathjs.org/v4/?expr=erf(${erfParam})`,false)
+		oReq.send()
+		//modelled off of:
+		//https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/Using_XMLHttpRequest
+
+		return 0.5*(1+erfTerm)
+	}
+
+	getStandardDeviation = (data,mu) => {
+		let numerator = 0,
+			sumWeights = 0
+
+		if (data.length==1){
+			return 0
+		}
+
+		data.forEach((dataPoint)=>{
+			numerator += dataPoint.weight*((dataPoint.grade - mu)**2)
+			sumWeights += dataPoint.weight
+		})
+
+		return Math.sqrt(numerator/(sumWeights))
+	}
+
+
+    var pdfCalc = null,
+    	cdfCalc = null,
+    	mu,
+    	sd
+    //needs to be global
 
     submitFun = (event) => {
     	event.preventDefault()
@@ -460,6 +543,7 @@
 	    fine = true
 	    total = 0
 	    sumWeights = 0
+	    data = []
 	    let weight,
 	    	percent
 
@@ -468,9 +552,10 @@
 
 	    percentGrades.forEach((e)=>{
 	    	weight = parseFloat(e.querySelector('.weight').value)
-	    	percent = parseFloat(e.querySelector('.percent').value)
+	    	grade = parseFloat(e.querySelector('.percent').value)
+			data.push(new DataPoint(grade,weight))
 
-	    	total += (percent/100)*(weight/100)
+	    	total += (grade/100)*(weight/100)
 	    	sumWeights += weight/100
 	    })
 
@@ -478,17 +563,22 @@
 	    	weight = parseFloat(e.querySelector('.weight').value)
 	    	score = parseFloat(e.querySelector('.score').value)
 	    	outOf = parseFloat(e.querySelector('.outOf').value)
-	    	total += (score/outOf)*(weight/100)
-	    	console.log('total: ',total)
+	    	grade = score/outOf
+	    	data.push(new DataPoint(grade*100,weight))
+	    	total += grade*(weight/100)
 	    	sumWeights += weight/100
-
 	    })
 
-	    gradeAvgVal = (sumWeights!=0) ? (total*100 / sumWeights) : 0
+	    if (sumWeights>1){
+	    	alert('error: weights larger than 100%')
+	    	return
+	    }
+
+	    mu = (sumWeights!=0) ? (total*100 / sumWeights) : 0
 	    gradeAvg = document.getElementById('gradeAvg')
-	    gradeAvg.innerHTML = gradeAvgVal.toFixed(deciPrec)
+	    gradeAvg.innerHTML = mu.toFixed(deciPrec)
 	    gradeAvg = document.getElementById('gradeAvgGPA')
-	    gradeAvg.innerHTML = getGradeStr(gradeAvgVal)
+	    gradeAvg.innerHTML = getGradeStr(mu)
 
 
 
@@ -501,10 +591,99 @@
 	   	finalGrade = document.getElementById('finalGradeGPA')
 	   	finalGrade.innerHTML = getGradeStr(finalGradeVal)
 
+	   	if (pdfCalc!=null) {
+	   		pdfCalc.destroy()
+	   		cdfCalc.destroy()
+	   		pdfCalc=null
+	   		cdfCalc=null
+
+	   	}
+
+	   	if (data.length<2){
+	   		return
+	   	}
+
+	   	document.getElementById('calculators').style.opacity = 1
+	   	var elt = document.getElementById('pdfCalc');
+	   	elt.innerHTML = ''
+		elt.style.height = '300px'
+		elt.style.width = '300px'
+	    calculator = Desmos.GraphingCalculator(elt, {
+	    	expressions:false,
+	    	lockViewport: true,
+	    	settingsMenu: false,
+	    	xAxisLabel: 'score',
+	    	yAxisLabel: 'probability'
+	    });
+
+		sd = getStandardDeviation(data,mu)
+
+		//to find the truncated normal distribution: normal over interval [0,100]~[a,b], we have pdf` = pdf/[cdf(b)-cdf(a)]
+		let coeff = 1/(get_cdf(100,mu,sd)-get_cdf(0,mu,sd))
+	    calculator.setExpression({ id: 'mu', latex: `x=${mu}`, lineStyle: Desmos.Styles.DASHED});
+		calculator.setExpression({ id: 'truncNorm', latex: `${coeff} * 1/\\sqrt{2*\\pi*${sd}^2} * e^{-(x-${mu})^2 / (2*${sd}^2)} \\{0<x<100\\}` });	
+    
+		/*for (let i=0; i<data.length; i++){
+			calculator.setExpression({
+				id: `point_${i}`,
+				latex: `(${data[i].grade},${data[i].weight/(sumWeights*100)})`
+			})
+		}*/
+		eval(`pdf = (x) => ${coeff} * 1/Math.sqrt(2*Math.PI*(${sd})**2) * Math.E**( -((x-${mu})**2) / (2*(${sd})**2) )`)
+		//compile function
+		calculator.setMathBounds({
+		    left: 0,
+		    right: 100,
+		    bottom: 0,
+		    top: pdf(mu)*1.2
+		});
+		calculator.setDefaultState(calculator.getState())
+
+	   	var elt = document.getElementById('cdfCalc');
+	   	elt.innerHTML = ''
+		elt.style.height = '300px'
+		elt.style.width = '300px'
+	    calculator = Desmos.GraphingCalculator(elt, {
+	    	expressions:false,
+	    	lockViewport: true,
+	    	settingsMenu: false,
+	    	xAxisLabel: 'score',
+	    	yAxisLabel: 'probability'
+	    });
+
+	   	calculator.setExpression({ id: 'z', latex: `z = (x - ${mu})/${sd}`, hidden: true });
+	   	calculator.setExpression({ id: 'mu', latex: `x=${mu}`, lineStyle: Desmos.Styles.DASHED});
+	   	//calculator.setExpression({ id: 'mu', latex: 'y=0.5', lineStyle: Desmos.Styles.DASHED});
+		calculator.setExpression({ id: 'truncCDF', latex: `${coeff} * 1/(1+e^{-1.702*z}) \\{0<x<100\\}` });
+		//cdf approx from: https://core.ac.uk/download/pdf/41787448.pdf
+
+		calculator.setMathBounds({
+		    left: 0,
+		    right: 100,
+		    bottom: 0,
+		    top: 1
+		});
+		calculator.setDefaultState(calculator.getState())
 
 	}
 
+	cdfHandler = () => {
+		event.preventDefault()
+    	loadWhale()
+		grade = document.getElementById('cdfInput').value
+		if (isNaN(grade)){
+			return
+		} else {
+			let prob = get_cdf(parseFloat(grade),mu,sd)
+			prob = ((1-prob)*100).toFixed(2)+'%'
+			document.getElementById('cdfOutput').innerHTML = prob
+		}
+	}
+
 	document.getElementById('myForm').addEventListener('submit', submitFun)
+	document.getElementById('cdfForm').addEventListener('submit', cdfHandler)
+
+
 
 </script>
 

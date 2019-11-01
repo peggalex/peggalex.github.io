@@ -526,10 +526,9 @@
     	this.weight = weight
     }
 
-    get_cdf = (_mu, mu, sd) => {
+    get_cdf = (_mu, mu, sd, coeff=1) => {
 		let erfTerm,
-			phiParam = (_mu - mu)/sd,
-			erfParam = phiParam/Math.sqrt(2)
+			erfParam = (_mu - mu)/(sd*Math.sqrt(2))
 
 		function reqListener () {
 		  //console.log(this.responseText)
@@ -544,7 +543,7 @@
 		//modelled off of:
 		//https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/Using_XMLHttpRequest
 
-		return 0.5*(1+erfTerm)
+		return coeff*0.5*(1+erfTerm)
 	}
 
 	getStandardDeviation = (data,mu) => {
@@ -569,7 +568,8 @@
     	sumWeights,
     	total,
     	mu,
-    	sd
+    	sd,
+    	coeff
     //needs to be global
 
     submitFun = (event) => {
@@ -659,7 +659,7 @@
 		sd = getStandardDeviation(data,mu)
 
 		//to find the truncated normal distribution: normal over interval [0,100]~[a,b], we have pdf` = pdf/[cdf(b)-cdf(a)]
-		let coeff = 1/(get_cdf(100,mu,sd)-get_cdf(0,mu,sd))
+		coeff = 1/(get_cdf(100,mu,sd)-get_cdf(0,mu,sd))
 	    calculator.setExpression({ id: 'mu', latex: `x=${mu}`, lineStyle: Desmos.Styles.DASHED});
 		calculator.setExpression({ id: 'truncNorm', latex: `${coeff} * 1/\\sqrt{2*\\pi*${sd}^2} * e^{-(x-${mu})^2 / (2*${sd}^2)} \\{0<x<100\\}` });	
     
@@ -735,7 +735,7 @@
 		if (isNaN(grade)){
 			return
 		} else {
-			let prob = get_cdf(parseFloat(grade),mu,sd)
+			let prob = get_cdf(parseFloat(grade),mu,sd,coeff)
 			prob = ((1-prob)*100).toFixed(2)+'%'
 			document.getElementById('cdfOutput').innerHTML = prob
 		}

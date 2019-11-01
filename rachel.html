@@ -153,16 +153,16 @@
 		}
 
 		.scoreGrade{
-			animation: popin 1s ease-out;
+			animation: popin 0.5s ease-out;
 		}
 
 		.percentGrade{
 			animation: popin 0.5s ease-out;
-			transition: width 0.5s;
+			transition: width 0.1s;
 		}
 
 		.dyingRow{
-			animation: popout 0.25s ease-in forwards;
+			animation: popout 0.1s forwards;
 		}
 
 		@keyframes popin {
@@ -256,26 +256,42 @@
 			justify-content: space-between;
 		}
 
-		#cdfInput{
+		.input{
 			width:40px;
 			margin-left:10px;
 		}
 
-		#cdfGo{
+		button.arrow{
 			border:none;
 			color:lightgreen;
 			transition: opacity 0.5s ease-out;
 		}
 
-		#cdfGo::after{
+		button.arrow::after{
 			content:'►';
 		}
 
-		#cdfGo:hover{
+		button.arrow:hover{
 			opacity:0.25;
 		}
 
+		.uninit{
+			opacity:0;
+		}
 
+
+		.subtitle{
+			color: grey;
+			margin-left:25px;
+			margin-top:0px;
+		}
+
+		/*#benegg{
+			border-top-style: solid;
+			border-bottom-style: solid;
+			border-color: lightgrey;
+			border-width: thin;
+		}*/
 	}
 
 
@@ -308,24 +324,42 @@
 				</div>
 				<button type="submit" id='submit'>calculate</button>
 			</form>
-			<p>Grade average so far: <span id='gradeAvg'></span>%<span id='gradeAvgGPA' style='color:red;'></span></p>
-			<p>Percent earned so far: <span id='totalPercent'></span>%</p>
-			<p>Guaranteed grade: <span id='finalGrade'></span>%<span id='finalGradeGPA' style='color:red;'></span></p>
-			<div id='calculators' style='opacity: 0;' class='row centered'>
-				<div class='col'>
-					<h2> grade pdf </h2>
-					<div id="pdfCalc"></div>
-					<form id='cdfForm' class='row centeredCross'>
-						<p>likelihood you get higher than: </p>
-						<input id='cdfInput' type=number step=any min=0 max=100>
+			<div id='heyThere' class='col uninit'>
+				<p>grade average so far: <span id='gradeAvg'></span>%<span id='gradeAvgGPA' style='color:red;'></span></p>
+				<!--<p class='subtitle'>percent earned so far: <span id='totalPercent'></span>%</p>-->
+				<p class='subtitle'>guaranteed grade: <span id='finalGrade'></span>%<span id='finalGradeGPA' style='color:red;'></span></p>
+				<div id='benegg'>
+					<form id='ifEndWith' class='row centeredCross'>
+						<p>what grade do I need to get to end with a: </p>
+						<input id='ifEndWithInput' class='input' type=number step=any min=0 max=100 required>
 						<p>%</p>
-						<button type='submit' id='cdfGo' onclick='cdfHandler()'></button>
-						<p id='cdfOutput'></p>
+						<button type='submit' id='ifEndWithGo' class='arrow'></button>
+						<p id='ifEndWithOutput'></p>
+					</form>
+					<form id='ifGet' class='row centeredCross'>
+						<p>what grade will I get if I earn: </p>
+						<input id='ifGetInput' class='input' type=number step=any min=0 max=100 required>
+						<p>%</p>
+						<button type='submit' id='ifGetGo' class='arrow'></button>
+						<p id='ifGetOutput'></p>
 					</form>
 				</div>
-				<div class='col'>
-					<h2> grade cdf </h2>
-					<div id='cdfCalc'></div>
+				<div id='calculators' class='row centered uninit'>
+					<div class='col'>
+						<h2> grade pdf </h2>
+						<div id="pdfCalc"></div>
+						<form id='cdfForm' class='row centeredCross'>
+							<p>likelihood you get higher than: </p>
+							<input id='cdfInput' class='input' type=number step=any min=0 max=100 required>
+							<p>%</p>
+							<button type='submit' id='cdfGo' class='arrow'></button>
+							<p id='cdfOutput'></p>
+						</form>
+					</div>
+					<div class='col'>
+						<h2> grade cdf </h2>
+						<div id='cdfCalc'></div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -415,7 +449,7 @@
     	loadWhale()
     	row = event.target.parentElement
     	row.classList.add('dyingRow')
-    	setTimeout(()=>grades.removeChild(row),250)
+    	setTimeout(()=>grades.removeChild(row),100)
     }
 
     addWeightAndDelete = (div) => {
@@ -533,6 +567,8 @@
 
     var pdfCalc = null,
     	cdfCalc = null,
+    	sumWeights,
+    	total,
     	mu,
     	sd
     //needs to be global
@@ -540,6 +576,7 @@
     submitFun = (event) => {
     	event.preventDefault()
     	loadWhale()
+    	document.getElementById('heyThere').classList.remove('uninit')
 	    fine = true
 	    total = 0
 	    sumWeights = 0
@@ -582,8 +619,8 @@
 
 
 
-	    totalPercent = document.getElementById('totalPercent')
-	   	totalPercent.innerHTML = (sumWeights*100).toFixed(deciPrec)
+	    /*totalPercent = document.getElementById('totalPercent')
+	   	totalPercent.innerHTML = (sumWeights*100).toFixed(deciPrec)*/
 
 	    finalGradeVal = total*100
 	   	finalGrade = document.getElementById('finalGrade')
@@ -599,11 +636,15 @@
 
 	   	}
 
-	   	if (data.length<2){
+	   	sd = getStandardDeviation(data,mu)
+	   	console.log(sd)
+
+	   	if (data.length<2 || isNaN(sd)){
+	   		document.getElementById('calculators').classList.add('uninit')
 	   		return
 	   	}
 
-	   	document.getElementById('calculators').style.opacity = 1
+	   	document.getElementById('calculators').classList.remove('uninit')
 	   	var elt = document.getElementById('pdfCalc');
 	   	elt.innerHTML = ''
 		elt.style.height = '300px'
@@ -654,7 +695,7 @@
 	   	calculator.setExpression({ id: 'z', latex: `z = (x - ${mu})/${sd}`, hidden: true });
 	   	calculator.setExpression({ id: 'mu', latex: `x=${mu}`, lineStyle: Desmos.Styles.DASHED});
 	   	//calculator.setExpression({ id: 'mu', latex: 'y=0.5', lineStyle: Desmos.Styles.DASHED});
-		calculator.setExpression({ id: 'truncCDF', latex: `${coeff} * 1/(1+e^{-1.702*z}) \\{0<x<100\\}` });
+		calculator.setExpression({ id: 'truncCDF', latex: `${coeff} * 1/(1+e^{-(0.07056z^3 + 1.5976z)}) \\{0<x<100\\}` });
 		//cdf approx from: https://core.ac.uk/download/pdf/41787448.pdf
 
 		calculator.setMathBounds({
@@ -667,7 +708,28 @@
 
 	}
 
-	cdfHandler = () => {
+	ifEndWithHandler = (event) => {
+		event.preventDefault()
+    	loadWhale()
+		val = parseFloat(document.getElementById('ifEndWithInput').value)/100
+		remainingWeights = 1-sumWeights
+		ans = val<=total ? "you've alredy got it :)" : '≥' + (((val-total)*100)/remainingWeights).toFixed(2) + '%'
+		document.getElementById('ifEndWithOutput').innerHTML = ans
+
+	}
+
+	ifGetHandler = (event) => {
+		event.preventDefault()
+    	loadWhale()
+		val = parseFloat(document.getElementById('ifGetInput').value)/100
+		remainingWeights = 1-sumWeights
+		document.getElementById('ifGetOutput').innerHTML = ((val*remainingWeights+total)*100).toFixed(2) + '%'
+
+	}
+
+
+
+	cdfHandler = (event) => {
 		event.preventDefault()
     	loadWhale()
 		grade = document.getElementById('cdfInput').value
@@ -682,6 +744,9 @@
 
 	document.getElementById('myForm').addEventListener('submit', submitFun)
 	document.getElementById('cdfForm').addEventListener('submit', cdfHandler)
+	document.getElementById('ifEndWith').addEventListener('submit', ifEndWithHandler)
+	document.getElementById('ifGet').addEventListener('submit', ifGetHandler)
+
 
 
 

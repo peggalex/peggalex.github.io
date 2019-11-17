@@ -712,7 +712,7 @@
     	loadWhale()
 		val = parseFloat(document.getElementById('ifEndWithInput').value)/100
 		remainingWeights = 1-sumWeights
-		ans = val<=total ? "you've alredy got it :)" : '≥' + (((val-total)*100)/remainingWeights).toFixed(2) + '%'
+		ans = val<=total ? "you've already got it :)" : '≥' + (((val-total)*100)/remainingWeights).toFixed(2) + '%'
 		document.getElementById('ifEndWithOutput').innerHTML = ans
 
 	}

@@ -4,7 +4,7 @@
 	<meta charset="utf-8"/> <!-- firefox throws an error without this -->
 	<style>
 		:root {
-			--skyBlue: #A6DCF7;
+			--skyBlue: deepskyblue;
 			--grassGreen: #7FFFAB;
 			--darkGreen: #5DC967;
 			--svgWidth: 1000px;
@@ -23,6 +23,7 @@
 			flex-direction: column;
 			align-items: center;
 			font-family: 'Lato', sans-serif;
+			cursor: url('./pizzaCursor.svg'), pointer;
 		}
 
 		body *{
@@ -98,6 +99,7 @@
 		.sideButton:hover {
 			background-color: var(--darkGreen);
 			transition: 1s;
+			cursor: inherit;
 		}
 
 		.sideButton.sideButtonActive {
@@ -186,6 +188,18 @@
 		  	}
 		}
 
+		#sky {
+			fill:var(--skyBlue);
+		}
+
+		#alex {
+			fill: white;
+		}
+
+		h1 {
+			font-size: 20px;
+		}
+
 	</style>
 
 	<link href="https://fonts.googleapis.com/css?family=Raleway:300&display=swap" rel="stylesheet">
@@ -207,8 +221,8 @@
 			</g>
 			<g id="txt_1_">
 				<g id="str">
-					<text transform="matrix(0.973 0 0 1 257.001 179.4326)" fill="#54ACEF" font-family="Quicksand-Regular" font-size="87.2863">Alex’s</text>
-					<text transform="matrix(0.9226 0 0 1 504.4453 178.4668)" fill="#FFFFFF" font-family="Quicksand-Regular" font-size="91.2708">repository</text>
+					<text id='alex' transform="matrix(1 0 0 1 260 179)" fill="#54ACEF" font-family="Quicksand-Regular" font-size="87.2863">Alex’s</text>
+					<text id ='repository' transform="matrix(1 0 0 1 504.5 179)" fill="#FFFFFF" font-family="Quicksand-Regular" font-size="91.2708">repository</text>
 				</g>
 			</g>
 			<g id="clouds_1_">
@@ -379,7 +393,7 @@
 					<p>Hi, my name's Alex. I am a 4th year computer programmer from the University of Toronto.</p>
 					<br>
 					<h1>Background</h1>
-					<p>I was born and raised in Hong Kong by my British dad and my Filipino mum.</p>
+					<p>I was born and raised in Hong Kong. I'm half British and half Filipino.</p>
 					<br>
 					<h1>School</h1>
 					<p>I'm majoring in both computer science and economics for an honorary bachelors of science. I've been a TA for CSC108, and it's all downhill from here</p>
@@ -391,24 +405,24 @@
 				<div class='projects content' id='content_projects'>
 					<h1>2048 Game</h1>
 					<a href="https://peggalex.github.io/test2048" target="_blank">https://peggalex.github.io/test2048</a>
-					<p>Comprehensive model/view/controller game that uses arrow key event listeners (controller) to update game state (model) and display it in an animated fluid ui (view)</p>
+					<p>Comprehensive model/view/controller game that uses arrow key event listeners (controller) to update game state (model) and display it in an animated fluid ui (view).</p>
 					<br>
 					<br>
 					<h1>Simple grade calculator</h1>
 					<a href="https://peggalex.github.io/rachel.html" target="_blank">https://peggalex.github.io/rachel.html</a>
-					<p>Calculate final grade given marks and weights</p>
-					<p>Additionally, assumes grades are normally distributed and predict future grades</p>
+					<p>Calculate final grade given marks and weights.</p>
+					<p>Additionally, assumes grades are normally distributed and predict future grades.</p>
 					<br>
 					<br>
 					<h1>Hong Kong SVG animation</h1>
 					<a href="https:/peggalex.github.io/hk" target="_blank">https:/peggalex.github.io/hk</a>
-					<p>SVG artwork of Victoria Harbour in Hong Kong, animated using CSS</p>
-					<p>Work in progress, recommend firefox for optimal SVG performance</p>
+					<p>SVG artwork of Victoria Harbour in Hong Kong, animated using CSS.</p>
+					<p>Work in progress, recommend firefox for optimal SVG performance.</p>
 					<br>
 					<br>
 					<h1>HTML Resume</h1>
 					<a href="https://peggalex.github.io/resume3.html" target="_blank">https://peggalex.github.com/resume3.html</a>
-					<p> Webfonts unpredictable in Safari, Firefox - recommend chrome or compiled pdf <a href="https://peggalex.github.io/alex_pegg_resume.pdf">here</a></p>
+					<p> Webfonts unpredictable in Safari, Firefox - recommend chrome or compiled pdf <a href="https://peggalex.github.io/alex_pegg_resume.pdf">here</a>.</p>
 					<br>
 					<br>
 					<h1>Other</h1>
@@ -426,6 +440,7 @@
 					<br><br>
 					<h1>Latex Resume</h1>
 					<a href='https://www.overleaf.com/read/kttybhdbwppk' target="_blank">LaTeX resume (professional)</a>
+					<br>
 					<a href='https://peggalex.github.io/alex_pegg_resume.pdf' target="_blank">html resume (stylized)</a>
 
 				</div>

@@ -2,211 +2,211 @@
 <html>
 <head>
 	<meta charset="utf-8"/> <!-- firefox throws an error without this -->
-	<style>
-		:root {
-			--skyBlue: skyblue;
-			--grassGreen: #7FFFAB;
-			--darkGreen: #5DC967;
-			--svgWidth: 1000px;
-			--svgHeight: 300px;
-			--firstAnimeTime: 1s;
-			--headTiltClock: 30deg;
-			--headTiltAntiClock: calc(-1 * var(--headTiltClock));
-			--rotationAmt: 20deg;
-			--headTiltClockEnd: calc(var(--headTiltClock) + var(--rotationAmt));
-			--headTitlAntiClockEnd: calc(-1 * var(--headTiltClockEnd));
-		}
-
-		body {
-			background-color: var(--skyBlue);
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-			font-family: 'Lato', sans-serif;
-			cursor: url('./pizzaCursor.svg'), pointer;
-		}
-
-		body *{
-			font-family: 'Lato', sans-serif;
-		}
-
-		button {
-			background-color: var(--grassGreen);
-			border: none;
-			color: white;
-			font-size: 20px;
-			padding: 15px;
-			margin-top: 5px;
-			text-align: center;
-		}
-		
-		button:focus { outline:0; }
-
-		#centerEverything {
-			display: flex;
-			flex-direction: column;
-			align-items: flex-start;
-			width: var(--svgWidth);
-			/*min-width: var(--svgWidth);*/
-		}
-
-		#nonHeader {
-			display: flex;
-			flex-direction: row;
-			width: 100%;
-		}
-
-		#sideButtons {
-			 position: sticky;
-			flex-shrink: 0;
-			flex-grow: 1;
-			display: flex;
-			flex-direction: column;
-		}
-
-		#stage {
-			background-color: white;
-			margin: 5px 0px 5px 5px;
-			padding: 5px;
-			width: 100%;
-		}
-
-		#stage h1{
-			color: var(--skyBlue);
-		}
-
-		#stage *:not(br){
-			margin: 0;
-		}
-
-		#header{
-			align-self: center;
-			width: var(--svgWidth);
-			/*min-width: var(--svgWidth);*/
-			height: var(--svgHeight);
-		  	position: sticky;
-		  	overflow: hidden;
-		}
-
-		.content {
-			display:none;
-		}
-
-		.content.contentActive {
-			display:block;
-		}
-
-		.sideButton:hover {
-			background-color: var(--darkGreen);
-			transition: 1s;
-			cursor: inherit;
-		}
-
-		.sideButton.sideButtonActive {
-			background-color: var(--darkGreen);
-		}
-
-		#cloud1{
-			animation: shiftRight 40s linear infinite;
-			animation-delay: var(--firstAnimeTime);
-		}
-
-		#cloud2{
-			animation: shiftRight 35s linear infinite;
-			animation-delay: var(--firstAnimeTime);
-		}
-
-		#str{
-			animation: comeUp var(--firstAnimeTime) ease-out;
-		}
-
-		#sheep1Head {
-			animation: shakeHeadClock 1s linear infinite;
-			transform-origin: 694px 231px;
-			transform: rotate(var(--headTiltClock));
-			animation-direction: alternate;
-			animation-delay: calc(var(--firstAnimeTime) + 2s);
-		}
-
-		#sheep2Head {
-			animation: shakeHeadAntiClock 1.2s linear infinite;
-			transform-origin: 508px 253px;
-			transform: rotate(var(--headTiltAntiClock));
-			animation-direction: alternate;
-			animation-delay: calc(var(--firstAnimeTime) + 1s);
-		}
-
-		#sheep3Head {
-			animation: shakeHeadAntiClock 1.5s linear infinite;
-			transform-origin: 456px 239px;
-			transform: rotate(var(--headTiltAntiClock));
-			animation-direction: alternate;
-			animation-delay: calc(var(--firstAnimeTime) + 1.5s);
-		}
-
-		@keyframes shiftRight {
-		    from {
-		    	transform: translateX(0px);
-
-		    }
-		    to {
-		    	transform: translateX(1500px);
-		    }
-		}
-
-		@keyframes comeUp {
-			from {
-				transform: translateY(150px);
-			}
-			to {
-				transform: translateY(0px);
-			}
-		}
-
-		@keyframes shakeHeadClock {
-			from {
-				transform: rotate(var(--headTiltClock));
-
-			}
-			to {
-				transform: rotate(var(--headTiltClockEnd));
-			}
-		}
-
-		@keyframes shakeHeadAntiClock {
-			from {
-				transform: rotate(var(--headTiltAntiClock));
-			}
-			to {
-				transform: rotate(var(--headTitlAntiClockEnd));
-			}
-		}
-		
-		@media only screen and (max-width: 1000px) {
-		  #centerEverything {
-		    	width: 100vw;
-		  	}
-		}
-
-		#sky {
-			fill:var(--skyBlue);
-		}
-
-		#alex {
-			fill: deepskyblue;
-		}
-
-		h1 {
-			font-size: 20px;
-		}
-
-	</style>
-
-	<link href="https://fonts.googleapis.com/css?family=Raleway:300&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Lato:300&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Noto+Sans+HK&display=swap" rel="stylesheet">
-	
+	<link href="https://fonts.googleapis.com/css?family=Public+Sans:100&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">	
 </head>
+<style>
+	:root {
+		--skyBlue: skyblue;
+		--grassGreen: #7FFFAB;
+		--darkGreen: #5DC967;
+		--svgWidth: 1000px;
+		--svgHeight: 300px;
+		--firstAnimeTime: 1s;
+		--headTiltClock: 30deg;
+		--headTiltAntiClock: calc(-1 * var(--headTiltClock));
+		--rotationAmt: 20deg;
+		--headTiltClockEnd: calc(var(--headTiltClock) + var(--rotationAmt));
+		--headTitlAntiClockEnd: calc(-1 * var(--headTiltClockEnd));
+	}
+
+	body {
+		background-color: var(--grassGreen);
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		cursor: url('./pizzaCursor.svg'), pointer;
+		margin-top: 0px;
+	}
+
+	body *{
+		font-family: 'Public Sans', sans-serif;
+		font-weight: 100;
+	}
+
+	button {
+		background-color: var(--grassGreen);
+		color: white;
+		font-size: 20px;
+		border: solid;
+		border-color: white;
+		border-width: thin;
+		padding: 15px;
+		margin-top: 5px;
+		text-align: center;
+	}
+
+	button:focus { outline:0; }
+
+	#centerEverything {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		width: var(--svgWidth);
+		/*min-width: var(--svgWidth);*/
+	}
+
+	#nonHeader {
+		display: flex;
+		flex-direction: row;
+		width: 100%;
+	}
+
+	#sideButtons {
+		position: sticky;
+		flex-shrink: 0;
+		flex-grow: 1;
+		display: flex;
+		flex-direction: column;
+	}
+
+	#stage {
+		background-color: white;
+		margin: 5px 0px 5px 5px;
+		padding: 5px;
+		width: 100%;
+	}
+
+	#stage h1{
+		color: var(--skyBlue);
+	}
+
+	#stage *:not(br){
+		margin: 0;
+	}
+
+	#header{
+		align-self: center;
+		width: var(--svgWidth);
+		/*min-width: var(--svgWidth);*/
+		height: var(--svgHeight);
+	  	position: sticky;
+	  	overflow: hidden;
+	}
+
+	.content {
+		display:none;
+	}
+
+	.content.contentActive {
+		display:block;
+	}
+
+	.sideButton.sideButtonActive, .sideButton:hover {
+		background-color: var(--darkGreen);
+		transition: 1s;
+		cursor: inherit;
+	}
+
+	#cloud1{
+		animation: shiftRight 40s linear infinite;
+		animation-delay: var(--firstAnimeTime);
+	}
+
+	#cloud2{
+		animation: shiftRight 35s linear infinite;
+		animation-delay: var(--firstAnimeTime);
+	}
+
+	#str{
+		animation: comeUp var(--firstAnimeTime) ease-out;
+	}
+
+	#sheep1Head {
+		animation: shakeHeadClock 1s linear infinite;
+		transform-origin: 694px 231px;
+		transform: rotate(var(--headTiltClock));
+		animation-direction: alternate;
+		animation-delay: calc(var(--firstAnimeTime) + 2s);
+	}
+
+	#sheep2Head {
+		animation: shakeHeadAntiClock 1.2s linear infinite;
+		transform-origin: 508px 253px;
+		transform: rotate(var(--headTiltAntiClock));
+		animation-direction: alternate;
+		animation-delay: calc(var(--firstAnimeTime) + 1s);
+	}
+
+	#sheep3Head {
+		animation: shakeHeadAntiClock 1.5s linear infinite;
+		transform-origin: 456px 239px;
+		transform: rotate(var(--headTiltAntiClock));
+		animation-direction: alternate;
+		animation-delay: calc(var(--firstAnimeTime) + 1.5s);
+	}
+
+	@keyframes shiftRight {
+	    from {
+	    	transform: translateX(0px);
+
+	    }
+	    to {
+	    	transform: translateX(1500px);
+	    }
+	}
+
+	@keyframes comeUp {
+		from {
+			transform: translateY(150px);
+		}
+		to {
+			transform: translateY(0px);
+		}
+	}
+
+	@keyframes shakeHeadClock {
+		from {
+			transform: rotate(var(--headTiltClock));
+
+		}
+		to {
+			transform: rotate(var(--headTiltClockEnd));
+		}
+	}
+
+	@keyframes shakeHeadAntiClock {
+		from {
+			transform: rotate(var(--headTiltAntiClock));
+		}
+		to {
+			transform: rotate(var(--headTitlAntiClockEnd));
+		}
+	}
+	
+	@media only screen and (max-width: 1000px) {
+	  #centerEverything {
+	    	width: 100vw;
+	  	}
+	}
+
+	#sky {
+		fill:var(--skyBlue);
+	}
+
+	#alex {
+		fill: deepskyblue;
+	}
+
+	h1, p, a {
+		font-size: 24px;
+	}
+
+	h1::before,h1::after {
+		content: ' ❄︎ ';
+	}
+
+</style>
 <body>
 	<div id='centerEverything'>
 		<div id='header'>
@@ -221,8 +221,8 @@
 			</g>
 			<g id="txt_1_">
 				<g id="str">
-					<text id='alex' transform="matrix(1 0 0 1 260 179)" fill="#54ACEF" font-family="Quicksand-Regular" font-size="87.2863">Alex’s</text>
-					<text id ='repository' transform="matrix(1 0 0 1 504.5 179)" fill="#FFFFFF" font-family="Quicksand-Regular" font-size="91.2708">repository</text>
+					<text id='alex' transform="matrix(1 0 0 1 260 170)" fill="#54ACEF" font-family="Quicksand-Regular" font-size="87.2863">Alex’s</text>
+					<text id ='repository' transform="matrix(1 0 0 1 504.5 170)" fill="#FFFFFF" font-family="Quicksand-Regular" font-size="91.2708">repository</text>
 				</g>
 			</g>
 			<g id="clouds_1_">
@@ -405,7 +405,10 @@
 				<div class='projects content' id='content_projects'>
 					<h1>2048 Game</h1>
 					<a href="https://peggalex.github.io/test2048" target="_blank">https://peggalex.github.io/test2048</a>
-					<p>Comprehensive model/view/controller game that uses arrow key event listeners (controller) to update game state (model) and display it in an animated fluid ui (view).</p>
+					<p>Comprehensive model/view/controller game.</p>
+					<p> Uses arrow key event listeners (controller),</p>
+					<p> to update game state (model)</p>
+					<p> and display it in an animated fluid ui (view).</p>
 					<br>
 					<br>
 					<h1>Simple grade calculator</h1>
@@ -423,12 +426,14 @@
 					<h1>HTML Resume</h1>
 					<a href="https://peggalex.github.io/resume3.html" target="_blank">https://peggalex.github.com/resume3.html</a>
 					<p>Resume stylized to look like an ide using a combination of syntax from different programming languages.</p>
-					<p>Webfonts unpredictable in Safari, Firefox - recommend chrome or compiled pdf <a href="https://peggalex.github.io/alex_pegg_resume.pdf">here</a>.</p>
+					<p>Webfonts unpredictable in Safari, Firefox - recommend chrome</p>
+					<p> Compiled pdf version <a href="https://peggalex.github.io/alex_pegg_resume.pdf">here</a>.</p>
 					<p>Professional resume <a href='https://www.overleaf.com/read/kttybhdbwppk' target="_blank">here</a>.</p>
 					<br>
 					<br>
 					<h1>Other</h1>
 					<a href="https://github.com/peggalex" target="_blank">https://github.com/peggalex</a>
+					<p> Github with python and java apps and scripts </p>
 				</div>
 				<div class='contact content' id='content_contact'>
 					<h1>Email</h1>

@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>alex_pegg_resume</title>
+	<link href="https://fonts.googleapis.com/css?family=Inconsolata&display=swap" rel="stylesheet" type='text/css'>
+	<link href="https://fonts.googleapis.com/css?family=Public+Sans&display=swap" rel="stylesheet" type='text/css'>
+</head>
+<style>
+
+	body {
+		font-family: 'Public Sans', sans-serif;
+	}
+
+	.row {
+		display: flex;
+		flex-direction: row;
+	}
+
+	.col {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.center {
+		display: flex;
+		align-items: center;
+	}
+
+	span.tag {
+		font-size: 12px;
+		color: 	#C8C8C8;
+		font-family: 'Inconsolata', monospace;
+	}
+
+	span.tag.close::before{
+		content: '</';
+	}
+
+	span.tag.open::before{
+		content: '<';
+	}
+
+	span.tag.open::after,span.tag.close::after{
+		content: '>';
+	}
+
+	span.num {
+		color: mediumpurple;
+	}
+
+	span.and, span.in, span.with, span.for, span.equals, h4{
+		/*color: lightcoral;*/
+		/*color: salmon;*/
+		color: darkorange;
+	}
+
+	h4 {
+		color: crimson;
+		text-indent: 15px;
+		/*font-style: italic;*/
+	}
+
+	h4 > *{
+		color: crimson !important;
+	}
+
+	h4::before{
+		content: '#	';
+	}
+
+	span.code {
+		color: black;
+	}
+
+	h3 {
+		/*color: mediumspringgreen;*/
+		/*color: mediumseagreen;*/
+		/*color: aquamarine;*/
+		color: #00cc65;
+	}
+
+	h3::before {
+		content: '/* ';
+	}
+
+	h3::after {
+		content: ' */';
+	}
+
+	h2 {
+		color: deepskyblue;
+		/*color: steelblue;*/
+		font-size: 20px;
+	}
+
+	.indented {
+		margin-left: 20px;
+	}
+
+	p,h1,h2,h3,h4{
+		margin-top: 2.5px;
+		margin-bottom: 2.5px;
+	}
+
+	p,h2,h3,h4{
+		font-size: 12px;
+	}
+
+	span.tag.param {
+		font-family: 'Public Sans', sans-serif;
+		font-size: 12px;
+		color: #484848;
+	}
+
+	p, h1 {
+		color: #484848;
+	}
+
+	p::after {
+		content: ';';
+	}
+
+	#left {
+		width: 40%;
+	}
+
+	#right {
+		width: 60%;
+		margin-right: 10px;
+	}
+
+	body{
+	    height:297mm;
+	    width:210mm;
+	    margin-left:auto;
+	    margin-right:auto;
+	    background-color: white;
+	    padding-left: 10px;
+		padding-right: 10px;
+	}
+
+	html {
+		background-color: grey;
+	}
+
+	hr {
+		border-style: solid;
+		border-width: 0.5px;
+	}
+</style>
+
+<span class='tag open'>!DOCTYPE resume</span>
+<body clas='col'>
+	<div id='header' class='col center'>
+		<h1><span class='tag open'>head</span><span class='tag open'>title</span>alex_pegg_resume<span class='tag close'>title</span><span class='tag close'>head</span></h1>
+	</div>
+
+	<!--<span class='tag open'>hr</span>
+	<hr>-->
+	<!--<span class='tag open'>style</span><span class='tag'> /* by me, alex pegg; */ </span><span class='tag close'>style</span>-->
+	<br>
+	<span class='tag open'>body</span>
+	<!--<span class='tag open'>body</span>-->
+	<div id='mainContent' class='row'>
+		<div id='left' class='col'>
+			<!--<span class='tag open'>div id='left' style=':width:40%;'</span>-->
+			<div id='education'>
+				<span class='tag open'>div id='education'</span>
+				<h2>education<span class='code'> ( ) = {</h2>
+				<div class='indented'>
+					<p>honorary bs | computer science <span class='and'>and</span> economics</p>
+					<p>university of toronto | <span class='num'>2016</span>-present</p>
+					<p>cs gpa <span class='num'>3.1</span></p>
+					<p>working towards AI</p>
+				</div>
+
+				<h2><span class='code'>}</span></h2>
+				<span class='tag close'>div</span>
+			</div>
+
+			<div id='coursework'>
+				<span class='tag open'>div id='coursework'</span>
+				<h2>coursework<span class='code'> ( ) = {</span></h2>
+
+				<div class='indented'>
+					<h3>computation</h3>
+					<p>software design <span class='and'>and</span> engineering</p>
+					<p>systems programming</p>
+					<p>computer organisation</p>
+					<p>data structures <span class='and'>and</span> analysis</p>
+					<p>numerical  methods</p>
+					<p>computer science implementation project</p>
+
+					<span class='tag open'>br</span>
+
+					<h3>stat/math</h3>
+					<p>linear algebra I</p>
+					<p>calculus of several variables</p>
+					<p>probability <span class='and'>and</span> statistics I</p>
+					<p>introduction to mathematical proofs</p>
+					<p>calculus <span class='and'>and</span> linear algebra <span class='for'>for</span> commerce</p>
+
+					<span class='tag open'>br</span>
+					
+					<h3>economics</h3>
+					<p>macroeconomic theory <span class='and'>and</span> policy</p>
+					<p>microeconmic theory</p>
+					<p>quantitative methods <span class='and'>in</span> economics</p>	
+
+					<span class='tag open'>br</span>
+
+					<h3>currently enrolled</h3>
+					<p>machine learning <span class='and'>and</span> data mining</p>
+					<p>algorithm design <span class='and'>and</span> analysis</p>
+					<p>economic analysis of law</p>
+					<p>money, banking <span class='and'>and</span> financial markets</p>
+				</div>	
+
+				<h2><span class='code'>}</span></h2>
+				<span class='tag close'>div</span>
+			</div>
+
+			<div id='skills'>
+				<span class='tag open'>div id='skills'</span>
+				<h2>skills<span class='code'> ( ) = {</span></h2>
+
+				<div class='indented'>
+
+					<h3>languages and technologies</h3>
+					<h4>experienced</h4>
+					<p>python &bull; java &bull; javascript</p>
+					<h4>proficient</h4>
+					<p>html/css &bull; c &bull; numpy &bull; neo4j &bull; restful API &bull; LaTeX</p>
+
+					<h3>general</h3>
+					<h4>os</h4>
+					<p>linux &bull; mac &bull; windows</p>
+					<h4>ides</h4>
+					<p>jupyter &bull; eclipse &bull; vim &bull; idle</p>
+					<h4>other</h4>
+					<p>runtime analysis &bull; design principles&bull; agile development &bull; mathematical computation optimisation <span class='and'>and</span> conditioning &bull; proof of correctness &bull; data structures</p>
+
+				</div>	
+
+				<h2><span class='code'>}</span></h2>
+				<span class='tag close'>div</span>
+			</div>
+		</div>
+
+		<div id='right' class='col'>
+			<!--<span class='tag open'>div id='right' style=':width:60%;'</span>-->
+			<div id='experience'>
+				<span class='tag open'>div id='experience'</span>
+				<h2>exprience<span class='code'> ( ) = {</h2>
+
+				<div class='indented'>
+					<h3>university of toronto | teaching assistant</h3>
+					<div class='indented'>
+						<h4>winter <span class='num'>2019</span></h4>
+						<p>paid position at the university</p>
+						<p>hosted mandatory tutorials <span class='for'>for</span> the first year computer science course</p>
+						<p>demonstrated strong understanding of python coding <span class='and'>and</span> diagnostics</p>
+						<p>create solutions manuals <span class='and'>and</span> mark midterms/final exams</p>
+						<p>host office hours <span class='and'>and</span> invigilate tests</p>
+					</div>
+
+					<span class='tag open'>br</span>
+
+					<h3>project include | teaching assistant</h3>
+					<div class='indented'>
+						<h4>summer <span class='num'>2018</span></h4>
+						<p>volunteering student initiative amongst team of <span class='num'>16</span></p>
+						<p> helped coordinate <span class='and'>and</span> carry out a coding bootcamp <span class='for'>for</span> at-risk secondary students across mississauga</p>
+						<p> teaching basic python at different libraries <span class='and'>and</span> schools <span class='for'>for</span> <span class='num'>4</span> weeks</p>
+						<p> prelimiary marketing <span class='and'>and</span> organisation 8 weeks prior</p>
+					</div>
+
+					<span class='tag open'>br</span>
+
+					<h3>university of toronto | special project</h3>
+					<div class='indented'>
+						<h4>early <span class='num'>2019</span>-present</h4>
+						<p>volunteering project <span class='in'>in</span> conjunction <span class='with'>with</span> a professor</p>
+						<p>creating a indifference curve analysis (microeconomics) graphing software</p>
+						<p>full stack <span class='with'>with</span> HTML/javascript frontend, python backend (connected <span class='with'>with</span> jquery <span class='and'>and</span> flask python server)</p>
+						<p>created an initial prototype alone over christmas, economics department head requested it on UofT economics homepage</p>
+						<p>pursuing optimisation <span class='and'>and</span> further development <span class='with'>with</span> a computer science professor</p>
+						<p>current URI: <span class='num'>142.1.44.135:5000</span> (may be ip restricted)</p>
+					</div>
+
+					<span class='tag open'>br</span>
+
+					<h3> independent | mini projects</h3>
+					<div class='indented'>
+						<h4>present</h4>
+						<p>small independent projects <span class='and'>and</span> compsci+art on website</p>
+						<p>further java <span class='and'>and</span> python experiments on github repository</p>
+						<p> links are by the icons at the top of page</p>
+					</div>
+				</div>
+
+				<h2><span class='code'>}</span></h2>
+				<span class='tag close'>div</span>
+			</div>
+			<div id='links'>
+				<span class='tag open'>div id='links'</span>
+				<h2>links<span class='code'> ( ) = {</h2>
+
+				<div class='indented'>
+					<h3> email </h3>
+					<span class='tag open'>a href=mailto:<span class='tag param'>alex.pegg@mail.utoronto.ca</span></span><span class='tag close'>a</span>
+
+					<br>
+
+					<h3> website </h3>
+					<span class='tag open'>a href=<span class='tag param'>peggalex.github.io</span> target="_blank"</span><span class='tag close'>a</span>
+
+					<br>
+
+					<h3> github </h3>
+					<span class='tag open'>a href=<span class='tag param'>github.com/peggalex</span> target="_blank"</span><span class='tag close'>a</span>
+
+					<br>
+
+					<h3> linkedIn </h3>
+					<span class='tag open'>a href=<span class='tag param'>linkedin.com/in/alexander-pegg-68b954163</span> target="_blank"</span><span class='tag close'>a</span>
+
+
+				</div>
+
+				<h2><span class='code'>}</span></h2>
+				<span class='tag close'>div</span>
+			</div>
+		</div>
+	</div>
+	<span class='tag close'>body</span>
+	<br>
+	<span class='tag close'>resume</span>
+</body>
+
+
+</html>

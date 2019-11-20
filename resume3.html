@@ -127,7 +127,7 @@
 
 	#right {
 		width: 60%;
-		margin-right: 10px;
+		padding-left: 3px;
 	}
 
 	body{
@@ -145,22 +145,37 @@
 	}
 
 	hr {
-		border-style: solid;
-		border-width: 0.5px;
+		border-style: dashed;
+		border-width: thin;
+		border-color: #C8C8C8;
 	}
+
+
+	#left > div, #right > div, #header {
+		border: dashed;
+		border-width: thin;
+		border-color: #C8C8C8;
+	}
+
+	div > div > div {
+		padding-left: 5px;
+		margin-bottom: 3px;
+	}
+
 </style>
 
 <span class='tag open'>!DOCTYPE resume</span>
 <body clas='col'>
-	<div id='header' class='col center'>
-		<h1><span class='tag open'>head</span><span class='tag open'>title</span>alex_pegg_resume<span class='tag close'>title</span><span class='tag close'>head</span></h1>
+	<div>
+		<div id='header' class='col center'>
+			<h1><span class='tag open'>head</span><span class='tag open'>title</span>alex_pegg_resume<span class='tag close'>title</span><span class='tag close'>head</span></h1>
+		</div>
+		<span class='tag open'>body</span>
 	</div>
 
 	<!--<span class='tag open'>hr</span>
 	<hr>-->
 	<!--<span class='tag open'>style</span><span class='tag'> /* by me, alex pegg; */ </span><span class='tag close'>style</span>-->
-	<br>
-	<span class='tag open'>body</span>
 	<!--<span class='tag open'>body</span>-->
 	<div id='mainContent' class='row'>
 		<div id='left' class='col'>
@@ -337,6 +352,7 @@
 	<span class='tag close'>body</span>
 	<br>
 	<span class='tag close'>resume</span>
+	<hr>
 </body>
 
 

@@ -3,7 +3,7 @@ document.getElementById('svgHeader').innerHTML = `	<g id="background">
 	</g>
 	<g id="txt_1_">
 		<g id="str">
-			<text id='alex' transform="matrix(1 0 0 1 260 170)" fill="#54ACEF" font-family="Quicksand-Regular" font-size="87.2863">alex’s</text>
+			<text id='alexSheep' transform="matrix(1 0 0 1 260 170)" fill="#54ACEF" font-family="Quicksand-Regular" font-size="87.2863">alex’s</text>
 			<text id ='repository' transform="matrix(1 0 0 1 504.5 170)" fill="#FFFFFF" font-family="Quicksand-Regular" font-size="91.2708">repository</text>
 		</g>
 	</g>

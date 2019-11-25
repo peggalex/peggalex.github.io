@@ -675,6 +675,8 @@ $('#button_about').trigger('click')
 				intervalFunctions.push(window.setTimeout(()=>leafPlace.removeChild(leaf), animationTime))
 			}
 
+			console.log('goin')
+
 		}
 
 		intervalFunctions.push(window.setInterval(createLeaf, interval))

@@ -55,6 +55,16 @@
 
 	button:focus { outline:0; }
 
+	.row {
+		display: flex;
+		flex-direction: row;
+	}
+
+	.col {
+		display: flex;
+		flex-direction: column;
+	}
+
 	#centerEverything {
 		display: flex;
 		flex-direction: column;
@@ -266,17 +276,6 @@
 		}
 	}
 
-	#themeButtons {
-		position: absolute;
-		right: 10px;
-
-	}
-	#themeButtons > button {
-		border-style: none;
-		margin-left: 5px;
-		border-radius: 50%;
-	}
-
 	#strIsland {
 		animation: fadeIn 2s ease-in;
 	}
@@ -463,8 +462,44 @@
 		}
 	}
 
-	button.selectedTheme {
+	#themeButtons {
+		margin-top: 5px;
+		position: absolute;
+		right: 10px;
+	}
+	.themeButton {
+		border-style: none;
+		border-radius: 50%;
+		border-color: white;
+		border-width: thin;
+		/*width:29px;
+		height:29px;*/
+	}
+
+	div.selectedTheme {
 		border-style: solid !important;
+		top: -1px;
+		left: -1px;
+
+	}
+
+	.halfCircle {
+		width: 30px;
+		height: 15px;
+		border-top-left-radius:30px;
+		border-top-right-radius:30px;
+		transform-origin: 15px 15px;
+		transform: rotate(-45deg);
+	}
+
+	.fullCircle {
+		width: 30px;
+		height: 30px;
+		border-radius: 30px;
+	}
+
+	.buttonContainer {
+		margin-left: 5px;
 	}
 
 
@@ -473,7 +508,7 @@
 	<div id='centerEverything'>
 		<div id='header'>
 			<div id='themeButtonsContainer' style='position: relative;'>
-				<div id='themeButtons'>
+				<div id='themeButtons' class='row'>
 				</div>
 			</div>
 			<?xml version="1.0" encoding="utf-8"?>
@@ -673,9 +708,6 @@ $('#button_about').trigger('click')
 
 			leafPlace.appendChild(leaf)
 			intervalFunctions.push(window.setTimeout(()=>leafPlace.removeChild(leaf), animationTime))
-
-			console.log('goin	')
-
 		}
 
 		intervalFunctions.push(window.setInterval(createLeaf, interval))
@@ -767,20 +799,50 @@ $('#button_about').trigger('click')
 		$('head').append(`<script type="text/javascript" src="https://peggalex.github.io/${theme.jsName}"><`+'/script>')
 	}
 
+	buttonDim = 30 //px
+
 	let themeButtons = document.getElementById('themeButtons')
 	themes.forEach((theme)=>{
-		let butt = document.createElement('button')
-		butt.classList.add('themeButton')
-		butt.style.backgroundColor = theme.colors.colors.primary
+
+		let buttonContainer = document.createElement('div')
+		buttonContainer.classList.add('buttonContainer')
+		buttonContainer.style.position = 'relative'
+		buttonContainer.style.width = '30px';
+		buttonContainer.style.height = '30px';
+
+		let circleContainer = document.createElement('div')
+		circleContainer.style.position = 'absolute'
+		circleContainer.style.top = '0px'
+
+		let halfCircleContainer = document.createElement('div')
+		halfCircleContainer.style.position = 'absolute'
+
+
+		let halfCircle = document.createElement('div')
+		halfCircle.classList.add('halfCircle')
+		halfCircle.style.backgroundColor = theme.colors.colors.buttonSelected
+		halfCircleContainer.appendChild(halfCircle)
+		circleContainer.appendChild(halfCircleContainer)
+
+		let fullCircle = document.createElement('div')
+		fullCircle.classList.add('fullCircle')
+		fullCircle.style.backgroundColor = theme.colors.colors.button
+		circleContainer.appendChild(fullCircle)
+
+		buttonContainer.appendChild(circleContainer)
+
+		buttonContainer.classList.add('themeButton')
 		let t = theme
-
-		butt.addEventListener('click', function() {
+		buttonContainer.addEventListener('click', function() {
+			if ($('.selectedTheme')[0] == buttonContainer){
+				return
+			}
 			$('.selectedTheme').removeClass('selectedTheme')
-			butt.classList.add('selectedTheme')
+			buttonContainer.classList.add('selectedTheme')
 			selectTheme(t)		
-		})
+		})		
 
-		themeButtons.appendChild(butt)
+		themeButtons.appendChild(buttonContainer)
 	})
 
 	themeIndex = Math.floor(Math.random()*themes.length)

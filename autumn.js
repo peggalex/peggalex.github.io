@@ -1,9 +1,4 @@
-svgString = `<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 width="1000px" height="300px" viewBox="0 0 1000 300" enable-background="new 0 0 1000 300" xml:space="preserve">
-	<g>
+svgString = `	<g>
 		<rect y="150" fill="#FBB03B" width="1000" height="150"/>
 		<polyline fill="#E6E6E6" points="500,150.5 547.999,150 900,300 100,300 452,150 499.2,150.5 	"/>
 		<polyline fill="#666666" points="470,150 250,300 750,300 530,150 	"/>
@@ -76,27 +71,11 @@ svgString = `<?xml version="1.0" encoding="utf-8"?>
 	<g id='str'>
 		<text id="alex" transform="matrix(1 0 0 1 155 130)" fill="#FFFFFF" font-family="Quicksand-Regular" font-size="90">Alex’s</text>
 		<text id="repository" transform="matrix(1 0 0 1 435 130)" fill="#FFFFFF" font-family="Quicksand-Regular" font-size="90">repository</text>
-	</g>
-</svg>`
+	</g>`
 
 document.getElementById('svgHeader').innerHTML = svgString
 
 const svgNameSpace = "http://www.w3.org/2000/svg"
-
-sideButtonCallback = function() {
-	$(".contentActive").removeClass("contentActive")
-	$(".sideButtonActive").removeClass("sideButtonActive")
-
-	$('#'+this.id).addClass("sideButtonActive")
-
-	let type = this.id.split('_')[1]
-	let contentName = '#content_'+type
-	$(contentName).addClass("contentActive")
-}
-
-$('.sideButton').on('click',sideButtonCallback)
-$('#button_about').trigger('click')
-
 
 LeafBuilder = function(pointsStr, stemStr){
 	this.stemStr = stemStr

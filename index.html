@@ -572,6 +572,9 @@ $('.sideButton').on('click',sideButtonCallback)
 $('#button_about').trigger('click')
 </script>
 <script>
+
+	var intervalFunctions = []
+
 	autumn_js = function() {
 		const svgNameSpace = "http://www.w3.org/2000/svg"
 
@@ -676,8 +679,6 @@ $('#button_about').trigger('click')
 
 		intervalFunctions.push(window.setInterval(createLeaf, interval))
 	}
-
-	intervalFunctions = []
 
 	ThemeColors = function(primary, background, button, buttonSelected, text){
 		this.colors = {

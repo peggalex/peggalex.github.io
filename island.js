@@ -858,4 +858,4 @@ document.getElementById('svgHeader').innerHTML = `	<polyline fill="#00FFFF" poin
 					c0,0,40.5,43.75,71.75,0c0,0,36,50,64,0"/>
 			</g>
 		</g>
-	</g>
+	</g>`

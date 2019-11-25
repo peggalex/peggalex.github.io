@@ -1,4 +1,5 @@
-document.getElementById('svgHeader').innerHTML = `	<g>
+document.getElementById('svgHeader').innerHTML = `	<polyline fill="#87CEFA" points="0,300 0,0 1000,0 1000,300 "/>
+	<g>
 		<rect y="150" fill="#FBB03B" width="1000" height="150"/>
 		<polyline fill="#E6E6E6" points="500,150.5 547.999,150 900,300 100,300 452,150 499.2,150.5 	"/>
 		<polyline fill="#666666" points="470,150 250,300 750,300 530,150 	"/>

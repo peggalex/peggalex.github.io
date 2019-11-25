@@ -656,6 +656,8 @@ $('#button_about').trigger('click')
 		animationTime = 3000 //in ms
 		interval = 500 //in ms
 
+		let leafPlace = document.getElementById('leafPlace')
+
 		createLeaf = ()=>{
 
 			leaf_i = Math.floor(Math.random()*3)
@@ -668,14 +670,11 @@ $('#button_about').trigger('click')
 			color = leafColors[color_i]
 
 			let leaf = leafBuilder.build(color, rotation, x, scale)
-			let leafPlace = document.getElementById('leafPlace')
 
-			if (leafPlace!=null){
-				leafPlace.appendChild(leaf)
-				intervalFunctions.push(window.setTimeout(()=>leafPlace.removeChild(leaf), animationTime))
-			}
+			leafPlace.appendChild(leaf)
+			intervalFunctions.push(window.setTimeout(()=>leafPlace.removeChild(leaf), animationTime))
 
-			console.log('goin')
+			console.log('goin	')
 
 		}
 
@@ -752,8 +751,6 @@ $('#button_about').trigger('click')
 			return
 		}
 		theme.colors.set()
-		$('head').append(`<script type="text/javascript" src="https://peggalex.github.io/${theme.jsName}"><`+'/script>')
-
 
 		callback = function(mutationsList, observer) {
 			theme.func()
@@ -766,6 +763,8 @@ $('#button_about').trigger('click')
 			childList: true,
 			subtree: true
 		})
+
+		$('head').append(`<script type="text/javascript" src="https://peggalex.github.io/${theme.jsName}"><`+'/script>')
 	}
 
 	let themeButtons = document.getElementById('themeButtons')

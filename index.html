@@ -747,6 +747,10 @@ $('#button_about').trigger('click')
 		intervalFunctions.forEach((f)=>window.clearInterval(f))
 		//clear all running functions like making leaves fall
 
+		if (theme==null){
+			console.log('i dont know why?')
+			return
+		}
 		theme.colors.set()
 		$('head').append(`<script type="text/javascript" src="https://peggalex.github.io/${theme.jsName}"><`+'/script>')
 
@@ -771,7 +775,7 @@ $('#button_about').trigger('click')
 		butt.style.backgroundColor = theme.colors.colors.primary
 		let t = theme
 
-		butt.addEventListener('click', () => {
+		butt.addEventListener('click', function() {
 			$('.selectedTheme').removeClass('selectedTheme')
 			butt.classList.add('selectedTheme')
 			selectTheme(t)		

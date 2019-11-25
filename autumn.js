@@ -1,4 +1,4 @@
-svgString = `	<g>
+document.getElementById('svgHeader').innerHTML = `	<g>
 		<rect y="150" fill="#FBB03B" width="1000" height="150"/>
 		<polyline fill="#E6E6E6" points="500,150.5 547.999,150 900,300 100,300 452,150 499.2,150.5 	"/>
 		<polyline fill="#666666" points="470,150 250,300 750,300 530,150 	"/>
@@ -68,121 +68,7 @@ svgString = `	<g>
 			C978.888,152.918,975.769,194.396,914.547,189.42z"/>
 	</g>
 	<g id='leafPlace'></g>
-	<g id='str'>
+	<g id='strAutumn'>
 		<text id="alex" transform="matrix(1 0 0 1 155 130)" fill="#FFFFFF" font-family="Quicksand-Regular" font-size="90">Alex’s</text>
 		<text id="repository" transform="matrix(1 0 0 1 435 130)" fill="#FFFFFF" font-family="Quicksand-Regular" font-size="90">repository</text>
 	</g>`
-
-document.getElementById('svgHeader').innerHTML = svgString
-
-const svgNameSpace = "http://www.w3.org/2000/svg"
-
-LeafBuilder = function(pointsStr, stemStr){
-	this.stemStr = stemStr
-
-	this.pointsStr = pointsStr
-	this.minX = Infinity
-	this.maxX = 0
-	this.minY = Infinity
-	this.maxY = 0
-	this.pointsStr.split(' ').forEach((point) => {
-		if (point=='	'){
-			return
-		}
-		// ^ adobe creates the points with an appened tab at the end
-		[x,y] = point.split(',')
-
-		x = parseFloat(x)
-		y = parseFloat(y)
-
-		this.minX = Math.min(this.minX, x)
-		this.minY = Math.min(this.minY, y)
-
-		this.maxX = Math.max(this.maxX, x)
-		this.maxY = Math.max(this.maxY, y)
-	})
-	this.centerX = (this.minX + this.maxX)/2
-	this.centerY = (this.minY + this.maxY)/2
-
-
-	this.build = (color, rotation, x, scale) => {
-		wrapper = document.createElementNS(svgNameSpace, 'g')
-		innerWrapper = document.createElementNS(svgNameSpace, 'g')
-		innerWrapper2 = document.createElementNS(svgNameSpace, 'g')
-		wholeLeaf = document.createElementNS(svgNameSpace, 'g')
-		wholeLeaf.innerHTML = this.stemStr
-
-		leaf = document.createElementNS(svgNameSpace, 'polyline')
-		leaf.setAttribute('points',this.pointsStr)
-		leaf.setAttribute('fill',color)
-		//leaf.setAttribute('stroke','#603813')
-		//leaf.setAttribute('stroke-width','0.5px')
-
-		wholeLeaf.appendChild(leaf)
-		wholeLeaf.setAttribute('transform',`rotate(${rotation}, ${this.centerX}, ${this.centerY})`)
-
-		innerWrapper2.append(wholeLeaf)
-		coeff = 1-scale
-		innerWrapper2.setAttribute('transform',`translate(${coeff*this.centerX} ${coeff*this.centerY}) scale(${scale} ${scale})`)
-
-		innerWrapper.append(innerWrapper2)
-		innerWrapper.setAttribute('transform',`translate(${x-this.minX})`)
-
-		wrapper.appendChild(innerWrapper)
-		wrapper.classList.add('fallingLeaf')
-
-		return wrapper
-	}
-}
-
-leaves = [
-	new LeafBuilder(`712.471,528.889 698.832,522.963 703.037,519.251 698.832,511.868 707.549,515.354 
-		710.625,510.022 716.162,518.226 714.727,499.563 719.648,502.64 726.211,495.667 730.312,503.255 736.26,502.64 730.107,520.626 
-		741.797,516.584 739.951,521.302 747.334,521.917 741.182,526.224 747.334,530.734 731.168,533.227 734.501,537.428 
-		708.574,533.606 	`, '<line fill="#603813" stroke="#603813" stroke-width="2" stroke-miterlimit="10" x1="721.125" y1="535.201" x2="720.083" y2="545"/>'),
-
-	new LeafBuilder(`524.865,547.032 510.226,537.314 514.948,535.579 509.667,525.933 521.324,531.584 
-		523.094,525.342 530.619,537.294 529.145,516.488 534.751,521.211 539.197,511.029 544.047,522.243 550.096,516.932 
-		545.191,537.294 558.064,530.808 557.559,536.683 569.721,537.441 560.721,542.458 566.18,545.409 549.211,549.541 550.688,555 
-		535.637,550.573 521.176,552.935 	`, '<line fill="#603813" stroke="#603813" stroke-width="2" stroke-miterlimit="10" x1="536" y1="550.001" x2="534.25" y2="560"/>'),
-
-	new LeafBuilder(`281.752,542.531 268.89,537.007 272.531,534.683 265.608,527.541 276.687,531.235 276.379,524.54 
-		283.048,528.926 281.983,516.46 287.986,520.214 293.694,508.61 296.234,521.138 304.383,518.307 300.851,530.312 309.942,527.277 
-		305.776,532 315.229,532 309.585,538.051 316.088,540.515 301.094,544.216 304.167,547.235 291,546.001 278.167,547.235 	`, '<line fill="#603813" stroke="#603813" stroke-width="2" stroke-miterlimit="10" x1="291" y1="546.001" x2="289.25" y2="556"/>')
-]
-
-leafColors = ["#F15A24", "#ED1C24", "#FBB03B"]
-
-leafPlace = document.getElementById('leafPlace')
-
-lastTime = 0
-
-animationTime = 3000 //in ms
-interval = 500 //in ms
-
-createLeaf = (time)=>{
-	if (time-lastTime < interval) {
-		window.requestAnimationFrame(createLeaf)
-		return
-	}
-	lastTime = time
-
-	leaf_i = Math.floor(Math.random()*3)
-	color_i = Math.floor(Math.random()*3)
-	rotation = Math.random()*360
-	x = Math.random()*1000
-	scale = 0.75+Math.random()/2
-
-	leafBuilder = leaves[leaf_i]
-	color = leafColors[color_i]
-
-	let leaf = leafBuilder.build(color, rotation, x, scale)
-
-	leafPlace.appendChild(leaf)
-	window.setTimeout(()=>leafPlace.removeChild(leaf), animationTime)
-
-	window.requestAnimationFrame(createLeaf)
-}
-
-window.requestAnimationFrame(createLeaf)
-

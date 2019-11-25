@@ -672,8 +672,10 @@ $('#button_about').trigger('click')
 
 			let leaf = leafBuilder.build(color, rotation, x, scale)
 
-			leafPlace.appendChild(leaf)
-			intervalFunctions.push(window.setTimeout(()=>leafPlace.removeChild(leaf), animationTime))
+			if (leafPlace!=null){
+				leafPlace.appendChild(leaf)
+				intervalFunctions.push(window.setTimeout(()=>leafPlace.removeChild(leaf), animationTime))
+			}
 
 		}
 

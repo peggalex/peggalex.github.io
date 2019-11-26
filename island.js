@@ -860,5 +860,5 @@ document.getElementById('svgHeader').innerHTML = `	<polyline fill="#00FFFF" poin
 		</g>
 	</g>`
 if (navigator.userAgent.indexOf('Firefox')> -1){
-	document.getElementById("textMe").setAttribute('startOffset','-33%')
+	document.getElementById("textMe").setAttribute('startOffset','-25%')
 }

@@ -285,6 +285,30 @@
 			margin-left:25px;
 		}
 
+		input[type='number'] {
+		    -moz-appearance:textfield;
+		}
+
+		input::-webkit-outer-spin-button,
+		input::-webkit-inner-spin-button {
+		    -webkit-appearance: none;
+		}
+
+		#grades > div > input {
+			width: 55px;
+		}
+
+		.scoreContainer {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+		}
+
+		.scoreContainer > input{
+			max-height: 13px;
+			max-width: 76px;
+		}
+
 		/*#benegg{
 			border-top-style: solid;
 			border-bottom-style: solid;
@@ -451,18 +475,72 @@
     	setTimeout(()=>grades.removeChild(row),100)
     }
 
+    addPercentGrade = (div) => {
+    	grade = div
+     	grade.classList.add('percentGrade')
+    	grade.innerHTML += '<p>percent score: </p>'
+    	percent = document.createElement("input")
+    	percent.setAttribute('type','number')
+       	percent.setAttribute('step','any')
+      	percent.setAttribute('min','0')
+    	percent.setAttribute('placeholder','%')
+    	percent.classList.add('percent')
+    	percent.required = true
+    	grade.appendChild(percent)
+    	grade.innerHTML += '<p>%</p>'
+    }
+
+    addScoreGrade = (div) => {
+    	grade = div
+        grade.classList.add('scoreGrade')
+    	grade.innerHTML += '<p> score: </p>'
+
+    	scoreContainer = document.createElement('div')
+    	scoreContainer.classList.add('scoreContainer')
+
+    	score = document.createElement("input")
+    	score.setAttribute('type','number')
+       	score.setAttribute('step','any')
+      	score.setAttribute('min','0')
+    	score.setAttribute('placeholder','score')
+       	score.classList.add('score')
+    	score.required = true
+    	scoreContainer.appendChild(score)
+
+    	scoreContainer.innerHTML += '<p>/</p>'
+
+    	outOf = document.createElement("input")
+    	outOf.setAttribute('type','number')
+    	outOf.setAttribute('step','any')
+      	outOf.setAttribute('min','0')
+    	outOf.setAttribute('placeholder','out of')
+        outOf.classList.add('outOf')
+    	outOf.required = true
+    	scoreContainer.appendChild(outOf)
+
+    	grade.append(scoreContainer)
+    }
+
+    addLabel = (div) => {
+    	div.innerHTML += '<p> label: </p>'
+    	label = document.createElement('input')
+    	label.classList.add('label')
+    	label.setAttribute('type','text')
+    	label.setAttribute('placeholder', 'optional')
+    	div.appendChild(label)
+    }
+
     addWeightAndDelete = (div) => {
 		div.innerHTML += '<p> weight: </p>'
     	weight = document.createElement('input')
     	weight.setAttribute('type','number')
     	weight.setAttribute('step','any')
     	weight.setAttribute('min','0')
-    	weight.setAttribute('placeholder','weight %')
+    	weight.setAttribute('placeholder','%')
     	weight.classList.add('weight')
     	weight.required = true
     	div.appendChild(weight)
     	div.innerHTML += '<p>%</p>'
-
 
     	deleteButt = document.createElement('button')
     	deleteButt.addEventListener('click',deleteGrade)
@@ -470,7 +548,23 @@
     	div.appendChild(deleteButt)
     }
 
-    newPercentGrade = () => {
+    createGrade = (inputFunc) => {
+    	loadWhale()
+    	grade = document.createElement("div")
+    	grade.classList.add('row')
+    	addLabel(grade)
+    	inputFunc(grade)
+    	addWeightAndDelete(grade)
+    	grades.appendChild(grade)
+
+    }
+
+	newPercentGrade = () => createGrade(addPercentGrade)
+
+	newScoreGrade = () => createGrade(addScoreGrade)
+
+
+    /*newPercentGrade = () => {
     	loadWhale()
     	grade = document.createElement("div")
     	grade.classList.add('percentGrade')
@@ -489,9 +583,9 @@
 
     	addWeightAndDelete(grade)
     	grades.appendChild(grade)
-    }
+    }*/
 
-    newScoreGrade = () => {
+    /*newScoreGrade = () => {
     	loadWhale()
     	grade = document.createElement("div")
     	grade.classList.add('scoreGrade')
@@ -519,7 +613,7 @@
 
     	addWeightAndDelete(grade)
     	grades.appendChild(grade)
-    }
+    }*/
 
     DataPoint = function(grade,weight){
     	this.grade = grade
@@ -725,8 +819,6 @@
 		document.getElementById('ifGetOutput').innerHTML = ((val*remainingWeights+total)*100).toFixed(2) + '%'
 
 	}
-
-
 
 	cdfHandler = (event) => {
 		event.preventDefault()

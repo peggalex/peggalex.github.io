@@ -517,7 +517,7 @@ document.getElementById('svgHeader').innerHTML = `<g>
 <g id="petals">
 	<path id="petal3" fill="#F9A2E8" stroke="#F9A2E8" stroke-miterlimit="10" d="M575.398-64.262c0,0-2.888-3.829-6.604-1.239
 		c-3.717,2.591,0.571,7.434,0.962,7.659C570.146-57.617,576.82-59.982,575.398-64.262z">
-		<animateMotion dur='5s'>
+		<animateMotion dur='5s' repeatcount='indefinite'>
 			<mpath href='#guide1'>
 		</animateMotion>
 	</path>

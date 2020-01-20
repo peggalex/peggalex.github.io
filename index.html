@@ -508,6 +508,19 @@
 		margin-left: 5px;
 	}
 
+	#chineseClouds > *{
+		animation: moveChineseClouds 40s linear infinite, fadeIn 1s;
+		animation-delay: -20s;
+	}
+
+	@keyframes moveChineseClouds{
+		from {
+			transform: translateX(0px);
+		} to {
+			transform: translateX(-1500px);
+		}
+	}
+
 
 </style>
 <body>
@@ -517,10 +530,7 @@
 				<div id='themeButtons' class='row'>
 				</div>
 			</div>
-			<?xml version="1.0" encoding="utf-8"?>
-			<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-			<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-			<svg version="1.1" id="svgHeader" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+			<svg version="1.1" id="svgHeader" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
 				 width="1000px" height="300px" viewBox="0 0 1000 300" enable-background="new 0 0 1000 300" xml:space="preserve">
 			</svg>
 		</div>
@@ -620,12 +630,13 @@ $('#button_about').trigger('click')
 
 		LeafBuilder = function(pointsStr, stemStr){
 			this.stemStr = stemStr
-
 			this.pointsStr = pointsStr
+
 			this.minX = Infinity
-			this.maxX = 0
 			this.minY = Infinity
+			this.maxX = 0
 			this.maxY = 0
+
 			this.pointsStr.split(' ').forEach((point) => {
 				if (point=='	'){
 					return
@@ -638,9 +649,8 @@ $('#button_about').trigger('click')
 
 				this.minX = Math.min(this.minX, x)
 				this.minY = Math.min(this.minY, y)
-
 				this.maxX = Math.max(this.maxX, x)
-				this.maxY = Math.max(this.maxY, y)
+				this.maxY = Math.max(this.minY, x)
 			})
 			this.centerX = (this.minX + this.maxX)/2
 			this.centerY = (this.minY + this.maxY)/2
@@ -656,8 +666,6 @@ $('#button_about').trigger('click')
 				leaf = document.createElementNS(svgNameSpace, 'polyline')
 				leaf.setAttribute('points',this.pointsStr)
 				leaf.setAttribute('fill',color)
-				//leaf.setAttribute('stroke','#603813')
-				//leaf.setAttribute('stroke-width','0.5px')
 
 				wholeLeaf.appendChild(leaf)
 				wholeLeaf.setAttribute('transform',`rotate(${rotation}, ${this.centerX}, ${this.centerY})`)
@@ -701,8 +709,8 @@ $('#button_about').trigger('click')
 
 		createLeaf = ()=>{
 
-			leaf_i = Math.floor(Math.random()*3)
-			color_i = Math.floor(Math.random()*3)
+			leaf_i = Math.floor(Math.random()*leaves.length)
+			color_i = Math.floor(Math.random()*leafColors.length)
 			rotation = Math.random()*360
 			x = Math.random()*1000
 			scale = 0.75+Math.random()/2
@@ -766,6 +774,14 @@ $('#button_about').trigger('click')
 
 	))
 
+	blossomTheme = new Theme(()=>{}, 'blossom.js', new ThemeColors(
+		"#F9A2E8",
+		"#FFFFFF",
+		"#1B1464",
+		"#3e3691",
+		"#F9A2E8"
+	))
+
 	callback = function(mutationsList, observer) {
 		observer.disconnect()
 	}
@@ -778,7 +794,7 @@ $('#button_about').trigger('click')
 	})
 
 
-	themes = [autumnTheme, sheepTheme, islandTheme]
+	themes = [autumnTheme, sheepTheme, islandTheme, blossomTheme]
 
 	selectTheme = (theme) => {
 		intervalFunctions.forEach((f)=>window.clearInterval(f))

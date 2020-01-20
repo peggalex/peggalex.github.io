@@ -1,5 +1,5 @@
 document.getElementById('svgHeader').innerHTML = `<g>
-	<g>
+	<g id='chineseClouds' transform='translate(800,0)'>
 		<path fill="none" stroke="#1B1464" stroke-width="3" stroke-miterlimit="10" d="M326.05,62.036c0,0,18.992,17.67,24.241-8.302
 			c0,0,21.91-11.786-0.5-27.28c0,0,0.66-28.779-25.041-16.958c0,0-52.904-11.219-69.799,13.497
 			c-21.605,31.606-34.821,10.614-34.821,10.614s-9.673-8.87,3.398-18.112c0,0-24.369,11.247-6.561,26.993

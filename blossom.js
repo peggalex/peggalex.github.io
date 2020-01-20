@@ -523,49 +523,49 @@ document.getElementById('svgHeader').innerHTML = `<g>
 	</path>
 	<path fill="#F9BBF0" d="M4.952-1.298c0,0-5.636,0.469-6.222-2.58c0,0-3.283,5.078-0.352,7.289
 		C1.31,5.622,4.605-0.712,4.952-1.298z">
-		<animateMotion begin='-0.1s' dur='5s' rotate='auto' repeatCount = 'indefinite'>
+		<animateMotion begin='-0.5s' dur='5s' rotate='auto' repeatCount = 'indefinite'>
 			<mpath href='#guide1'
 		</animateMotion>
 	</path>
 	<path fill="#F7BCEE" d="M4.952,0.039c0,0-2.24-4.371-6.109-2.914C-5.025-1.418-4.428,3.438-2.946,4.41
 		C-1.465,5.382,4.407,2.954,4.952,0.039z">
-		<animateMotion begin='-0.2s' dur='5s' rotate='auto' repeatCount = 'indefinite'>
+		<animateMotion begin='-1s' dur='5s' rotate='auto' repeatCount = 'indefinite'>
 			<mpath href='#guide3'
 		</animateMotion>
 	</path>
 		<path fill="#F9A2E8" stroke="#F9A2E8" stroke-miterlimit="10" d="M3.956-1.035c0,0-2.888-3.829-6.604-1.239
 		c-3.717,2.591,0.571,7.434,0.962,7.659C-1.296,5.61,5.377,3.246,3.956-1.035z">
-		<animateMotion begin='-0.3s' dur='5s' rotate='auto' repeatCount = 'indefinite'>
+		<animateMotion begin='-1.5s' dur='5s' rotate='auto' repeatCount = 'indefinite'>
 			<mpath href='#guide4'
 		</animateMotion>
 	</path>
 	<path fill="#F9BBF0" d="M4.952-1.298c0,0-5.636,0.469-6.222-2.58c0,0-3.283,5.078-0.352,7.289
 		C1.31,5.622,4.605-0.712,4.952-1.298z">
-		<animateMotion begin='-0.4s' dur='5s' rotate='auto' repeatCount = 'indefinite'>
+		<animateMotion begin='-2s' dur='5s' rotate='auto' repeatCount = 'indefinite'>
 			<mpath href='#guide5'
 		</animateMotion>
 	</path>
 	<path fill="#F7BCEE" d="M4.952,0.039c0,0-2.24-4.371-6.109-2.914C-5.025-1.418-4.428,3.438-2.946,4.41
 		C-1.465,5.382,4.407,2.954,4.952,0.039z">
-		<animateMotion begin='-0.5s' dur='5s' rotate='auto' repeatCount = 'indefinite'>
+		<animateMotion begin='-2.5s' dur='5s' rotate='auto' repeatCount = 'indefinite'>
 			<mpath href='#guide6'
 		</animateMotion>
 	</path>
 	<path fill="#F9A2E8" stroke="#F9A2E8" stroke-miterlimit="10" d="M3.956-1.035c0,0-2.888-3.829-6.604-1.239
 		c-3.717,2.591,0.571,7.434,0.962,7.659C-1.296,5.61,5.377,3.246,3.956-1.035z">
-		<animateMotion begin='-0.6s' dur='5s' rotate='auto' repeatCount = 'indefinite'>
+		<animateMotion begin='-3s' dur='5s' rotate='auto' repeatCount = 'indefinite'>
 			<mpath href='#guide7'
 		</animateMotion>
 	</path>
 	<path fill="#F9BBF0" d="M4.952-1.298c0,0-5.636,0.469-6.222-2.58c0,0-3.283,5.078-0.352,7.289
 		C1.31,5.622,4.605-0.712,4.952-1.298z">
-		<animateMotion begin='-0.7s' dur='5s' rotate='auto' repeatCount = 'indefinite'>
+		<animateMotion begin='-3.5s' dur='5s' rotate='auto' repeatCount = 'indefinite'>
 			<mpath href='#guide8'
 		</animateMotion>
 	</path>
 	<path fill="#F7BCEE" d="M4.952,0.039c0,0-2.24-4.371-6.109-2.914C-5.025-1.418-4.428,3.438-2.946,4.41
 		C-1.465,5.382,4.407,2.954,4.952,0.039z">
-		<animateMotion begin='-0.8s' dur='5s' rotate='auto' repeatCount = 'indefinite'>
+		<animateMotion begin='-4s' dur='5s' rotate='auto' repeatCount = 'indefinite'>
 			<mpath href='#guide9'
 		</animateMotion>
 	</path>

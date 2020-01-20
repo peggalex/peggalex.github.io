@@ -514,7 +514,7 @@ document.getElementById('svgHeader').innerHTML = `<g id='chineseClouds' transfor
 		c0,0-186.532,35.689-261.083-1.448c-74.551-37.137-236.763-3.741-255.538,9.692c-18.775,13.433,9.859,24.797,14.317,5.682
 		c4.458-19.115-330.251,2.633-339.25,10.147"/>
 </g>
-<g id='strAutumn'>
+<g id='strBlossom'>
 	<text id="alex" transform="matrix(1 0 0 1 155 130)" fill="#F9BBF0" font-family="Quicksand-Regular" font-size="90">Alex’s</text>
 	<text id="repository" transform="matrix(1 0 0 1 435 130)" fill="#F7BCEE" font-family="Quicksand-Regular" font-size="90">repository</text>
 </g>

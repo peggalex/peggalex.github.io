@@ -515,15 +515,59 @@ document.getElementById('svgHeader').innerHTML = `<g>
 		c4.458-19.115-330.251,2.633-339.25,10.147"/>
 </g>
 <g id="petals">
-	<path id="petal3" fill="#F9A2E8" stroke="#F9A2E8" stroke-miterlimit="10" d="M575.398-64.262c0,0-2.888-3.829-6.604-1.239
+	<path fill="#F9A2E8" stroke="#F9A2E8" stroke-miterlimit="10" d="M575.398-64.262c0,0-2.888-3.829-6.604-1.239
 		c-3.717,2.591,0.571,7.434,0.962,7.659C570.146-57.617,576.82-59.982,575.398-64.262z">
-		<animateMotion dur='5s' repeatcount='indefinite'>
-			<mpath href='#guide1'>
+		<animatMotion begin='0s' dur='5s' rotate='auto'>
+			<mpath href='#guide1'
 		</animateMotion>
 	</path>
-	<path id="petal2" fill="#F9BBF0" d="M558.023-56.921c0,0-5.636,0.469-6.222-2.58c0,0-3.283,5.078-0.352,7.289
-		C554.381-50.001,557.677-56.335,558.023-56.921z"/>
-	<path id="petal1" fill="#F7BCEE" d="M558.711-67.158c0,0-2.24-4.371-6.109-2.914c-3.868,1.457-3.271,6.313-1.789,7.285
-		C552.294-61.815,558.166-64.243,558.711-67.158z"/>
+	<path fill="#F9BBF0" d="M558.023-56.921c0,0-5.636,0.469-6.222-2.58c0,0-3.283,5.078-0.352,7.289
+		C554.381-50.001,557.677-56.335,558.023-56.921z">
+		<animatMotion begin='0.1s' dur='5s' rotate='auto'>
+			<mpath href='#guide1'
+		</animateMotion>
+	</path>
+	<path fill="#F7BCEE" d="M558.711-67.158c0,0-2.24-4.371-6.109-2.914c-3.868,1.457-3.271,6.313-1.789,7.285
+		C552.294-61.815,558.166-64.243,558.711-67.158z">
+		<animatMotion begin='0.2s' dur='5s' rotate='auto'>
+			<mpath href='#guide3'
+		</animateMotion>
+	</path>
+		<path fill="#F9A2E8" stroke="#F9A2E8" stroke-miterlimit="10" d="M575.398-64.262c0,0-2.888-3.829-6.604-1.239
+		c-3.717,2.591,0.571,7.434,0.962,7.659C570.146-57.617,576.82-59.982,575.398-64.262z">
+		<animatMotion begin='0.3s' dur='5s' rotate='auto'>
+			<mpath href='#guide4'
+		</animateMotion>
+	</path>
+	<path fill="#F9BBF0" d="M558.023-56.921c0,0-5.636,0.469-6.222-2.58c0,0-3.283,5.078-0.352,7.289
+		C554.381-50.001,557.677-56.335,558.023-56.921z">
+		<animatMotion begin='0.4s' dur='5s' rotate='auto'>
+			<mpath href='#guide5'
+		</animateMotion>
+	</path>
+	<path fill="#F7BCEE" d="M558.711-67.158c0,0-2.24-4.371-6.109-2.914c-3.868,1.457-3.271,6.313-1.789,7.285
+		C552.294-61.815,558.166-64.243,558.711-67.158z">
+		<animatMotion begin='0.5s' dur='5s' rotate='auto'>
+			<mpath href='#guide6'
+		</animateMotion>
+	</path>
+	<path fill="#F9A2E8" stroke="#F9A2E8" stroke-miterlimit="10" d="M575.398-64.262c0,0-2.888-3.829-6.604-1.239
+		c-3.717,2.591,0.571,7.434,0.962,7.659C570.146-57.617,576.82-59.982,575.398-64.262z">
+		<animatMotion begin='0.6s' dur='5s' rotate='auto'>
+			<mpath href='#guide7'
+		</animateMotion>
+	</path>
+	<path fill="#F9BBF0" d="M558.023-56.921c0,0-5.636,0.469-6.222-2.58c0,0-3.283,5.078-0.352,7.289
+		C554.381-50.001,557.677-56.335,558.023-56.921z">
+		<animatMotion begin='0.7s' dur='5s' rotate='auto'>
+			<mpath href='#guide8'
+		</animateMotion>
+	</path>
+	<path fill="#F7BCEE" d="M558.711-67.158c0,0-2.24-4.371-6.109-2.914c-3.868,1.457-3.271,6.313-1.789,7.285
+		C552.294-61.815,558.166-64.243,558.711-67.158z">
+		<animatMotion begin='0.8s' dur='5s' rotate='auto'>
+			<mpath href='#guide9'
+		</animateMotion>
+	</path>
 </g>
 `

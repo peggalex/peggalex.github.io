@@ -550,7 +550,7 @@
 		text-orientation: upright;
 	}
 
-	#friends {
+	#time {
 		transform: translate(60px,0px);
 	}
 
@@ -770,19 +770,16 @@ $('#button_about').trigger('click')
 
 		text = document.createElementNS(svgNameSpace, 'text')
 		text.id = 'welcome'
-		text.innerHTML = '大家好' //i thought about animating
-			// the drawing of the strokes,
-			// 但是那个太难的。
+		text.innerHTML = '大家好' 
 		text.classList.add('chineseText')
 		document.getElementById('svgHeader').appendChild(text)
 
 		text = document.createElementNS(svgNameSpace, 'text')
-		text.id = 'friends'
-		text.innerHTML = '朋友'
+		hour = new Date().getHours()
+		text.id =  'time'
+		text.innerHTML =  hour<12 ? '早安' : (hour<6 ? '午安' : '晚安')
 		text.classList.add('chineseText')
 		document.getElementById('svgHeader').appendChild(text)
-
-		// apparently they arent just up-down, but also right-left
 	}
 
 	ThemeColors = function(primary, background, button, buttonSelected, text){

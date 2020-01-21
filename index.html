@@ -8,6 +8,7 @@
 	<link href="https://peggalex.github.io/DPStickWebFont/stylesheet.css" rel="stylesheet">	
 	<link href="https://peggalex.github.io/UrgentFont/stylesheet.css" rel="stylesheet">	
 	<link href="https://fonts.googleapis.com/css?family=Quicksand:300&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Long+Cang&display=swap" rel="stylesheet">
 
 </head>
 <style>
@@ -526,6 +527,38 @@
 		font-family: 'urgentbrushregular';
 	}
 
+	#strBlossom {
+		animation: blowWord 3s;
+	}
+
+	@keyframes blowWord {
+		from {
+			transform: translateX(250px);
+			opacity: 0%;
+		} to {
+			transform: translateX(0px);
+			opacity: 100%;
+		}
+	}
+
+	.chineseText {
+		font-size: 25px;
+		/*fill: rgb(247, 188, 238);*/
+		fill: #202020;
+		writing-mode: vertical-rl;
+		font-family: 'Long Cang', cursive;
+		text-orientation: upright;
+	}
+
+	#friends {
+		transform: translate(30px,0px);
+	}
+
+
+	#welcome {
+		transform: translate(60px,0px);
+	}
+
 
 </style>
 <body>
@@ -732,6 +765,27 @@ $('#button_about').trigger('click')
 		intervalFunctions.push(window.setInterval(createLeaf, interval))
 	}
 
+	blossom_js = () => {
+		const svgNameSpace = "http://www.w3.org/2000/svg"
+
+		text = document.createElementNS(svgNameSpace, 'text')
+		text.id = 'friends'
+		text.innerHTML = '朋友' //welcome!
+			//i thought about animating
+			// the drawing of the strokes,
+			// 但是那个太难的。
+		text.classList.add('chineseText')
+		document.getElementById('svgHeader').appendChild(text)
+
+		text = document.createElementNS(svgNameSpace, 'text')
+		text.id = 'welcome'
+		text.innerHTML = '大家好' //i thought about animating
+			// the drawing of the strokes,
+			// 但是那个太难的。
+		text.classList.add('chineseText')
+		document.getElementById('svgHeader').appendChild(text)
+	}
+
 	ThemeColors = function(primary, background, button, buttonSelected, text){
 		this.colors = {
 			'primary': primary,
@@ -779,7 +833,7 @@ $('#button_about').trigger('click')
 
 	))
 
-	blossomTheme = new Theme(()=>{}, 'blossom.js', new ThemeColors(
+	blossomTheme = new Theme(blossom_js, 'blossom.js', new ThemeColors(
 		"#F9A2E8",
 		"#FFFFFF",
 		"#1B1464",

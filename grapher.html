@@ -1,0 +1,898 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+
+	<title>~grapher~</title>
+	<link href="https://fonts.googleapis.com/css?family=Oxygen:300&display=swap" rel="stylesheet">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<style>
+
+		:root {
+			--canvasCursor: auto;
+			--circleCursor: auto;
+			--lineCursor: auto;
+			--pathCursor: auto;
+		}
+		body {
+			font-family: 'Oxygen', sans-serif;
+			/*height: 100%;
+			overflow: hidden;*/
+			cursor: var(--canvasCursor);
+		}
+
+		svg {
+			width: 100%;
+			height: 600px;
+			border: 1px solid black;
+		}
+
+		#interface button {
+			background-color: white;
+			border: 1px solid lightblue;
+			width: 60px;
+			height: 40px;
+			outline: none;
+			font-size: 20px;
+			transition: background-color 0.5s, opacity 0.5s;
+		}
+
+		#interface button:hover {
+			background-color: lightblue;
+			opacity: 0.5;
+		}
+
+		button	.pressed {
+			background-color: lightblue !important;
+			border-color: white !important;
+		}
+
+		.row {
+			display: flex;
+			flex-direction: row;
+		}
+
+		.col {
+			display: flex;
+			flex-direction: column;
+		}
+
+		.centered {
+			display: flex;
+			justify-content: center;
+		}
+
+		.centeredCross {
+			display: flex;
+			align-items: center;
+		}
+
+		#interface {
+			margin-right: 10px;
+		}
+
+		#interface div{
+			display: flex;
+			flex-direction: row;
+		}
+
+		#menuHeader {
+			border: 1px solid black;
+			margin: 0px 0px 0px 0px;
+
+		}
+
+		#hi{
+			background-image:‎⁨ url('./exampleImage.png)');
+		}
+
+		#canvasContainer{
+			width: 600px;
+			height: 600px;
+		}
+
+		#imageFrame {
+			position:absolute;
+			z-index: -1;
+			width:100%;
+			object-fit: cover;
+		}
+
+		#imageUpload{
+			margin-left: 10px
+		}
+
+		polygon {
+			fill: #7FFFD4;
+			stroke: black;
+			opacity: 0.75;
+		}
+
+		circle {
+			stroke: blue;
+			stroke-width: 1;
+			fill: white;
+		}
+
+		circle:hover {
+			cursor: var(--circleCursor);
+			fill: blue;
+		}
+
+		path:hover {
+			cursor: var(--pathCursor);
+		}
+
+		.hidden {
+			opacity: 0;
+		}
+
+		#colorPickerContainer>p{
+			margin-right:5px;
+		}
+
+		.mayDelete:hover {
+			cursor: pointer;
+			fill: red !important;
+			stroke: blue;
+			opacity: 0.25;
+		}
+
+		#textContainer > input {
+			background-color: rgb(0,0,0,0);
+			border: none;
+			text-align: center;
+			overflow: visible;
+			transform: translate(-50%, -50%);
+			pointer-events: none;
+		}
+
+		#textContainer > input:focus {
+    		outline: none;
+		}
+
+		line {
+			stroke: black;
+			stroke-width: 2;
+		}
+
+		#canvas > path {
+			stroke: black;
+			stroke-width: 2;
+			fill: none;	
+		}
+
+
+
+
+	</style>
+</head>
+
+<body>
+	<div id='mainStage' class='row'>
+
+		<div id='interface' class='col'>
+			<p id='menuHeader' class='centered'>menu</p>
+			<div>
+				<span title='manipulate polygons'>
+					<button id='click'>👆🏻</button>
+				</span>
+				<span title='delete polygons'>
+					<button id='cut'>✂️</button>
+				</span>
+			</div>
+			<div>
+				<span title='draw a polygon from points'>
+					<button id='nodes'>◯</button>
+				</span>
+				<span title='draw a polygon by dragging'>
+					<button id='edges'>✏️</button>
+				</span>
+			</div>
+			<div>
+				<span title='clear all'>
+					<button id='clearAll'>🗑</button>
+				</span>
+			</div>
+			<br>
+			<div id='colorPickerContainer' class='row centered centeredCross'>
+				<p>color: </p>
+				<input type='color' id='colorPicker' value='#7FFFD4'>
+			</div>
+		</div>
+		<div id='canvasContainer'>
+			<div id='textContainer' style='position: relative;'></div>
+
+			<svg id='canvas' style='/*position: relative; background-color: rgb(0,0,0,0)*/' viewBox="0 0 600 600">
+				  <defs id='defs'>
+				    <marker id="arrowHead" markerWidth="10" markerHeight="10" refX="0" refY="3" orient="auto" markerUnits="strokeWidth">
+				      <path d="M0,0 L0,6 L6,3 z" fill="#00000" />
+				      <!-- courtesy of https://vanseodesign.com/web-design/svg-markers/ -->
+				    </marker>
+				  </defs>
+				<text x="0" y="0" id="cursorIcon" style="pointer-events: none;"></text>
+			</svg>
+		</div>
+		<div id='imageUploadDiv'>
+			<form id='imageUpload'>
+				<div class='col'>
+		    		<input id="imageInput" type="file" accept="image/*" required>
+		    		<button type='submit'>upload image</button>
+		    	</div>
+			</form>
+		</div>
+
+		<img id='hi'>
+	</div>
+</body>
+
+<script>
+uploadImage = function(e) {
+	e.preventDefault()
+	imageInput = document.getElementById('imageInput')
+	imageFrame = document.getElementById('canvas')
+	image = URL.createObjectURL(imageInput.files[0])
+	document.getElementById('imageFrame').src = image
+}
+document.getElementById('imageUpload').addEventListener('submit',uploadImage)
+
+const svgNameSpace = "http://www.w3.org/2000/svg",
+	pointRadius = 5,
+	hitRadius = 7.5
+	//points radius is arbitrary (not px)
+	//hit radius in pixels (px)
+
+var canvas = document.getElementById('canvas'),
+	canvasRect = canvas.getBoundingClientRect(),
+	cursorIcon = document.getElementById('cursorIcon'),
+	cursorIconOffset = 30,
+	color = document.getElementById('colorPicker').value
+
+
+getCanvasX = (x) => x - canvasRect.left
+getCanvasY = (y) => y - canvasRect.top
+
+getCanvasXRev = (x) => x + canvasRect.left
+getCanvasYRev = (y) => y + canvasRect.top
+
+var Point = function(x,y,simp=true) {
+
+	this.set = (x,y) => {
+		this.x = getCanvasX(x)
+		this.y = getCanvasY(y)
+	}
+
+	if (simp) {
+		this.set(x,y)
+	} else {
+		this.x = x
+		this.y = y
+	}
+
+	this.shift = (dx,dy) => {
+		this.x += dx
+		this.y += dy
+	}
+
+	this.toString = () => this.x.toString() + ',' + this.y.toString()
+}
+
+getMidPoint = (p1,p2,simp=false) => new Point((p1.x + p2.x)/2, (p1.y + p2.y)/2, simp)
+
+strokeWidth = 1
+fontSize = 11
+
+makeCircle = (x,y,r,color) => {
+	circle = document.createElementNS(svgNameSpace, "circle")
+	circle.style.fill = color
+	circle.setAttribute('cx',`${x}`)
+	circle.setAttribute('cy',`${y}`)
+	circle.setAttribute('r',`${r}`)
+	circle.setAttribute('stroke',color)
+	circle.setAttribute('stroke-width',`${strokeWidth}`)
+	canvas.appendChild(this.circle)
+	return circle
+}
+
+makeText = (x,y,r) => {
+	text = document.createElement('input')
+	text.style.position = 'absolute'
+	text.setAttribute('type','text')
+	text.style.top = `${y}px`
+	text.style.left = `${x}px`
+	text.style.width = `${2*2*r}px`
+	document.getElementById('textContainer').appendChild(text)
+	text.focus()
+	return text
+}
+
+
+var Node = function(x,y,r,color){
+	if ((grid = modelObj.grid)!=null) {
+		x = Math.round(x/grid)*grid
+		y = Math.round(y/grid)*grid
+	}
+	this.c = new Point(x, y)
+	this.cx = this.c.x
+	this.cy = this.c.y
+	this.r = r
+	this.color = color
+	this.edgesIn = new Set()
+	this.edgesOut = new Set()
+
+	this.circle = makeCircle(this.cx,this.cy,r,color)
+	this.el = this.circle
+	this.text = makeText(this.cx,this.cy,r,color)
+
+	this._move = (dx,dy,p) => {
+		if ((grid = modelObj.grid)!=null) {
+			x = Math.round(p.x/grid)*grid
+			y = Math.round(p.y/grid)*grid
+		} else {
+			x = p.x
+			y = p.y
+		}
+		this.c.x = x
+		this.c.y = y
+		this.cx = x
+		this.cy = y
+		this.circle.setAttribute('cx', x)
+		this.circle.setAttribute('cy', y)
+		this.text.style.top = `${y}px`
+		this.text.style.left = `${x}px`
+
+		for (let edge of this.edgesOut) edge.movedSource(dx,dy)
+
+		for (let edge of this.edgesIn) edge.movedSink()
+	}
+
+	this.move = (dx,dy,p) => this._move(dx,dy,p)
+
+	this.addEdgeOut = (edge) => this.edgesOut.add(edge)
+
+	this.addEdgeIn = (edge) => this.edgesIn.add(edge)
+
+	this.removeEdge = (edge) => { for (let edgeSet of [this.edgesIn, this.edgesOut]) edgeSet.delete(edge) }
+}
+
+var ModelObj = function() {
+	this.model
+	this.nodes = []
+	this.grid = null
+
+	this.removeNode = (node) => {
+		for (let i=0; i<this.nodes.length; i++){
+			if (this.nodes[i] === node) {
+				/*nodes.poly.parentElement.removeChild(points.poly)
+				this.polys.splice(i,1)
+				return*/
+			}
+		}
+		throw 'circle not found'
+	}
+
+	this.setCursors = () => {
+		for (let name of ['canvas','circle','line','path']) {
+			if ((c=this.model[`${name}Cursor`])!==undefined){
+				document.documentElement.style.setProperty(`--${name}Cursor`, c)
+			} else {
+				document.documentElement.style.setProperty(`--${name}Cursor`, 'auto')
+			}
+		}
+	}
+
+	this.click = (x,y) =>  {
+		if (this.model.click !== undefined) this.model.click(x,y)
+	}
+		
+
+	this.mousedown = (x,y) =>  {
+		if (this.model.mousedown !== undefined) this.model.mousedown(x,y)
+	}
+
+	this.mouseup = (x,y) => {
+		if (this.model.mouseup !== undefined) this.model.mouseup(x,y)
+	}
+
+	this.mousemove = (x,y) => {
+		if (this.model.hover !== undefined) this.model.hover(x,y)
+		cursorIcon.parentElement.removeChild(cursorIcon) //we have to add it to the end of the dom
+		cursorIcon.setAttribute('x', getCanvasX(x)-cursorIconOffset)
+		cursorIcon.setAttribute('y', getCanvasY(y)+cursorIconOffset)
+		canvas.appendChild(cursorIcon)
+	}
+
+	this.onclickCircle = (e, node) => {
+		if (this.model.onclickCircle !== undefined) this.model.onclickCircle(e.x, e.y, node)
+	}
+
+	this.mousedownCircle = (e, node) => {
+		if (this.model.mousedownCircle !== undefined) this.model.mousedownCircle(e.x, e.y, node)
+	}
+
+	this.mouseupCircle = (e, node) => {
+		if (this.model.mouseupCircle !== undefined) this.model.mouseupCircle(e.x, e.y, node)
+	}
+
+	this.mouseenterCircle = (e, node) => {
+		if (this.model.mouseenterCircle !== undefined) this.model.mouseenterCircle(e.x, e.y, node)
+	}
+
+	this.mouseleaveCircle = (e, node) => {
+		if (this.model.mouseleaveCircle !== undefined) this.model.mouseleaveCircle(e.x, e.y, node)
+	}
+
+	this.mousemoveCircle = (e, node) => {
+		if (this.model.mousemoveCircle !== undefined) this.model.mousemoveCircle(e.x, e.y, node)
+	}
+
+	this.mousedownLine = (e, line) => {
+		if (this.model.mousedownLine !== undefined) this.model.mousedownLine(e.x, e.y, line)
+	}
+
+	this.mouseupLine = (e, line) => {
+		if (this.model.mouseupLine !== undefined) this.model.mouseupLine(e.x, e.y, line)
+	}
+
+	this.tearDown = () => {
+		if (this.model.tearDown !== undefined) this.model.tearDown()
+	}
+
+	this.mouseleave = () => cursorIcon.classList.add('hidden')
+
+	this.mouseenter = () => cursorIcon.classList.remove('hidden')
+
+	this.changeColor = () => {
+		color = document.getElementById('colorPicker').value
+		this.polys.forEach( (points) => {
+			points.poly.style.fill = color
+		})
+	}
+
+	this.clearAll = () => {
+		this.polys.forEach((points) => {
+			points.poly.parentElement.removeChild(points.poly)
+		})
+		this.polys = []
+	}
+}
+
+var modelObj = new ModelObj()
+
+applyAllElements = (tagName, f) => {
+	els = Array.from(document.querySelectorAll(tagName))
+	for (let el of els){
+		f(el)
+	}
+}
+
+var Model_nodes = function() {
+
+	this.node = null
+	this.r = 20
+	this.color = '#FFFFFF'
+	this.canvasCursor = 'copy'
+
+	/*modelObj.nodes.forEach((node) => {
+		node.circle.classList.add('unselectable')
+		node.text.classList.add('unselectable')
+	})*/
+	this.click = (x,y) => {
+		let node = new Node(x,y,this.r,this.color)
+		modelObj.nodes.push(node)
+
+		node.circle.addEventListener('click',(e)=>modelObj.onclickCircle(e,node))
+		node.circle.addEventListener('mousedown',(e)=>modelObj.mousedownCircle(e,node))
+		node.circle.addEventListener('mouseup',(e)=>modelObj.mouseupCircle(e,node))
+		node.circle.addEventListener('mouseenter',(e)=>modelObj.mouseenterCircle(e,node))
+		node.circle.addEventListener('mouseleave',(e)=>modelObj.mouseleaveCircle(e,node))
+		node.circle.addEventListener('mousemove',(e)=>modelObj.mousemoveCircle(e,node))
+
+		node.text.focus()
+
+	}
+}
+
+arrowHeadLength = 12
+
+var LinearEq = function(m,c) {
+	this.m = m
+	this.c = c
+
+	this.getY = (x) => this.m*x + c
+}
+
+getOrthogonalLine = (p1, p2) => {
+
+	let mInv = -(p2.x-p1.x)/(p2.y-p1.y), // orthogonal gradient = -1/m = -run/rise
+		midPointX = (p2.x+p1.x)/2,
+		midPointY = (p2.y+p1.y)/2,
+		c = (mInv==Infinity) ? midPointX : midPointY - mInv*midPointX // y = mx+c => c = y-m*x
+
+	return new LinearEq(mInv, c)
+}
+
+getIntersect = (l1, l2) => {
+	let x,
+		y
+	if (l1.m == Infinity) {
+		x = l1.c
+		y = l2.getY(x)
+	} else if (l2.m == Infinity) {
+		x = l2.c
+		y = l1.getY(x)
+	} else {
+		x = (l2.c - l1.c)/(l1.m-l2.m)
+		y = l1.getY(x)
+	}
+	return new Point(x,y,false)
+}
+
+getDist = (p1, p2) => ((p2.x-p1.x)**2 + (p2.y-p1.y)**2)**(0.5)
+
+getAngle = (p1, p2) => {
+	let a = p2.x-p1.x,
+		o = p2.y-p1.y
+
+	angle = (a==0) ? Math.PI/2 : Math.abs(Math.atan(o/a))
+
+	if (p2.x < p1.x) { //quadrant 2/3
+		if (p2.y > p1.y) { //quadrant 2
+			angle = Math.PI - angle
+		} else { //quadrant 3
+			angle += Math.PI
+		}
+	} else if (p2.y < p1.y) { //quadrant 4
+		angle = Math.PI*2 - angle
+	}
+
+	return angle
+}
+
+getAngleInRange = (angle, lower, upper) => {
+	if (upper < lower) {
+		return (lower < angle && angle < 2*Math.PI) || (0 < angle && angle < upper)
+	} else {
+		return lower < angle && angle < upper
+	}
+}
+
+textOffset = 10 //px
+
+var Line = function(_x, _y, source) {
+
+	// either stop storing source/sink
+	// or dont take in x,y <- redundancy
+
+	this.el = document.createElementNS(svgNameSpace, 'path')
+	this.el.setAttribute('marker-end', "url(#arrowHead)")
+
+	this.guide = document.createElementNS(svgNameSpace, 'path')
+	this.guide.classList.add('hidden')
+	
+	this.textGuide1 = document.createElementNS(svgNameSpace, 'path')
+	this.textGuide1.id = 'textGuide'
+	this.textGuide1.style.stroke = 'blue'
+	//this.textGuide1.classList.add('hidden')
+	this.textGuide2 = document.createElementNS(svgNameSpace, 'path')
+	this.textGuide2.style.stroke = 'red'
+
+	canvas.insertBefore(this.el, canvas.childNodes[1]) //insert at back of svg
+	canvas.insertBefore(this.guide, canvas.childNodes[1])
+	canvas.insertBefore(this.textGuide1, canvas.childNodes[1])
+	canvas.insertBefore(this.textGuide2, canvas.childNodes[1])
+
+	this.circ = document.createElementNS(svgNameSpace, 'circle')
+	this.circ.style.stroke = 'red'
+	canvas.insertBefore(this.circ, canvas.childNodes[1])
+
+	this.source = source
+	this.sink = null
+
+	this.orthogonalLine = null
+	this.midPoint = null
+	this.angle = null
+
+	this.radius = Infinity
+	this.largeArc = null
+	this.sweep = null
+	this.center = null
+	this.startPoint = null
+	this.endPoint = null
+	this.p = null
+
+	this.offset = null
+
+	this.changeOrigin = (dx = null, dy = null) => {
+		this.startPoint = this.source.c
+		if (this.sink!=null) {
+			this.magnetize()
+		}
+	}
+
+	this.updateArcSink = () => {
+		let str = `M ${this.startPoint.x} ${this.startPoint.y} `
+
+		if (this.radius!=Infinity){
+			let arcStr = (p, largeArc) => `A ${this.radius} ${this.radius} 0 ${largeArc} ${this.sweep} ${p.x} ${p.y}`
+			this.guide.setAttribute('d',str+arcStr(this.endPoint, this.largeArc))
+			endPoint = this.guide.getPointAtLength(this.guide.getTotalLength()-this.offset)
+
+			let lineAngle = getAngle(this.source.c, endPoint),
+				lineAngleRev = (lineAngle+Math.PI)%(2*Math.PI),
+				centerAngle = getAngle(this.source.c, this.center),
+				largeArc = (this.sweep==0) ? getAngleInRange(centerAngle,lineAngleRev,lineAngle) : getAngleInRange(centerAngle,lineAngle,lineAngleRev)
+			largeArc = (this.source == this.sink) ? 1 : (largeArc ? 0:1)
+			str += arcStr(endPoint, largeArc)
+
+			if (this.center) {
+				let angle1 = getAngle(this.center, this.startPoint),
+					angle2 = getAngle(this.center, this.endPoint)
+
+				let textGuideStr = (r) => `M ${this.center.x + r*Math.cos(angle1)} ${this.center.y + r*Math.sin(angle1)} A ${r} ${r} 0 ${this.largeArc} ${this.sweep} ${this.center.x + r*Math.cos(angle2)} ${this.center.y + r*Math.sin(angle2)}`
+
+				this.textGuide1.setAttribute('d',textGuideStr(this.radius + this.source.r))
+				if (this.radius >= this.source.r) this.textGuide2.setAttribute('d',textGuideStr(this.radius - this.source.r))
+			}
+		} else {
+			this.guide.setAttribute('d',str+`L ${this.sink.cx} ${this.sink.cy}`)
+			endPoint = this.guide.getPointAtLength(this.guide.getTotalLength()-this.offset)
+			str += `L ${endPoint.x} ${endPoint.y}`
+		}
+		this.el.setAttribute('d',str)
+	}
+
+	this.updateArc = (p) => this.el.setAttribute('d',`M ${this.source.cx} ${this.source.cy} L ${p.x} ${p.y}`)
+
+	this.changeEnd = (x,y) => {
+		if (this.sink==null) this.updateArc(new Point(x,y))
+	}
+
+	this.magnitizeSelf = () => {}
+
+	this.magnetize = (sink = this.sink, x=null, y=null) => {
+		this.sink = sink
+		this.endPoint = sink.c
+		this.orthogonalLine = getOrthogonalLine(this.source.c,this.sink.c)
+		if (this.source === sink){
+			if (x!=null) this.angle = getAngle(this.source.c, new Point(x,y))
+		} else {
+			this.angle = getAngle(this.source.c, this.sink.c)
+		}
+		this.midPoint = getMidPoint(this.source.c, sink.c)
+		if (this.source === sink){
+			this.radius = (r = this.source.r)
+			let getPoint = (multiplier, offset = Math.PI/8) => {
+				let newAngle = this.angle+(offset*multiplier),
+					dx = r*Math.cos(newAngle),
+					// cos(angle) == a / h(=r)
+					// => a = r * cos(angle)
+					dy = r*Math.sin(newAngle),
+					p =  new Point(this.source.cx, this.source.cy, false)
+				p.shift(dx,dy)
+				return p
+			}
+			this.startPoint =  getPoint(2)
+			this.endPoint = getPoint(0)
+			this.largeArc = 1
+			this.sweep = 0
+			d = 2*(r*Math.cos(Math.PI/8))
+			dx = (d)*Math.cos(this.angle + Math.PI/8)
+			dy = (d)*Math.sin(this.angle + Math.PI/8)
+			this.center = new Point(this.source.cx, this.source.cy, false)
+			this.center.shift(dx,dy)
+			this.circ.setAttribute('cx', this.center.x)
+			this.circ.setAttribute('cy', this.center.y)
+
+		}
+		this.offset = (this.source === sink) ? arrowHeadLength : sink.r + arrowHeadLength
+		this.updateArcSink()
+	}
+
+	this.unmagnetize = () => {
+		this.sink = null
+		this.radius = Infinity
+		this.startPoint = this.source.c
+		this.endPoint = null
+	} 
+
+	this.finished = (sink) => {
+		this.magnetize(sink)
+	}
+
+	this.move = (dx,dy,p) => {
+		if (this.source === this.sink){
+			this.magnetize(this.sink, getCanvasXRev(p.x), getCanvasYRev(p.y))
+			return
+		}
+		let orthogonalLine = getOrthogonalLine(this.source.c, p)
+		if (this.orthogonalLine.m == orthogonalLine.m) {
+			this.radius = Infinity
+			this.largeArc = null
+			this.sweep = null
+		} else {
+			this.center = getIntersect(this.orthogonalLine, orthogonalLine)
+			let newAngle = getAngle(this.source.c, p),
+				bigAngle = this.angle+Math.PI,
+				notSweep
+
+			notSweep = getAngleInRange(newAngle, this.angle, bigAngle%(Math.PI*2))
+			this.radius = getDist(this.center, this.source.c)
+			this.largeArc = getDist(this.center,p)< getDist(this.midPoint,p) ? 1:0
+			this.sweep = notSweep ? 0:1
+			this.startPoint = this.source.c
+			this.endPoint = this.sink.c
+			this.offset = this.sink.r + arrowHeadLength
+			this.updateArcSink()
+		}
+	}
+
+	this.destroy = () => {
+		canvas.removeChild(this.el)
+		canvas.removeChild(this.guide)
+	}
+
+	this.changeOrigin()
+}
+
+var Edge = function(source,sink,line) {
+	this.source = source
+	this.sink = sink
+	this.line = line
+
+	// A mutationObserver would have been better,
+	// but svg nodes raise a bunch of node checking errors
+	// such as with insertBefore and MutationOberser.Observe()
+	this.movedSource = (dx,dy) => this.line.changeOrigin(dx,dy)
+
+	this.movedSink = () => this.line.magnetize()
+}
+
+var Model_edges = function() {
+
+	this.source = null
+	this.line = null
+	this.circleCursor = 'copy'
+
+	this.click = (x,y) => {
+		//pass
+	}
+
+	this.hover = (x,y) => {
+		if (this.line != null) this.line.changeEnd(x,y)
+	}
+
+	this.onclickCircle = (x,y,node) => {
+		if (this.source==null){
+			this.source = node
+			let line = new Line(node.cx, node.cy, node)
+			this.line = line
+			this.line.el.addEventListener('mousedown',(e)=>modelObj.mousedownLine(e,line))
+		} else {
+			this.line.finished(node)
+			let edge = new Edge(this.source, node, this.line)
+			if (node!==this.source) node.addEdgeIn(edge)
+			this.source.addEdgeOut(edge)
+
+			this.source = null
+			this.line = null
+		}
+	}
+
+	this.mouseenterCircle = (x,y,node) => {
+		if (this.line) this.line.magnetize(node,x,y)
+	}
+
+	this.mousemoveCircle = (x,y,node) => {
+		if (this.source === node) this.line.magnetize(node,x,y)
+	}
+
+	this.mouseleaveCircle = (x,y,node) => {
+		if (this.line) this.line.unmagnetize()
+	}
+
+	this.tearDown = () => {
+		if (this.line) this.line.destroy()
+	}
+
+}
+
+var Model_click = function() {
+
+	this.origin = null
+	this.selected = null
+	this.circleCursor = 'move'
+	this.lineCursor = 'move'
+	this.pathCursor = 'grab'
+
+	this.hover = (x,y) => {
+		if (this.selected!=null){
+			dx = getCanvasX(x) - this.origin.x
+			dy = getCanvasY(y) - this.origin.y
+			this.origin.set(x, y)
+			this.selected.move(dx,dy,this.origin)
+		}
+	}
+
+	this.mouseup = (x,y) => {
+		if (this.selected!=null) {
+			this.selected = null
+			this.origin = null
+		}
+	}
+
+	this.mousedownCircle = (x,y,node) => {
+		this.selected = node
+		this.origin = new Point(x, y)
+		node.text.focus()
+	}
+
+	this.mousedownLine = (x,y,line) => {
+		this.selected = line
+		this.origin = new Point(x, y)
+	}
+
+}
+
+var Model_cut = function() {
+
+	applyAllElements('polygon',(el)=>el.classList.add('mayDelete'))
+
+	this.onclickPoly = (e, points) => {
+		poly = e.target
+		modelObj.removePoly(points)
+	}
+
+	this.tearDown = () => {
+		applyAllElements('polygon',(el)=>el.classList.remove('mayDelete'))
+	}
+
+}
+
+mouseEvents = ['click','mousedown','mouseup','mousemove','mouseleave','mouseenter']
+for (let s of mouseEvents) canvas.addEventListener(s,(e) => {
+	e.stopPropagation()
+	e.preventDefault() //there was this annoying bug where
+						//even though the cursor is not draggable
+						//if you were already dragging through the svg listener
+						//the mousedown event would propagate to the cursor anyway
+	modelObj[s](e.clientX, e.clientY)
+})
+
+modelObj.model = new Model_nodes()
+
+idToModel = {
+	'nodes': Model_nodes,
+	'click': Model_click,
+	'edges': Model_edges,
+	'cut': Model_cut
+}
+
+for (let key in idToModel){
+	let butt = document.getElementById(key)
+	butt.addEventListener('click',(e)=>{
+		modelObj.tearDown()
+		modelObj.model= new idToModel[key]()
+		modelObj.setCursors()
+		cursorIcon.innerHTML = e.target.innerHTML
+		//currPressed = document.querySelector('.pressed')
+		if ((currPressed = document.querySelector('.pressed'))) {
+			currPressed.classList.remove('pressed')
+		}
+		butt.classList.add('pressed')
+	})
+}
+
+document.getElementById('nodes').click() //initialize choice through manual click
+document.getElementById('colorPicker').addEventListener('change',modelObj.changeColor)
+document.getElementById('clearAll').addEventListener('click', () => {
+	if (confirm('Are you sure you want to delete all shapes?')){
+		this.modelObj.clearAll()
+	}
+})
+
+
+
+</script>
+
+</html>

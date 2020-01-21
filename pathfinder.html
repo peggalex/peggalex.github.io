@@ -1,0 +1,737 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+
+	<title>~pantfinder~</title>
+	<link href="https://fonts.googleapis.com/css?family=Oxygen:300&display=swap" rel="stylesheet">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<style>
+		body {
+			font-family: 'Oxygen', sans-serif;
+			/*height: 100%;
+			overflow: hidden;*/
+		}
+
+		svg {
+			width: 100%;
+			height: 600px;
+			border: 1px solid black;
+		}
+
+		#interface button {
+			background-color: white;
+			border: 1px solid lightblue;
+			width: 60px;
+			height: 40px;
+			outline: none;
+			font-size: 20px;
+			transition: background-color 0.5s, opacity 0.5s;
+		}
+
+		#interface button:hover {
+			background-color: lightblue;
+			opacity: 0.5;
+		}
+
+		button	.pressed {
+			background-color: lightblue !important;
+			border-color: white !important;
+		}
+
+		.row {
+			display: flex;
+			flex-direction: row;
+		}
+
+		.col {
+			display: flex;
+			flex-direction: column;
+		}
+
+		.centered {
+			display: flex;
+			justify-content: center;
+		}
+
+		.centeredCross {
+			display: flex;
+			align-items: center;
+		}
+
+		#interface {
+			margin-right: 10px;
+		}
+
+		#interface div{
+			display: flex;
+			flex-direction: row;
+		}
+
+		#menuHeader {
+			border: 1px solid black;
+			margin: 0px 0px 0px 0px;
+
+		}
+
+		#hi{
+			background-image:‎⁨ url('./exampleImage.png)');
+		}
+
+		#canvasContainer{
+			width: 600px;
+			height: 600px;
+		}
+
+		#imageFrame {
+			position:absolute;
+			z-index: -1;
+			width:100%;
+			object-fit: cover;
+		}
+
+		#imageUpload{
+			margin-left: 10px
+		}
+
+		polygon {
+			fill: #7FFFD4;
+			stroke: black;
+			opacity: 0.75;
+		}
+
+		circle {
+			stroke: blue;
+			stroke-width: 1;
+			fill: white;
+		}
+
+		circle:hover {
+			cursor: move;
+			fill: blue;
+		}
+
+		.hidden {
+			opacity: 0;
+		}
+
+		.unfinishedPoly {
+			stroke: blue;
+			opacity: 0.5;
+		}
+
+		.unselectable:hover {
+			cursor: not-allowed;
+		}
+
+		.grabable:hover{
+			cursor: grab;
+		}
+
+		.clickable:hover{
+			cursor: pointer;
+		}
+
+		.addCursor {
+			cursor: copy;
+		}
+
+		.crosshairCursor {
+			cursor: crosshair;
+		}
+
+		.pointerCursor {
+			cursor: pointer;
+		}
+
+		#colorPickerContainer>p{
+			margin-right:5px;
+		}
+
+		.mayDelete:hover {
+			cursor: pointer;
+			fill: red !important;
+			stroke: blue;
+			opacity: 0.25;
+		}
+
+
+
+
+	</style>
+</head>
+
+<body>
+	<div id='mainStage' class='row'>
+
+		<div id='interface' class='col'>
+			<p id='menuHeader' class='centered'>menu</p>
+			<div>
+				<span title='manipulate polygons'>
+					<button id='click'>👆🏻</button>
+				</span>
+				<span title='delete polygons'>
+					<button id='cut'>✂️</button>
+				</span>
+			</div>
+			<div>
+				<span title='draw a polygon from points'>
+					<button id='linePoints'>⌇</button>
+				</span>
+				<span title='draw a polygon by dragging'>
+					<button id='lineScribble'>✏️</button>
+				</span>
+			</div>
+			<div>
+				<span title='clear all'>
+					<button id='clearAll'>🗑</button>
+				</span>
+			</div>
+			<br>
+			<div id='colorPickerContainer' class='row centered centeredCross'>
+				<p>color: </p>
+				<input type='color' id='colorPicker' value='#7FFFD4'>
+			</div>
+		</div>
+		<div id='canvasContainer'>
+			<div style='position: relative'>
+				<img id='imageFrame'>
+			</div>
+			<svg id='canvas' viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+				<text x="0" y="0" id="cursorIcon" style="user-select: none; user-drag: none; pointer-events: none;"></text>
+			</svg>
+		</div>
+		<div id='imageUploadDiv'>
+			<form id='imageUpload'>
+				<div class='col'>
+		    		<input id="imageInput" type="file" accept="image/*" required>
+		    		<button type='submit'>upload image</button>
+		    	</div>
+			</form>
+		</div>
+
+		<img id='hi'>
+	</div>
+</body>
+
+<script>
+uploadImage = function(e) {
+	e.preventDefault()
+	imageInput = document.getElementById('imageInput')
+	imageFrame = document.getElementById('canvas')
+	image = URL.createObjectURL(imageInput.files[0])
+	document.getElementById('imageFrame').src = image
+}
+document.getElementById('imageUpload').addEventListener('submit',uploadImage)
+
+const svgNameSpace = "http://www.w3.org/2000/svg",
+	pointRadius = 5,
+	hitRadius = 7.5
+	//points radius is arbitrary (not px)
+	//hit radius in pixels (px)
+
+var canvas = document.getElementById('canvas'),
+	canvasRect = canvas.getBoundingClientRect(),
+	cursorIcon = document.getElementById('cursorIcon'),
+	cursorIconOffset = 30,
+	color = document.getElementById('colorPicker').value
+
+
+getCanvasX = (x) => x - canvasRect.left
+getCanvasY = (y) => y - canvasRect.top
+
+var Point = function(x,y) {
+
+	this.set = (x,y) => {
+		this.x = getCanvasX(x)
+		this.y = getCanvasY(y)
+	}
+
+	this._set = (p) => {
+		this.x = p.x
+		this.y = p.y
+	}
+
+	this.set(x,y)
+
+	this.shift = (dx,dy) => {
+		this.x += dx
+		this.y += dy
+	}
+
+	this.toString = () => this.x.toString() + ',' + this.y.toString()
+}
+
+initPoly = () => {
+	poly = document.createElementNS(svgNameSpace, "polygon")
+	poly.style.fill = color
+	poly.setAttribute('draggable',true)
+	poly.classList.add('unfinishedPoly')
+	canvas.appendChild(poly)
+	return poly
+}
+
+
+var Points = function(x,y) {
+	this.poly = initPoly()
+	this.start = new Point(x,y)
+	this.points = [this.start]
+
+	this.getEnd = () => this.points[this.points.length-1]
+
+	inRadius = (v1,v2) => Math.abs(v1-v2) <= hitRadius
+
+	this.isEnd = (x,y) => inRadius(getCanvasX(x),this.start.x) && inRadius(getCanvasY(y),this.start.y)
+
+	this._isEnd = (_x,_y) => inRadius(_x,this.start.x) && inRadius(_y,this.start.y)
+
+	this.toString = () => {
+		str = ''
+		this.points.slice(0,-1).forEach((point) => str += point.toString() + ' ')
+		if (!this._isEnd(this.getEnd().x,this.getEnd().y)){
+			str += this.getEnd().toString()
+		}
+		return str
+	}
+
+	this.setPoly = () => this.poly.setAttribute('points', this.points.toString())
+
+	this.endPoint = (x,y) => {
+		end = this.getEnd()
+		if (this.isEnd(x,y)){
+			end._set(this.start)
+		} else {
+			end.set(x,y)
+		}
+		this.setPoly()
+	}
+
+	this.add = (x,y) => {
+		this.endPoint(x,y)
+		this.points.push(new Point(x,y))
+		this.setPoly()
+	}
+
+	this.add(x,y)
+
+	this.snapLast = () => {
+		this.points.splice(-1)
+		this.setPoly()
+	}
+}
+
+
+drawCircle = (x,y) => {
+	let circle = document.createElementNS(svgNameSpace, "circle")
+	circle.setAttribute('cx', x)
+	circle.setAttribute('cy', y)
+	circle.setAttribute('r', pointRadius)
+	circle.setAttribute('draggable',true)
+	canvas.appendChild(circle)
+	return circle
+}
+
+var ModelObj = function() {
+	this.model
+	this.polys = []
+
+	this.removePoly = (points) => {
+		for (let i=0; i<this.polys.length; i++){
+			if (this.polys[i] === points) {
+				points.poly.parentElement.removeChild(points.poly)
+				this.polys.splice(i,1)
+				return
+			}
+		}
+		throw 'poly not found'
+	}
+
+	this.modelHasMethod = (name) => {
+		allProperties = Object.getOwnPropertyNames(this.model)
+		functions = allProperties.filter((s)=>typeof this.model[s]==='function')
+		return functions.findIndex(name) >= 0
+	}
+
+	this.click = (x,y) => this.model.click(x,y)
+
+	this.mousedown = (x,y) => this.model.mousedown(x,y)
+
+	this.mouseup = (x,y) => this.model.mouseup(x,y)
+
+	this.mousemove = (x,y) => {
+		this.model.hover(x,y)
+		cursorIcon.parentElement.removeChild(cursorIcon) //we have to add it to the end of the dom
+		cursorIcon.setAttribute('x', getCanvasX(x)-cursorIconOffset)
+		cursorIcon.setAttribute('y', getCanvasY(y)+cursorIconOffset)
+		canvas.appendChild(cursorIcon)
+	}
+
+	this.onclickPoly = (e, points) => this.model.onclickPoly(e, points)
+
+	this.mousedownPoly = (e) => this.model.mousedownPoly(e)
+
+	this.mouseupPoly = (e) => this.model.mouseupPoly(e)
+
+	this.addPoly = (poly) => this.polys.push(poly)
+
+	this.tearDown = () => this.model.tearDown()
+
+	this.mouseleave = () => cursorIcon.classList.add('hidden')
+
+	this.mouseenter = () => cursorIcon.classList.remove('hidden')
+
+	this.changeColor = () => {
+		color = document.getElementById('colorPicker').value
+		this.polys.forEach( (points) => {
+			points.poly.style.fill = color
+		})
+	}
+
+	this.clearAll = () => {
+		this.polys.forEach((points) => {
+			points.poly.parentElement.removeChild(points.poly)
+		})
+		this.polys = []
+	}
+}
+
+var modelObj = new ModelObj()
+
+finishPoly = (points) => {
+	points.snapLast()
+	points.poly.classList.remove('unfinishedPoly')
+	points.poly.classList.add('unselectable')
+	points.poly.addEventListener('click',(e) => modelObj.onclickPoly(e, points))
+}
+
+applyAllElements = (tagName, f) => {
+	els = Array.from(document.getElementsByTagName(tagName))
+	for (let el of els){
+		f(el)
+	}
+}
+
+var Model_lineScribble = function() {
+
+	this.dragging = false
+	this.points
+
+	this.init = () => {
+		this.points = null
+		canvas.classList.add('addCursor')
+		canvas.classList.remove('crosshairCursor')
+	}
+
+	this.init()
+	modelObj.polys.forEach((points) => points.poly.classList.add('unselectable'))
+
+	this.mousedown = (x,y) => {
+		this.dragging = true
+	}
+
+	this.hover = (x,y) => {
+		if (this.dragging){
+			if (this.points){
+				this.points.add(x,y)
+			} else {
+				this.points = new Points(x,y)
+				modelObj.addPoly(this.points)
+				canvas.classList.remove('addCursor')
+				canvas.classList.add('crosshairCursor')
+			}
+		}
+	}
+
+	this.onclickPoly = (e, points) => {
+		e.stopPropagation()
+	}
+
+	this.tearDown = () => {
+		canvas.classList.remove('addCursor')
+		canvas.classList.remove('crosshairCursor')
+		applyAllElements('polygon',(el)=>el.classList.remove('unselectable'))
+		if (this.points) {
+			modelObj.removePoly(this.points)
+		}
+	}
+
+	this.mouseup = (x,y) => {
+		this.dragging = false
+		if (this.points){
+			finishPoly(this.points)
+		}
+		this.init()
+	}
+
+	this.click = (x,y) => {
+		//pass
+	}
+}
+
+var Model_linePoints = function() {
+
+	this.points
+
+	this.init = () => {
+		this.points = null
+		canvas.classList.add('addCursor')
+		canvas.classList.remove('crosshairCursor')
+	}
+
+	this.init()
+	modelObj.polys.forEach((points) => points.poly.classList.add('unselectable'))
+
+	this.click = (x,y) => {
+		if (this.points){
+			if (this.points.isEnd(x,y)){
+				finishPoly(this.points)
+				this.init()
+			} else {
+				this.points.add(x,y)
+			}
+		} else {
+			this.points = new Points(x,y)
+			modelObj.addPoly(this.points)
+			canvas.classList.remove('addCursor')
+			canvas.classList.add('crosshairCursor')
+		}
+	}
+
+	this.hover = (x,y) => {
+		if (this.points) {
+			this.points.endPoint(x,y)
+		}
+	}
+
+	this.onclickPoly = (e, points) => {
+		e.stopPropagation()
+	}
+
+	this.tearDown = () => {
+		canvas.classList.remove('addCursor')
+		canvas.classList.remove('crosshairCursor')
+		applyAllElements('polygon',(el)=>el.classList.remove('unselectable'))
+		if (this.points) {
+			modelObj.removePoly(this.points)
+		}
+	}
+
+	this.mousedown = () => {
+		//pass
+	}
+
+	this.mouseup = () => {
+		//pass
+	}
+
+	this.mousedownPoly = (e) => {
+		//pass
+	}
+
+	this.mouseupPoly = (e) => {
+		//pass
+	}
+}
+
+var CircleObj = function(circle, point, points) {
+	this.circle = circle
+	this.point = point
+	this.points = points
+
+	this._move = (dx,dy) => {
+		this.point.shift(dx,dy)
+		x = parseFloat(this.circle.getAttribute('cx')) + dx
+		y = parseFloat(this.circle.getAttribute('cy')) + dy
+		this.circle.setAttribute('cx', x)
+		this.circle.setAttribute('cy', y)
+	}
+
+	this.move = (dx,dy) => {
+		this._move(dx,dy)
+		this.points.setPoly()
+	}
+}
+
+var PolygonObj = function(points, circles){
+	this.points = points
+	this.circles = circles
+
+	this.move = (dx,dy) => {
+		this.circles.forEach((c) => c._move(dx,dy))
+		this.points.setPoly()
+	}
+}
+
+var Model_click = function() {
+
+	this.origin = null
+	this.selected = null
+
+	applyAllElements('polygon',(el)=>el.classList.add('grabable'))
+	canvas.classList.add('clickable')
+
+	let circle,
+		circles
+	modelObj.polys.forEach((points) => {
+
+		circles = []
+
+		points.points.forEach((point) => {
+			circle = drawCircle(point.x, point.y)
+			let circleObj = new CircleObj(circle,point,points)
+			circles.push(circleObj)
+
+			circle.addEventListener('mousedown',((e) => {
+				this.origin = new Point(e.x, e.y)
+				this.selected = circleObj
+			}))
+
+			circle.addEventListener('mouseup', (() => {
+				this.selected = null
+				this.origin = null
+			}))
+
+		})
+
+		let polygonObj = new PolygonObj(points, circles)
+		points.poly.addEventListener('mousedown',((e) => {
+			this.selected = polygonObj
+			this.origin = new Point(e.x, e.y)
+		}))
+
+		points.poly.addEventListener('mouseup',((e) => {
+			this.selected = null
+			this.origin = null
+		}))
+
+	})
+
+	this.setPoly = () => this.poly.setAttribute('points', this.points.toString())
+
+	this.mousedown = (x,y) => {
+		//pass
+	}
+
+	this.hover = (x,y) => {
+		if (this.selected!=null){
+			dx = getCanvasX(x) - this.origin.x
+			dy = getCanvasY(y) - this.origin.y
+			this.selected.move(dx,dy)
+			this.origin.set(x, y)
+		}
+	}
+
+	this.onclickPoly = (e, points) => {
+		e.stopPropagation()
+	}
+
+	this.tearDown = () => {
+		applyAllElements('circle',(el)=>el.parentElement.removeChild(el))
+		applyAllElements('polygon',(el)=>{
+			el.classList.remove('grabable')
+		})
+		canvas.classList.remove('clickable')
+
+	}
+
+	this.mouseup = (x,y) => {
+		//pass
+	}
+
+	this.click = (x,y) => {
+		//pass
+	}
+
+	this.mousedownPoly = (e) => {
+		//pass
+	}
+
+	this.mouseupPoly = (e) => {
+		//pass
+	}
+}
+
+var Model_cut = function() {
+
+	applyAllElements('polygon',(el)=>el.classList.add('mayDelete'))
+
+	this.mousedown = (x,y) => {
+		//pass
+	}
+
+	this.hover = (x,y) => {
+		//pass
+	}
+
+	this.onclickPoly = (e, points) => {
+		poly = e.target
+		modelObj.removePoly(points)
+	}
+
+	this.tearDown = () => {
+		applyAllElements('polygon',(el)=>el.classList.remove('mayDelete'))
+	}
+
+	this.mouseup = (x,y) => {
+		//pass
+	}
+
+	this.click = (x,y) => {
+		//pass
+	}
+
+	this.mousedownPoly = (e) => {
+		//pass
+	}
+
+	this.mouseupPoly = (e) => {
+		//pass
+	}
+}
+
+mouseEvents = ['click','mousedown','mouseup','mousemove','mouseleave','mouseenter']
+mouseEvents.forEach((s)=> canvas.addEventListener(s,(e) => {
+	e.stopPropagation()
+	e.preventDefault() //there was this annoying bug where
+						//even though the cursor is not draggable
+						//if you were already dragging through the svg listener
+						//the mousedown event would propagate to the cursor anyway
+	modelObj[s](e.clientX, e.clientY)
+}))
+
+modelObj.model = new Model_linePoints()
+
+idToModel = {
+	'linePoints': Model_linePoints,
+	'click': Model_click,
+	'lineScribble': Model_lineScribble,
+	'cut': Model_cut
+}
+
+for (let key in idToModel){
+	let butt = document.getElementById(key)
+	butt.addEventListener('click',(e)=>{
+		modelObj.tearDown()
+		modelObj.model= new idToModel[key]()
+		cursorIcon.innerHTML = e.target.innerHTML
+		currPressed = document.querySelector('.pressed')
+		if (currPressed) {
+			currPressed.classList.remove('pressed')
+		}
+		butt.classList.add('pressed')
+	})
+}
+
+document.getElementById('linePoints').click() //initialize choice through manual click
+document.getElementById('colorPicker').addEventListener('change',modelObj.changeColor)
+document.getElementById('clearAll').addEventListener('click', () => {
+	if (confirm('Are you sure you want to delete all shapes?')){
+		this.modelObj.clearAll()
+	}
+})
+
+
+
+</script>
+
+</html>

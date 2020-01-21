@@ -551,12 +551,12 @@
 	}
 
 	#friends {
-		transform: translate(30px,0px);
+		transform: translate(60px,0px);
 	}
 
 
 	#welcome {
-		transform: translate(60px,0px);
+		transform: translate(30px,0px);
 	}
 
 
@@ -769,21 +769,20 @@ $('#button_about').trigger('click')
 		const svgNameSpace = "http://www.w3.org/2000/svg"
 
 		text = document.createElementNS(svgNameSpace, 'text')
-		text.id = 'friends'
-		text.innerHTML = '朋友' //welcome!
-			//i thought about animating
-			// the drawing of the strokes,
-			// 但是那个太难的。
-		text.classList.add('chineseText')
-		document.getElementById('svgHeader').appendChild(text)
-
-		text = document.createElementNS(svgNameSpace, 'text')
 		text.id = 'welcome'
 		text.innerHTML = '大家好' //i thought about animating
 			// the drawing of the strokes,
 			// 但是那个太难的。
 		text.classList.add('chineseText')
 		document.getElementById('svgHeader').appendChild(text)
+
+		text = document.createElementNS(svgNameSpace, 'text')
+		text.id = 'friends'
+		text.innerHTML = '朋友'
+		text.classList.add('chineseText')
+		document.getElementById('svgHeader').appendChild(text)
+
+		// apparently they arent just up-down, but also right-left
 	}
 
 	ThemeColors = function(primary, background, button, buttonSelected, text){

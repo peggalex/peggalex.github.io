@@ -217,15 +217,6 @@
 </body>
 
 <script>
-uploadImage = function(e) {
-	e.preventDefault()
-	imageInput = document.getElementById('imageInput')
-	imageFrame = document.getElementById('canvas')
-	image = URL.createObjectURL(imageInput.files[0])
-	document.getElementById('imageFrame').src = image
-}
-document.getElementById('imageUpload').addEventListener('submit',uploadImage)
-
 const svgNameSpace = "http://www.w3.org/2000/svg",
 	pointRadius = 5,
 	hitRadius = 7.5

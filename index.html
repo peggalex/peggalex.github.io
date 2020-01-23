@@ -271,14 +271,14 @@
 	}
 
 	.fallingLeaf {
-		animation: leafFall 4s linear 1s forwards;
+		animation: leafFall 3s linear 1s forwards;
 	}
 
 	@keyframes leafFall {
 		from {
 			transform: translateY(-550px);
 		} to {
-			transform: translateY(-200px);
+			transform: translateY(-150px);
 		}
 	}
 
@@ -586,10 +586,12 @@
 					<p>I was born and raised in Hong Kong. I'm half British and half Filipino.</p>
 					<br>
 					<h1>School</h1>
-					<p>I'm majoring in both computer science and economics for an honorary bachelors of science. I've been a TA for CSC108, and it's all downhill from here.</p>
+					<p>I'm majoring in both computer science and economics for an honorary bachelors of science. I've been a tutorial and marking TA for CSC108.</p>
 					<br>
 					<h1>Interests</h1>
-					<p>I like chicken nuggets and apple pies.	</p>
+					<p>I'm into machine learning and full stack development, making standalone apps. Despite the adage about not reinventing the wheel, I try not to use external libraries, as these apps are more of an excersize of applying my knowledge. I wanna get a Raspberry PI and install apache so I can have a non-static website with more interactive applications that link different backend technologies like python and Java to my apps.</p>
+					<br>
+					<p>I also like making animated SVGs in illustrator with css/js, watching tv (rip Suits) and playing league with friends.</p>
 					<br>
 				</div>
 				<div class='projects content' id='content_projects'>
@@ -756,8 +758,8 @@ $('#button_about').trigger('click')
 
 		leafColors = ["#F15A24", "#ED1C24", "#FBB03B"]
 
-		animationTime = 5000 //in ms
-		interval = 1000 //in ms
+		animationTime = 3500 //in ms
+		interval = 500 //in ms
 
 		let leafPlace = document.getElementById('leafPlace')
 
@@ -793,7 +795,7 @@ $('#button_about').trigger('click')
 		text = document.createElementNS(svgNameSpace, 'text')
 		hour = new Date().getHours()
 		text.id =  'time'
-		text.innerHTML =  hour<12 ? '早安' : (hour<6 ? '午安' : '晚安')
+		text.innerHTML =  hour<12 ? '早安' : (hour<18 ? '午安' : '晚安')
 		text.classList.add('chineseText')
 		document.getElementById('svgHeader').appendChild(text)
 	}

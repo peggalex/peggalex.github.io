@@ -662,81 +662,81 @@
 </body>
 <script>
 	sideButtonCallback = function() {
-	let buttActiveClass = "sideButtonActive"
+	let buttActiveClass = "sideButtonActive";
 	let contentActiveClass = "contentActive";
 
-	[buttActiveClass, contentActiveClass].forEach((className)=>$('.'+className).removeClass(className))
+	[buttActiveClass, contentActiveClass].forEach((className)=>$('.'+className).removeClass(className));
 
-	$('#'+this.id).addClass(buttActiveClass)
+	$('#'+this.id).addClass(buttActiveClass);
 
-	let type = this.id.split('_')[1]
-	let contentName = '#content_'+type
-	$(contentName).addClass(contentActiveClass)
+	let type = this.id.split('_')[1];
+	let contentName = '#content_'+type;
+	$(contentName).addClass(contentActiveClass);
 }
 
-$('.sideButton').on('click',sideButtonCallback)
-$('#button_about').trigger('click')
+$('.sideButton').on('click',sideButtonCallback);
+$('#button_about').trigger('click');
 </script>
 <script>
 
-	var intervalFunctions = []
+	var intervalFunctions = [];
 
 	autumn_js = () => {
-		const svgNameSpace = "http://www.w3.org/2000/svg"
+		const svgNameSpace = "http://www.w3.org/2000/svg";
 
 		LeafBuilder = function(pointsStr, stemStr){
-			this.stemStr = stemStr
-			this.pointsStr = pointsStr
+			this.stemStr = stemStr;
+			this.pointsStr = pointsStr;
 
-			this.minX = Infinity
-			this.minY = Infinity
-			this.maxX = 0
-			this.maxY = 0
+			this.minX = Infinity;
+			this.minY = Infinity;
+			this.maxX = 0;
+			this.maxY = 0;
 
 			this.pointsStr.split(' ').forEach((point) => {
 				if (point=='	'){
-					return
+					return;
 				}
 				// ^ adobe creates the points with an appened tab at the end
-				[x,y] = point.split(',')
+				[x,y] = point.split(',');
 
-				x = parseFloat(x)
-				y = parseFloat(y)
+				x = parseFloat(x);
+				y = parseFloat(y);
 
-				this.minX = Math.min(this.minX, x)
-				this.minY = Math.min(this.minY, y)
-				this.maxX = Math.max(this.maxX, x)
-				this.maxY = Math.max(this.minY, x)
+				this.minX = Math.min(this.minX, x);
+				this.minY = Math.min(this.minY, y);
+				this.maxX = Math.max(this.maxX, x);
+				this.maxY = Math.max(this.minY, x);
 			})
-			this.centerX = (this.minX + this.maxX)/2
-			this.centerY = (this.minY + this.maxY)/2
+			this.centerX = (this.minX + this.maxX)/2;
+			this.centerY = (this.minY + this.maxY)/2;
 
 
 			this.build = (color, rotation, x, scale) => {
-				wrapper = document.createElementNS(svgNameSpace, 'g')
-				innerWrapper = document.createElementNS(svgNameSpace, 'g')
-				innerWrapper2 = document.createElementNS(svgNameSpace, 'g')
-				wholeLeaf = document.createElementNS(svgNameSpace, 'g')
-				wholeLeaf.innerHTML = this.stemStr
+				wrapper = document.createElementNS(svgNameSpace, 'g');
+				innerWrapper = document.createElementNS(svgNameSpace, 'g');
+				innerWrapper2 = document.createElementNS(svgNameSpace, 'g');
+				wholeLeaf = document.createElementNS(svgNameSpace, 'g');
+				wholeLeaf.innerHTML = this.stemStr;
 
-				leaf = document.createElementNS(svgNameSpace, 'polyline')
-				leaf.setAttribute('points',this.pointsStr)
-				leaf.setAttribute('fill',color)
+				leaf = document.createElementNS(svgNameSpace, 'polyline');
+				leaf.setAttribute('points',this.pointsStr);
+				leaf.setAttribute('fill',color);
 
-				wholeLeaf.appendChild(leaf)
-				wholeLeaf.setAttribute('transform',`rotate(${rotation}, ${this.centerX}, ${this.centerY})`)
+				wholeLeaf.appendChild(leaf);
+				wholeLeaf.setAttribute('transform',`rotate(${rotation}, ${this.centerX}, ${this.centerY})`);
 
-				innerWrapper2.append(wholeLeaf)
-				coeff = 1-scale
-				innerWrapper2.setAttribute('transform',`translate(${coeff*this.centerX} ${coeff*this.centerY}) scale(${scale} ${scale})`)
+				innerWrapper2.append(wholeLeaf);
+				coeff = 1-scale;
+				innerWrapper2.setAttribute('transform',`translate(${coeff*this.centerX} ${coeff*this.centerY}) scale(${scale} ${scale})`);
 
-				innerWrapper.append(innerWrapper2)
-				innerWrapper.setAttribute('transform',`translate(${x-this.minX})`)
+				innerWrapper.append(innerWrapper2);
+				innerWrapper.setAttribute('transform',`translate(${x-this.minX})`);
 
-				wrapper.appendChild(innerWrapper)
-				wrapper.classList.add('fallingLeaf')
+				wrapper.appendChild(innerWrapper);
+				wrapper.classList.add('fallingLeaf');
 
-				return wrapper
+				return wrapper;
 			}
 		}
 
@@ -754,50 +754,73 @@ $('#button_about').trigger('click')
 			new LeafBuilder(`281.752,542.531 268.89,537.007 272.531,534.683 265.608,527.541 276.687,531.235 276.379,524.54 
 				283.048,528.926 281.983,516.46 287.986,520.214 293.694,508.61 296.234,521.138 304.383,518.307 300.851,530.312 309.942,527.277 
 				305.776,532 315.229,532 309.585,538.051 316.088,540.515 301.094,544.216 304.167,547.235 291,546.001 278.167,547.235 	`, '<line fill="#603813" stroke="#603813" stroke-width="2" stroke-miterlimit="10" x1="291" y1="546.001" x2="289.25" y2="556"/>')
-		]
+		];
 
-		leafColors = ["#F15A24", "#ED1C24", "#FBB03B"]
+		leafColors = ["#F15A24", "#ED1C24", "#FBB03B"];
 
-		animationTime = 3500 //in ms
-		interval = 500 //in ms
+		animationTime = 3500; //in ms
+		interval = 500; //in ms
 
-		let leafPlace = document.getElementById('leafPlace')
+		let leafPlace = document.getElementById('leafPlace');
 
-		createLeaf = ()=>{
+		let lastLeafBirth = performance.now();
 
-			leaf_i = Math.floor(Math.random()*leaves.length)
-			color_i = Math.floor(Math.random()*leafColors.length)
-			rotation = Math.random()*360
-			x = Math.random()*1000
-			scale = 0.75+Math.random()/2
+		createLeaf = (time) => {
 
-			leafBuilder = leaves[leaf_i]
-			color = leafColors[color_i]
+			if (time-lastLeafBirth < interval){
+				window.requestAnimationFrame(createLeaf);
+				return;
+			}
+			lastLeafBirth = time;
 
-			let leaf = leafBuilder.build(color, rotation, x, scale)
+			leaf_i = Math.floor(Math.random()*leaves.length);
+			color_i = Math.floor(Math.random()*leafColors.length);
+			rotation = Math.random()*360;
+			x = Math.random()*1000;
+			scale = 0.75+Math.random()/2;
 
-			leafPlace.appendChild(leaf)
-			intervalFunctions.push(window.setTimeout(()=>leafPlace.removeChild(leaf), animationTime))
+			leafBuilder = leaves[leaf_i];
+			color = leafColors[color_i];
+
+			let leaf = leafBuilder.build(color, rotation, x, scale);
+
+			leafPlace.appendChild(leaf);
+
+			let leafBirth = performance.now();
+
+			deleteLeaf = (time) => {
+				if (time-leafBirth >= animationTime){
+					leafPlace.removeChild(leaf);
+				} else {
+					window.requestAnimationFrame(deleteLeaf);
+				}
+			}
+			window.requestAnimationFrame(deleteLeaf);
+
+			window.requestAnimationFrame(createLeaf);
+
+			//intervalFunctions.push(window.setTimeout(()=>leafPlace.removeChild(leaf), animationTime))
 		}
 
-		intervalFunctions.push(window.setInterval(createLeaf, interval))
+		//intervalFunctions.push(window.setInterval(createLeaf, interval))
+		window.requestAnimationFrame(createLeaf);
 	}
 
 	blossom_js = () => {
-		const svgNameSpace = "http://www.w3.org/2000/svg"
+		const svgNameSpace = "http://www.w3.org/2000/svg";
 
-		text = document.createElementNS(svgNameSpace, 'text')
-		text.id = 'welcome'
-		text.innerHTML = '大家好' 
-		text.classList.add('chineseText')
-		document.getElementById('svgHeader').appendChild(text)
+		text = document.createElementNS(svgNameSpace, 'text');
+		text.id = 'welcome';
+		text.innerHTML = '大家好' ;
+		text.classList.add('chineseText');
+		document.getElementById('svgHeader').appendChild(text);
 
-		text = document.createElementNS(svgNameSpace, 'text')
-		hour = new Date().getHours()
-		text.id =  'time'
-		text.innerHTML =  hour<12 ? '早安' : (hour<18 ? '午安' : '晚安')
-		text.classList.add('chineseText')
-		document.getElementById('svgHeader').appendChild(text)
+		text = document.createElementNS(svgNameSpace, 'text');
+		hour = new Date().getHours();
+		text.id =  'time';
+		text.innerHTML =  hour<12 ? '早安' : (hour<18 ? '午安' : '晚安');
+		text.classList.add('chineseText');
+		document.getElementById('svgHeader').appendChild(text);
 	}
 
 	ThemeColors = function(primary, background, button, buttonSelected, text){
@@ -807,19 +830,22 @@ $('#button_about').trigger('click')
 			'button': button,
 			'buttonSelected': buttonSelected,
 			'text': text,
-		}
+		};
 
 		this.set = () => {
 			for (let colorName of Object.keys(this.colors)){
-				document.documentElement.style.setProperty(`--${colorName}Color`, this.colors[colorName]);
+				document.documentElement.style.setProperty(
+					`--${colorName}Color`, 
+					this.colors[colorName]
+				);
 			}
 		}
 	}
 
 	Theme = function(func, jsName, themeColors){
-		this.func = func
-		this.jsName = jsName
-		this.colors = themeColors
+		this.func = func;
+		this.jsName = jsName;
+		this.colors = themeColors;
 	}
 
 	autumnTheme = new Theme(autumn_js, 'autumn.js', new ThemeColors(
@@ -828,7 +854,7 @@ $('#button_about').trigger('click')
 		'#FBB03B',
 		'#ED1C24',
 		'#FBB03B'
-	))
+	));
 
 	sheepTheme = new Theme(()=>{}, 'sheep.js', new ThemeColors(
 		'#A6DCF7',
@@ -836,7 +862,7 @@ $('#button_about').trigger('click')
 		'#7FFFAB',
 		'#5DC967',
 		'#A6DCF7'
-	))
+	));
 
 	islandTheme = new Theme(()=>{}, 'island.js', new ThemeColors(
 		'#F4F06E',
@@ -845,7 +871,7 @@ $('#button_about').trigger('click')
 		'#00FFFF',
 		'#0068FF'
 
-	))
+	));
 
 	blossomTheme = new Theme(blossom_js, 'blossom.js', new ThemeColors(
 		"#F9A2E8",
@@ -853,13 +879,13 @@ $('#button_about').trigger('click')
 		"#1B1464",
 		"#3e3691",
 		"#F9A2E8"
-	))
+	));
 
 	callback = function(mutationsList, observer) {
-		observer.disconnect()
+		observer.disconnect();
 	}
 
-	observer = new MutationObserver(callback)
+	observer = new MutationObserver(callback);
 	observer.observe(document.getElementById('svgHeader'), {
 		attributes: true,
 		childList: true,
@@ -867,81 +893,82 @@ $('#button_about').trigger('click')
 	})
 
 
-	themes = [autumnTheme, sheepTheme, islandTheme, blossomTheme]
+	themes = [autumnTheme, sheepTheme, islandTheme, blossomTheme];
 
 	selectTheme = (theme) => {
 		intervalFunctions.forEach((f)=>window.clearInterval(f))
 		//clear all running functions like making leaves fall
 
 		if (theme==null){
-			console.log('i dont know why?')
-			return
+			console.log('i dont know why?');
+			return;
 		}
-		theme.colors.set()
+		theme.colors.set();
 
 		callback = function(mutationsList, observer) {
-			theme.func()
-			observer.disconnect()
+			theme.func();
+			observer.disconnect();
 		}
 
-		observer = new MutationObserver(callback)
+		observer = new MutationObserver(callback);
 		observer.observe(document.getElementById('svgHeader'), {
 			attributes: true,
 			childList: true,
 			subtree: true
-		})
+		});
 
-		$('head').append(`<script type="text/javascript" src="https://peggalex.github.io/${theme.jsName}"><`+'/script>')
+		$('head').append(`<script type="text/javascript" src="https://peggalex.github.io/${theme.jsName}"><`+'/script>');
 	}
 
-	buttonDim = 30 //px
+	buttonDim = 30; //px
 
-	let themeButtons = document.getElementById('themeButtons')
+	let themeButtons = document.getElementById('themeButtons');
+
 	themes.forEach((theme)=>{
 
 		let buttonContainer = document.createElement('div')
-		buttonContainer.classList.add('buttonContainer')
-		buttonContainer.style.position = 'relative'
+		buttonContainer.classList.add('buttonContainer');
+		buttonContainer.style.position = 'relative';
 		buttonContainer.style.width = '30px';
 		buttonContainer.style.height = '30px';
 
-		let circleContainer = document.createElement('div')
-		circleContainer.style.position = 'absolute'
-		circleContainer.style.top = '0px'
+		let circleContainer = document.createElement('div');
+		circleContainer.style.position = 'absolute';
+		circleContainer.style.top = '0px';
 
-		let halfCircleContainer = document.createElement('div')
-		halfCircleContainer.style.position = 'absolute'
+		let halfCircleContainer = document.createElement('div');
+		halfCircleContainer.style.position = 'absolute';
 
 
-		let halfCircle = document.createElement('div')
-		halfCircle.classList.add('halfCircle')
-		halfCircle.style.backgroundColor = theme.colors.colors.buttonSelected
-		halfCircleContainer.appendChild(halfCircle)
-		circleContainer.appendChild(halfCircleContainer)
+		let halfCircle = document.createElement('div');
+		halfCircle.classList.add('halfCircle');
+		halfCircle.style.backgroundColor = theme.colors.colors.buttonSelected;
+		halfCircleContainer.appendChild(halfCircle);
+		circleContainer.appendChild(halfCircleContainer);
 
-		let fullCircle = document.createElement('div')
-		fullCircle.classList.add('fullCircle')
-		fullCircle.style.backgroundColor = theme.colors.colors.primary
-		circleContainer.appendChild(fullCircle)
+		let fullCircle = document.createElement('div');
+		fullCircle.classList.add('fullCircle');
+		fullCircle.style.backgroundColor = theme.colors.colors.primary;
+		circleContainer.appendChild(fullCircle);
 
-		buttonContainer.appendChild(circleContainer)
+		buttonContainer.appendChild(circleContainer);
 
-		buttonContainer.classList.add('themeButton')
-		let t = theme
+		buttonContainer.classList.add('themeButton');
+		let t = theme;
 		buttonContainer.addEventListener('click', function() {
 			if ($('.selectedTheme')[0] == buttonContainer){
-				return
+				return;
 			}
-			$('.selectedTheme').removeClass('selectedTheme')
-			buttonContainer.classList.add('selectedTheme')
-			selectTheme(t)		
+			$('.selectedTheme').removeClass('selectedTheme');
+			buttonContainer.classList.add('selectedTheme');
+			selectTheme(t);
 		})		
 
-		themeButtons.appendChild(buttonContainer)
+		themeButtons.appendChild(buttonContainer);
 	})
 
-	themeIndex = Math.floor(Math.random()*themes.length)
-	selectTheme($('.themeButton')[themeIndex].click())
+	themeIndex = Math.floor(Math.random()*themes.length);
+	selectTheme($('.themeButton')[themeIndex].click());
 
 
 	//setIntervalFunc()

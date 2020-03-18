@@ -3,7 +3,7 @@
 
 <head>
 
-	<title>~pantfinder~</title>
+	<title>~pathfinder~</title>
 	<link href="https://fonts.googleapis.com/css?family=Oxygen:300&display=swap" rel="stylesheet">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<style>
@@ -840,7 +840,7 @@ class Graph {
 		this.vertices = vertices;
 		this.edges = edges;
 
-		getOtherV = (e,v) => (e.v2==v) e.v1 : e.v2;
+		let getOtherV = (e,v) => (e.v2==v) ? e.v1 : e.v2;
 
 		// type map so we can have object keys
 		this.edgeDic = new Map();

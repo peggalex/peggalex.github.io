@@ -110,6 +110,10 @@
 		margin: 0;
 	}
 
+	.projects p {
+	    margin-top: 10px !important;
+	}
+
 	#header{
 		align-self: center;
 		width: var(--svgWidth);
@@ -601,15 +605,30 @@
 					<br>
 				</div>
 				<div class='projects content' id='content_projects'>
+					<h1>Microeconomics 2 Goods Model Grapher</h1>
+					<a href="https://mcsapps.utm.utoronto.ca/micrographer" target="_blank">https://peggalex.github.io/rachel.html</a>
+					<p>Full stack application built for the economics department of University of Toronto.</p>
+					<p>Given a utility function, a change in the price of x, a price y and income, calculate the subsitution, income effects of a
+					utility-maximising customer.</p>
+					<p>Works with cobb douglas functions, substitutes and complements.</p>
+					<p>An example input is [x*y^2, 4, 1, 2, 36], or [min(3x+y, 3y+x), 4, 1, 2, 36].</p>
+					<p>The optima is calculated using an algebraic parser sympy in the backend python.</p>
+					<p>The result is graphed with the <a href="https://www.desmos.com/api/v1.4/docs/index.html" target="_blank">Desmos API</a></p>
+					<p>The server is uses web sockets, with a flask backend, and a socket.io frontend.</p>
+					<br>
+					<br>
 					<h1>2048 Game</h1>
 					<a href="https://peggalex.github.io/test2048" target="_blank">https://peggalex.github.io/test2048</a>
 					<p>Comprehensive model/view/controller game. Control with arrow keys.</p>
+					<p> Cookies store highscore.</p>
+					<p> Animations are pure css and js.</p>
 					<br>
 					<br>
 					<h1>Simple grade calculator</h1>
 					<a href="https://peggalex.github.io/rachel.html" target="_blank">https://peggalex.github.io/rachel.html</a>
 					<p>Calculate final grade given marks and weights.</p>
-					<p>Also assumes grades are normally distributed and can predict future grades.</p>
+					<p>Also assumes grades are normally distributed and can predict future grades using a PDF/CDF.</p>
+					<p>Uses the https://api.mathjs.org/ endpoint to calculate the CDF</p>
 					<br>
 					<br>
 					<h1>Hong Kong SVG animation</h1>
@@ -638,7 +657,7 @@
 					<a href="https://peggalex.github.io/resume3.html" target="_blank">https://peggalex.github.com/resume3.html</a>
 					<p>Resume stylized to look like an ide using a combination of syntax from different programming languages.</p>
 					<p>Webfonts unpredictable in Safari, Firefox - recommend chrome</p>
-					<p> Compiled pdf version <a href="https://peggalex.github.io/alex_pegg_resume.pdf" target="_blank">here</a>.</p>
+					<p> Compiled pdf version <a href="https://peggalex.github.io/Alex_Pegg_Resume.pdf" target="_blank">here</a>.</p>
 					<p>Professional resume <a href='https://www.overleaf.com/read/kttybhdbwppk' target="_blank">here</a>.</p>
 					<br>
 					<br>
@@ -659,7 +678,9 @@
 					<h1>Latex Resume</h1>
 					<a href='https://www.overleaf.com/read/kttybhdbwppk' target="_blank">LaTeX resume (professional)</a>
 					<br>
-					<a href='https://peggalex.github.io/alex_pegg_resume.pdf' target="_blank">html resume (stylized)</a>
+					<a href='https://peggalex.github.io/Alex_Pegg_Resume.pdf' target="_blank">LaTeX resume (professional, compiled)</a>
+					<br>
+					<a href="https://peggalex.github.io/resume3.html" target="_blank">html resume (stylized)</a>
 
 				</div>
 			</div>

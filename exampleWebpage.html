@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+	<title> ~ Example Webpage ~ </title>
+	<!-- this title is what appears on the tab of your browser at the top -->
+
+	<link href="https://fonts.googleapis.com/css?family=Be+Vietnam|Rubik&display=swap" rel="stylesheet">
+	<!--import some google fonts to make it look nice at fonts.google.com-->
+
+	<style>
+
+	.horizontal {
+		/* I made this a class (with the dot at the start instead of the hashtag)
+		because I want to keep reusing the code for multiple elements I want horizontal.
+		If I just wanted to apply something to a specific element,
+		I would have made it an ID instead*/
+
+		display: flex;
+		/* `display: flex;` allows you to choose between columns (the default in html) or rows. */
+
+		flex-direction: row;
+		/* `flex-direction: row;` makes items arranged in rows - a horizontal layout.
+		this is only avaiable if you do `display: flex` */
+	}
+
+	.vertical {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.center {
+		display: flex;
+		justify-content: center;
+		/* `justify-content: center;` means the content is centered.
+		this is also only available if you use `display: flex` */
+	}
+
+	#tabs {
+		/* these css properties are only specific to the tabs div, so I made it an ID not a class*/
+		
+		border-bottom: solid;
+		border-color: lightblue;
+		/* adding some borders to make it look pretty */
+		
+		border-top: solid;
+		border-color: lightblue;
+
+		padding-top: 10px;
+		padding-bottom: 10px;
+		/* this padding applies a little space inside the border.
+		the difference between padding and margins is that padding is inside
+		the borders, and margins are outside. If I specified margins instead of
+		padding, there would not be any space between the blue border lines
+		and the tab buttons; instead that would create space between the border lines and
+		other elements above/below.
+		You can try commenting out the padding and see what happens*/
+		
+		margin-bottom: 10px;
+		/* here I added a margin to the bottom because I want a little space between
+		the blue border line and the div below it (which is `#content`)*/
+	}
+
+	button {
+		/* applies to all buttons */
+
+		font-size: 20px;
+		color: white;
+	}
+
+	#tabs button {
+		/* the first element is the container, the second element after the space
+		applies these css properties to everything in the first element.
+		So all the `button`s in `#tabs` have these styles: */
+		
+		height: 40px;
+		margin-left: 10px;
+		margin-right: 10px;
+		/* this margin puts some space inbetween each of the buttons so they aren't side by side.
+		If I made it padding instead, the spacing within the buttons would just become bigger, and
+		this would not change the space between the buttons */
+		
+		background-color: lightblue;
+	}
+
+	#sidebar button{
+		/* all the buttons in sidebar have these styles: */;
+		
+		width: 120px;
+		margin-bottom: 10px;
+		background-color: pink;
+	}
+
+	#sidebar {
+		margin-right: 20px;
+		margin-top: 20px;
+	}
+
+	#footer {
+		margin-top: 20px;
+		border-top: solid;
+		border-width: 1px;
+	}
+
+	h1 {
+		font-size: 60px;
+	}
+
+	h1,button {
+		/* the comma applies it to all tags/ids/classes specified
+		so this font is applied to all `h1` and `button` tags */
+		
+		font-family: 'Be Vietnam', sans-serif;
+	}
+
+	h2,p {
+		font-family: 'Rubik', sans-serif;
+	}
+
+	/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+	!!!these are more advanced things for the animation and stuff,
+	you probably dont need to worry about it for now!!! */
+
+	#header {
+		animation: slideInTitleAnimation 1.5s ease-out;
+		/* this applies the animation slideInTitleAnimation
+		to `#header`, that animation is defined below */ 
+		
+		white-space: nowrap;
+	}
+
+	#turnsToPink {
+		animation: turnToPink 1s linear 1.5s forwards;
+	}
+
+	@keyframes slideInTitleAnimation {
+		/* this animation increases the width of the header from 0 to 100%,
+		making it look like it's sliding out */
+		from {
+			width:0%;
+		}
+		to {
+			width: 100%;
+		}
+	}
+
+	@keyframes turnToPink {
+		from {
+			color: black;
+		}
+		to {
+			color: pink;
+		}
+
+	}
+
+	.preserveLineBreaks {
+		white-space: pre-wrap;
+		/* this means that if I have text with newlines / paragraphs,
+		 it keeps them instead of automatically removing them */
+	}
+
+	/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+	</style>
+</head>
+
+
+<!-- you can see why some people put css on a different page, it can get pretty long to make a website look nice.
+	the actual body is pretty short -->
+
+
+
+<body>
+	<div id="header" class="center">
+		<h1 id='title'>Hi welcome to <span id="turnsToPink">Alex's</span> website</h1>
+		<!-- that span allows me to specifically select that word "Alex's"
+			so I can change it's color individually. -->
+
+		<!-- I used the `h1` heading tag instead of `p` because `h1` is like a `p` but 
+			with a different name. This is a standard in html for different headings.
+			They have tags from h1 to h6, and you can use them for different types of headers.
+			This `h1` is my title, and later on I use a `h2` tag for the heading of the `Lorem Ipsum` text.-->
+	</div>
+	<div id="tabs" class="horizontal">
+		<button>home</button>
+		<button>products</button>
+		<button>about</button>
+		<button>contact</button>
+		<button>FAQ</button>
+		<button>login</button>
+	</div>
+
+	<div id="content" class="horizontal">
+		<div id="sidebar" class="vertical">
+			<button>search</button>
+			<button>friends</button>
+			<button>form</button>
+			<button>help</button>
+		</div>
+		<div id="mainContent" class="vertical">
+			<h2>Lorem Ipsum</h2>
+			<!-- This is the `h2` text. It's different size to `p` because it's a header so I gave it a different tag.-->
+
+			<!-- the following is just random text to fill up the page: -->
+			<p class="preserveLineBreaks">"Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit..."
+"There is no one who loves pain itself, who seeks after it and wants to have it, simply because it is pain..."
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec aliquet diam at ligula fringilla, ac convallis quam iaculis. Ut ante lectus, tempor in est sit amet, tempor lacinia nulla. Proin aliquam tellus at felis sollicitudin, in placerat arcu fringilla. Phasellus pharetra, quam et dignissim scelerisque, tellus ex efficitur orci, at tincidunt nibh dolor a mi. Pellentesque vehicula lacus sed turpis sodales semper. Praesent volutpat tortor non libero placerat finibus. Proin eu luctus enim, in ultricies eros. Suspendisse sapien purus, rutrum sed augue vel, lobortis accumsan tellus. Curabitur id nunc id lectus venenatis sodales sit amet at tortor. Proin egestas risus id ligula tristique dictum. Interdum et malesuada fames ac ante ipsum primis in faucibus. Mauris convallis at nisl ut suscipit. Proin ex est, suscipit vel tortor eu, dignissim lobortis lorem. Duis quam libero, dictum ac lobortis nec, condimentum efficitur erat. Donec accumsan lacus vel mi imperdiet efficitur.
+
+Aenean at erat bibendum, vulputate ligula nec, blandit nulla. Integer tempor tincidunt lectus ornare efficitur. Praesent vehicula vehicula lorem posuere auctor. Quisque eget pulvinar sem. Fusce et enim ullamcorper, ullamcorper felis eu, iaculis sapien. Proin tellus dolor, pharetra in viverra sit amet, pharetra vel turpis. Curabitur posuere, sem vitae tempor accumsan, dolor arcu fringilla lacus, vitae imperdiet arcu purus suscipit mauris. Nulla tristique est a metus cursus pharetra eu sed justo. Nullam at volutpat dui, eu pretium neque. Donec porttitor vitae ligula quis convallis.
+
+Duis arcu massa, maximus vel velit et, feugiat rhoncus velit. Nullam nisl nisl, varius vitae faucibus vitae, vestibulum in odio. Suspendisse ac quam eget velit finibus euismod id in est. Vivamus aliquam pellentesque malesuada. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum finibus dolor sapien, a tempor erat mollis in. Sed dictum luctus luctus. Aenean vel commodo lacus, dapibus lobortis augue. Proin ultrices, lacus et luctus ullamcorper, ligula sapien rutrum turpis, mollis pulvinar leo turpis sit amet eros. Etiam ultricies id dolor eu volutpat. Donec turpis ipsum, consectetur ut commodo quis, tristique eget tortor. Mauris a libero metus. In vehicula ut purus ut imperdiet. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Morbi et blandit neque. Donec sit amet lacus vulputate eros venenatis auctor.
+
+Fusce condimentum euismod bibendum. Cras luctus ultricies consectetur. Praesent sed orci sodales, ornare nunc sed, pellentesque lectus. Nam ullamcorper risus elit, eu ultricies tortor condimentum eu. Maecenas scelerisque enim eros, nec interdum urna euismod sit amet. Proin fringilla facilisis condimentum. In ac ligula sodales, pulvinar nisi quis, vulputate nunc. Aenean ullamcorper est eget pretium finibus. Sed metus nunc, porta non erat posuere, rutrum posuere erat. Maecenas sagittis mollis lacinia. Praesent porta nibh id sem condimentum, vel efficitur risus porta. Cras tempor luctus leo, cursus tempor nibh sollicitudin vitae. Nulla porttitor egestas magna nec ultrices.
+
+Ut et interdum urna. Aenean consectetur libero non dignissim dictum. Praesent at velit et dolor consectetur aliquam ac eget nisl. Ut nulla lectus, pretium nec tristique non, ornare sed nisl. Cras viverra vitae ligula in varius. Aenean et elementum quam. Etiam luctus finibus orci id consectetur. Nulla quis facilisis sapien, ac hendrerit velit. Sed eu lectus nisl. Ut eros enim, ultricies eu ante nec, accumsan malesuada magna. Etiam consequat turpis quis massa pellentesque sagittis.<p>
+		</div>
+	</div>
+
+	<div id="footer" class="center">
+		<p > copyright © 2019-2029 all rights reserved  |  designed by <a href="https://peggalex.github.io" target="_blank">alex pegg</a>.</p>
+		<!--that `<a>` tag is a hyperlink to my website-->
+	</div>
+</body>
+
+</html>

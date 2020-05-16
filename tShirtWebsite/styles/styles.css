@@ -151,7 +151,7 @@ footer {
     background-color: white;
     position: absolute;
     bottom: 0;
-    padding: 0.5rem;
+    padding: 0.5rem 0;
 }
 
 footer > p { 
@@ -290,6 +290,7 @@ button.togglePlay {
         scroll-snap-type: x mandatory;
         padding-bottom: 1rem;
         margin-bottom: 1rem;
+        scroll-behavior: smooth;
     }
 
     .carouselElement { 

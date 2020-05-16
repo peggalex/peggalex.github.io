@@ -36,7 +36,7 @@ var isMobile = () => window.matchMedia("(max-width: 700px)").matches;
 
 function CarouselElement({imageSrc, caption}){
     return (
-        <figure className={'carouselElement'}>
+        <figure id={imageSrc} className={'carouselElement'}>
             <img src={imageSrc}></img>
             <figcaption>{caption}</figcaption>
         </figure>
@@ -94,7 +94,6 @@ function MobileCarousel({carouselElements}){
 
                 let closestIndex = children.reduce(func, 0);
 
-                console.log(closestIndex);
                 return {index: closestIndex}
             case 'goto':
                 return {index: action.index};
@@ -112,8 +111,8 @@ function MobileCarousel({carouselElements}){
                 (i)=>{
                     let carouselImages = $(carouselImagesRef.current);
                     let children = $(carouselImages).children().toArray();
-                    let scrollTo = getWidthCenter($(children[i]));
-                    carouselImages[0].scrollLeft(scrollTo);
+                    let scrollTo = getWidthCenter($(children[i])) + carouselImages.scrollLeft();
+                    carouselImages.scrollLeft(scrollTo);
                 } // carouselNodes dont do anything on mobile
             }/>
         ); 

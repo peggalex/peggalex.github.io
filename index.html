@@ -248,10 +248,6 @@
 		font-size: 20px;
 	}
 
-	#alex {
-		/*fill:  #AED6F1  ;*/
-	}
-
 	#strAutumn {
 		animation: wordFall 1s ease-out 0s;
 	}
@@ -317,7 +313,12 @@
 			transform: translateY(0px);
 		}
 	}
-	h1, p, a {
+
+	h1 {
+		font-size: 1.5rem;
+	}
+
+	p, a {
 		font-size: 20px;
 	}
 
@@ -454,7 +455,6 @@
 	@keyframes moveForward {
 		from {
 			transform: translateX(0px);
-			transform: 
 		} to {
 			transform: translateX(1200px);
 		}
@@ -606,7 +606,7 @@
 				</div>
 				<div class='projects content' id='content_projects'>
 					<h1>Microeconomics 2 Goods Model Grapher</h1>
-					<a href="https://mcsapps.utm.utoronto.ca/micrographer" target="_blank">https://mcsapps.utm.utoronto.ca/micrographer</a>
+					<p><a href="https://mcsapps.utm.utoronto.ca/micrographer" target="_blank">https://mcsapps.utm.utoronto.ca/micrographer</a></p>
 					<p>Full stack application built for the economics department of University of Toronto.</p>
 					<p>Microeconomics indifference curve analysis application.</p>
 					<p>The optima is calculated using an algebraic parser sympy in the backend python.</p>
@@ -614,29 +614,45 @@
 					<p>The server is uses web sockets, with a flask backend, and a socket.io frontend.</p>
 					<br>
 					<br>
+					<h1>Whisper</h1>
+					<p><a href="https://github.com/peggalex/whisper" target="_blank">https://github.com/peggalex/whisper</a></p>
+					<p> Messaging app that encrypts messages so the server can't see.</p>
+					<p> React frontend, nodejs backend with express and websockets. Sqlite database.</p>
+					<p> Search users, send friend requests, talk to friends and see whos online in real time.</p>
+					<p> Front and backend validation for express routing calls and websocket connections.</p>
+					<p> Encryption done with subtle.crypto, SHA256 & SHA512 for hashing, AEM with IV for encryption.</p>
+					<br>
+					<br>
 					<h1>2048 Game</h1>
-					<a href="https://peggalex.github.io/test2048" target="_blank">https://peggalex.github.io/test2048</a>
+					<p><a href="https://peggalex.github.io/test2048" target="_blank">https://peggalex.github.io/test2048</a></p>
 					<p>Comprehensive model/view/controller game. Control with arrow keys.</p>
 					<p> Cookies store highscore.</p>
 					<p> Animations are pure css and js.</p>
 					<br>
 					<br>
 					<h1>Simple grade calculator</h1>
-					<a href="https://peggalex.github.io/rachel.html" target="_blank">https://peggalex.github.io/rachel.html</a>
+					<p><a href="https://peggalex.github.io/rachel.html" target="_blank">https://peggalex.github.io/rachel.html</a></p>
 					<p>Calculate final grade given marks and weights.</p>
 					<p>Also assumes grades are normally distributed and can predict future grades using a PDF/CDF.</p>
 					<p>Uses the https://api.mathjs.org/ endpoint to calculate the CDF</p>
 					<br>
 					<br>
+					<h1>T-shirt example website</h1>
+					<p><a href="https://peggalex.github.io/tShirtWebsite" target="_blank">https://peggalex.github.io/tShirtWebsite</a></p>
+					<p>My friend wanted to bring her t-shirt business online, so I made a template website.</p>
+					<p>Written using React hooks, has stateful carousel and snap scroll.</p>
+					<p>Renders differently depending on media queries (mobile).</p>
+					<br>
+					<br>
 					<h1>Hong Kong SVG animation</h1>
 					<p> (!!!WORK IN PROGRESS!!!)</p>
-					<a href="https:/peggalex.github.io/hk" target="_blank">https:/peggalex.github.io/hk</a>
+					<p><a href="https:/peggalex.github.io/hk" target="_blank">https:/peggalex.github.io/hk</a></p>
 					<p> SVG artwork of Victoria Harbour in Hong Kong, animated using CSS.</p>
 					<p> Recommend firefox for optimal SVG performance.</p>
 					<br>
 					<br>
 					<h1>Shortest Path Finder</h1>
-					<a href="https://peggalex.github.io/pathfinder.html" target="_blank">https://peggalex.github.com/pathfinder.html</a>
+					<p><a href="https://peggalex.github.io/pathfinder.html" target="_blank">https://peggalex.github.com/pathfinder.html</a></p>
 					<p> (!!!WORK IN PROGRESS!!!)</p>
 					<p> Shortest path from a point A to point B given drawn polygon obstacles. </p>
 					<p> Allows for uploading images to trace on top of. </p>
@@ -645,13 +661,13 @@
 					<br>
 					<h1>Converting Node Graphs to Latex</h1>
 					<p> (!!!WORK IN PROGRESS!!!)</p>
-					<a href="https://peggalex.github.io/grapher.html" target="_blank">https://peggalex.github.com/grapher.html</a>
+					<p><a href="https://peggalex.github.io/grapher.html" target="_blank">https://peggalex.github.com/grapher.html</a></p>
 					<p> Draw a node graph and then convert it into code that can be copied into latex. </p>
 					<p> Expands on features from this similar website: <a href="http://madebyevan.com/fsm/"> http://madebyevan.com/fsm/</a></p>
 					<br>
 					<br>
 					<h1>HTML Resume</h1>
-					<a href="https://peggalex.github.io/resume3.html" target="_blank">https://peggalex.github.com/resume3.html</a>
+					<p><a href="https://peggalex.github.io/resume3.html" target="_blank">https://peggalex.github.com/resume3.html</a></p>
 					<p>Resume stylized to look like an ide using a combination of syntax from different programming languages.</p>
 					<p>Webfonts unpredictable in Safari, Firefox - recommend chrome</p>
 					<p> Compiled pdf version <a href="https://peggalex.github.io/Alex_Pegg_Resume.pdf" target="_blank">here</a>.</p>
@@ -664,20 +680,20 @@
 				</div>
 				<div class='contact content' id='content_contact'>
 					<h1>Email</h1>
-					<a href='mailto:alex.pegg@mail.utoronto.ca'>alex.pegg@mail.utoronto.ca</a>
+					<p><a href='mailto:alex.pegg@mail.utoronto.ca'>alex.pegg@mail.utoronto.ca</a></p>
 					<br><br><br>
 					<h1>LinkedIn</h1>
-					<a href='https://www.linkedin.com/in/alexander-pegg-68b954163/' target="_blank">Alexander Pegg -- LinkedIn</a>
+					<p><a href='https://www.linkedin.com/in/alexander-pegg-68b954163/' target="_blank">Alexander Pegg -- LinkedIn</a></p>
 					<br><br><br>
 					<h1>GitHub</h1>
-					<a href='https://github.com/peggalex' target="_blank">peggalex -- github</a>
+					<p><a href='https://github.com/peggalex' target="_blank">peggalex -- github</a></p>
 					<br><br><br>
 					<h1>Latex Resume</h1>
-					<a href='https://www.overleaf.com/read/kttybhdbwppk' target="_blank">LaTeX resume (professional)</a>
+					<p><a href='https://www.overleaf.com/read/kttybhdbwppk' target="_blank">LaTeX resume (professional)</a></p>
 					<br>
-					<a href='https://peggalex.github.io/Alex_Pegg_Resume.pdf' target="_blank">LaTeX resume (professional, compiled)</a>
+					<p><a href='https://peggalex.github.io/Alex_Pegg_Resume.pdf' target="_blank">LaTeX resume (professional, compiled)</a></p>
 					<br>
-					<a href="https://peggalex.github.io/resume3.html" target="_blank">html resume (stylized)</a>
+					<p><a href="https://peggalex.github.io/resume3.html" target="_blank">html resume (stylized)</a></p>
 
 				</div>
 			</div>

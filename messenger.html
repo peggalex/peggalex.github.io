@@ -379,7 +379,7 @@
 
 		return new Promise((resolve, reject) => $.ajax({
 		    	method: method,
-		    	url: url
+		    	url: `http://74.208.175.189:10790/${url}`
 		    })
 		    .done(resolve)
 		    .fail((data,_,error) => reject(alertError(data,_,error)))

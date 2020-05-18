@@ -1155,7 +1155,7 @@ class HomeComponent extends SuperHideableComponent{
 
 	createSocket = (port) => {
 		//let url = location.hostname;
-		let url = "http://74.208.175.189";
+		let url = "74.208.175.189";
 		return new WebSocket(
 			`ws://${url}:${port}/?username=${this.username}&passwordHash=${this.passwordHash}`
 		);		

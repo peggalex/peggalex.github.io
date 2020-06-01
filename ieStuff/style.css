@@ -308,3 +308,60 @@ section.filterTab {
         margin-top: 2rem;
     }   
 }
+
+#screen1 {
+    transform: translate(-153px, 30px);
+    animation: screen1 1s ease-out 0.5s forwards;
+}
+
+#screen1 > g{
+    transform: rotate(-8deg);
+    animation: screen1g 1s ease-out 0.5s forwards;
+
+}
+
+#screen2 {
+    transform: translate(200px, -30px);
+    animation: screen2 1s ease-out 0.75s forwards;
+
+}
+
+#screen2 > g {
+    transform: rotate(13deg);
+    animation: screen2g 1s ease-out 0.75s forwards;
+
+}
+
+@keyframes screen1 {
+    from {
+        transform: translate(-153px, 30px);
+    } to {
+        transform: translate(0px, 0px);
+    }
+}
+
+@keyframes screen1g {
+    from {
+        transform: rotate(-8deg);
+    } to {
+        transform: rotate(0deg);
+    }
+}
+
+@keyframes screen2 {
+    from {
+        transform: translate(200px, -30px);
+    } to {
+        transform: translate(0px, 0px);
+    }
+}
+
+@keyframes screen2g {
+    from {
+        transform: rotate(13deg);
+    } to {
+        transform: rotate(0deg);
+    }
+}
+
+

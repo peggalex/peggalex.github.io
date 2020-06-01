@@ -364,4 +364,13 @@ section.filterTab {
     }
 }
 
+.github{
+    width: 2rem;
+    position: absolute;
+    right: 3rem;
+}
+
+.github svg {
+    color: royalblue
+}
 

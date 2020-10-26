@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>alex_pegg_resume</title>
+	<link href="https://peggalex.github.io/menloFont/style.css" rel="stylesheet" type='text/css'>
+	<link href="https://fonts.googleapis.com/css?family=Inconsolata&display=swap" rel="stylesheet" type='text/css'>
+	<link href="https://fonts.googleapis.com/css?family=Public+Sans&display=swap" rel="stylesheet" type='text/css'>
+	<style>
+		:root {
+			--indent: 1rem;
+			--tagColour: var(--grey400);
+			--hashCommentColour: var(--red);
+			--regularTextColour: var(--grey700);
+		}
+	
+		body {
+			font-family: 'Consolas', sans-serif;
+		}
+		
+		body::before {
+			content: "<!DOCTYPE resume>";
+			font-size: 12px;
+			color: 	var(--tagColour);
+		}
+		
+		.row {
+			display: flex;
+			flex-direction: row;
+		}
+		
+		.col {
+			display: flex;
+			flex-direction: column;
+		}
+		
+		.center {
+			display: flex;
+			align-items: center;
+		}
+		
+		
+		span.num {
+			color: mediumpurple;
+		}
+		
+		span.word, span.and, span.in, span.with, span.for, span.equals, span.of, h4{
+			color: darkorange;
+		}
+		
+		header {
+			padding-bottom: 0.5rem;
+			border-bottom: solid 0.75rem var(--grey300);
+		}
+		
+		#mainContent > div:not(:first-child) {
+			border-left: solid 0.75rem var(--grey300);
+			padding-left: 0.5rem;
+		}
+		
+		#mainContent > div{
+			padding-left: 0.5rem;
+		}
+		
+		h4 {
+			color: var(--hashCommentColour);
+			font-style: italic;
+		}
+		
+		h4 > *{
+			color: var(--red) !important;
+		}
+		
+		h4::before{
+			content: '#	';
+		}
+		
+		span.code {
+			color: black;
+		}
+		
+		h3, h3 span {
+			color: #00cc65 !important;
+		}
+		
+		
+		h3::before {
+			content: '/* ';
+		}
+		
+		h3::after {
+			content: ' */';
+		}
+		
+		h2 {
+			color: var(--blue);
+			font-size: 20px;
+		}
+		
+		.indented {
+			margin-left: var(--indent);
+		}
+		
+		p, h1, h2, h3, h4{
+			font-weight: normal;
+			margin-top: 1.5px;
+			margin-bottom: 1.5px;
+		}
+		
+		p, h2, h3, h4, a{
+			font-size: 12px;
+		}
+		
+		h2::before {
+			color: var(--purple700);
+			content: 'function '
+		}
+		
+		h2::after{
+			color: black;
+			content: '(){';
+		}
+		
+		section > p:last-child::after, section > div:last-child::after{
+			display: block;
+			font-size: 12px;
+			content: "}";
+			margin-left: calc(var(--indent) * -1);
+		}
+		
+		section > p{
+			margin-left: var(--indent);
+		}
+		
+		section > div{
+			margin-left: var(--indent);
+		}
+		
+		p {
+			margin-left: calc(2 * var(--indent));
+			text-indent: calc(-1 * var(--indent));
+		}
+		
+		p, h1, a {
+			color: var(--regularTextColour);
+		}
+		
+		p::after {
+			content: ';';
+		}
+		
+		#left {
+			width: 40%;
+		}
+		
+		#right {
+			width: 60%;
+			padding-left: 1rem;
+		}
+		
+		body{
+			height:297mm;
+			width:210mm;
+			margin-left: auto;
+			margin-right: auto;
+			background-color: white;
+		}
+		
+		html {
+			background-color: grey;
+		}
+		
+		section::before{
+			content: "<div>";
+			font-size: 12px;
+			color: 	var(--tagColour);
+		}
+		
+		section::after{
+			content: "</div>";
+			font-size: 12px;
+			color: 	var(--tagColour);
+		}
+		
+		section > div {
+			margin-left: var(--indent);
+		}
+		
+		section > div > p {
+			margin-left: var(--indent);
+		}
+		
+		h1::before{
+			content: "<head><title>";
+			font-size: 12px;
+			color: 	var(--tagColour);
+			font-family: 'Inconsolata', monospace;
+		}
+		
+		h1::after{
+			content: "</head></title>";
+			font-size: 12px;
+			color: 	var(--tagColour);
+			font-family: 'Inconsolata', monospace;
+		}
+		
+		section > div > div + div::before {
+			margin: 0.5rem 0;
+			content: "<br/>";
+			display: block;
+			font-size: 12px;
+			color: 	var(--tagColour);
+			font-family: 'Inconsolata', monospace;
+		}
+		
+		section a:not(.email)::before {
+			content: '<a href="';
+			color: var(--tagColour);
+		}
+		
+		section a.email::before {
+			content: '<a href="mailto:';
+			color: var(--tagColour);
+		}
+		
+		section a::after {
+			content: '"></a>';
+			color: var(--tagColour);
+		}
+
+		@font-face {
+			font-family: 'Consolas';
+			src: URL('Consolas.ttf') format('truetype');
+		}
+
+	</style>
+	<link href="./tailwindColours.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body clas='col'>
+	<div>
+		<header class='col center'>
+			<h1>alex_pegg_resume</h1>
+		</header>
+	</div>
+
+	<div id='mainContent' class='row'>
+		<div id='left' class='col'>
+			<section>
+				<h2>education</h2>
+
+				<div>
+					<p>honorary bs | computer science and economics</p>
+					<p>university of toronto | 2016-present</p>
+					<p>cs gpa 3.1</p>
+					<p>working towards AI</p>
+				</div>
+			</section>
+
+			<section>
+				<h2>coursework</h2>
+
+				<div>
+					<div>
+						<h3>computation</h3>
+						<p>software design and engineering</p>
+						<p>systems programming</p>
+						<p>computer organisation</p>
+						<p>data structures and analysis</p>
+						<p>numerical  methods</p>
+						<p>computer science implementation project</p>
+					</div>
+
+					<div>
+						<h3>stat/math</h3>
+						<p>linear algebra I</p>
+						<p>calculus of several variables</p>
+						<p>probability and statistics I</p>
+						<p>introduction to mathematical proofs</p>
+						<p>calculus and linear algebra for commerce</p>	
+					</div>
+
+					<div>
+						<h3>economics</h3>
+						<p>macroeconomic theory and policy</p>
+						<p>microeconmic theory</p>
+						<p>quantitative methods in economics</p>		
+					</div>
+
+					<div>
+						<h3>currently enrolled</h3>
+						<p>machine learning and data mining</p>
+						<p>algorithm design and analysis</p>
+						<p>economic analysis of law</p>
+						<p>money, banking and financial markets</p>
+					</div>
+				</div>	
+			</section>
+
+			<section>
+				<h2>skills</h2>
+
+				<div>
+					<h3>languages and technologies</h3>
+						<div>
+							<h4>experienced</h4>
+							<p>python &bull; java &bull; javascript</p>
+						</div>
+						
+						<div>
+							<h4>proficient</h4>
+							<p>html/css &bull; c &bull; numpy &bull; neo4j &bull; restful API &bull; LaTeX</p>
+						</div>
+				</div>
+
+				<div>
+					<h3>general</h3>
+					<div>
+						<h4>os</h4>
+						<p>linux &bull; mac &bull; windows</p>
+					</div>
+					<div>
+						<h4>ides</h4>
+						<p>jupyter &bull; eclipse &bull; vim &bull; idle</p>
+					</div>
+					<div>
+						<h4>other</h4>
+						<p>runtime analysis &bull; design principles&bull; agile development &bull; mathematical computation optimisation and conditioning &bull; proof of correctness &bull; data structures</p>
+					</div>
+				</div>
+			</section>
+		</div>
+
+		<div id='right' class='col'>
+			<section>
+				<h2>exprience</h2>
+
+				<div>
+					<div>
+						<h3>university of toronto | teaching assistant</h3>
+						<h4>winter 2019</h4>
+						<p>paid position at the university</p>
+						<p>hosted mandatory tutorials for the first year computer science course</p>
+						<p>demonstrated strong understanding of python coding and diagnostics</p>
+						<p>create solutions manuals and mark midterms/final exams</p>
+						<p>host office hours and invigilate tests</p>
+					</div>
+
+					<div>
+						<h3>project include | teaching assistant</h3>
+						<h4>summer 2018</h4>
+						<p>volunteering student initiative amongst team of 16</p>
+						<p> helped coordinate and carry out a coding bootcamp for at-risk secondary students across mississauga</p>
+						<p> teaching basic python at different libraries and schools for 4 weeks</p>
+						<p> prelimiary marketing and organisation 8 weeks prior</p>
+					</div>
+
+					<div>
+						<h3>university of toronto | special project</h3>
+						<h4>early 2019-present</h4>
+						<p>volunteering project in conjunction with a professor</p>
+						<p>creating a indifference curve analysis (microeconomics) graphing software</p>
+						<p>full stack with HTML/javascript frontend, python backend (connected with jquery and flask python server)</p>
+						<p>created an initial prototype alone over christmas, economics department head requested it on UofT economics homepage</p>
+						<p>pursuing optimisation and further development with a computer science professor</p>
+						<p>current URI: 142.1.44.135:5000 (may be ip restricted)</p>
+					</div>
+
+					<div>
+						<h3> independent | mini projects</h3>
+						<h4>present</h4>
+						<p>small independent projects and compsci+art on website</p>
+						<p>further java and python experiments on github repository</p>
+						<p> links are by the icons at the top of page</p>
+					</div>
+				</div>
+			</section>
+			<section id='links'>
+				<h2>links</h2>
+
+				<div>
+					<div>
+						<h3>email</h3>
+						<a class='email'>alex.pegg@mail.utoronto.ca</a>
+	
+					</div>
+
+					<div>
+						<h3>website</h3>
+						<a>peggalex.github.io</a>
+					</div>
+
+					<div>
+						<h3>github</h3>
+						<a>github.com/peggalex</a>	
+					</div>
+
+					<div>
+						<h3> linkedIn </h3>
+						<a>linkedin.com/in/alexander-pegg-68b954163</a>
+					</div>
+				</div>
+			</section>
+		</div>
+	</div>
+</body>
+
+
+</html>
+
+<script>
+
+	async function insertOneByOne(getElement, time){
+		let fullText = getElement().innerHTML.replace(/<script>[^]+<\/script>/, '');
+		getElement().innerHTML = '';
+
+		var i = 0;
+		while (i < fullText.length){
+			await new Promise(resolve => setTimeout(resolve, time));
+			let char = fullText[i];
+			if (char == "<"){
+				var tag = fullText.substring(i).match(/<[^>]*>/)[0];
+				i += tag.length;
+			} else {
+				getElement().innerHTML = fullText.substring(0, i+1);
+				i++;
+			}
+		}
+	}
+	const getTimeNow = () => Date.now();
+	const startTime = getTimeNow();
+
+	insertOneByOne(() => document.querySelector('style'), 2);
+	insertOneByOne(() => document.querySelector('body'), 0.5).then(() => {
+
+		const wordsToHighlight = [
+			"for",
+			"and",
+			"or",
+			"with",
+			"in",
+			"out",
+			"as",
+			"of"
+		];
+
+		var wordHighlightRegex = new RegExp(`\\b(${wordsToHighlight.join("|")})\\b`, 'g');
+		document.querySelectorAll("p").forEach(
+			(e) => e.innerHTML = e.innerHTML.replaceAll(
+				wordHighlightRegex, 
+				"<span class='word'>$1</span>"
+			)
+		);
+
+		var numberHighlightRegex = new RegExp(`\\b((?:\\d|\\.)+)\\b`, 'g');
+		document.querySelectorAll("p").forEach(
+			(e) => e.innerHTML = e.innerHTML.replaceAll(
+				numberHighlightRegex, 
+				"<span class='num'>$1</span>"
+			)
+		);
+		console.log(`time elapsed: ${((getTimeNow() - startTime)/1000).toFixed(2)} seconds`);
+	});
+</script>
